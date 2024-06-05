@@ -1,5 +1,6 @@
 class PersonalsController < ApplicationController
-  before_action :set_personal, only: [:show, :edit, :update, :destroy]
+  before_action :set_personal, only: %i[show edit update destroy]
+  # skip_before_action :require_no_authentication, only: [:create]
 
   def index
     @personals = Personal.all
@@ -12,16 +13,17 @@ class PersonalsController < ApplicationController
     @personal = Personal.new
   end
 
+  def edit
+  end
+
   def create
     @personal = Personal.new(personal_params)
+
     if @personal.save
       redirect_to @personal, notice: 'Personal was successfully created.'
     else
       render :new
     end
-  end
-
-  def edit
   end
 
   def update
@@ -33,8 +35,13 @@ class PersonalsController < ApplicationController
   end
 
   def destroy
+    @personal = Personal.find(params[:id])
     @personal.destroy
-    redirect_to personals_url, notice: 'Personal was successfully destroyed.'
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@personal) }
+      format.html { redirect_to personals_url, notice: 'Personal was successfully destroyed.' }
+    end
   end
 
   private
@@ -44,6 +51,6 @@ class PersonalsController < ApplicationController
   end
 
   def personal_params
-    params.require(:personal).permit(:user_id, :specialization, :availability, :bio, :rating, :languages, :emergency_contact, :current_clients, :certifications, :photos, :plans, :achievements)
+    params.require(:personal).permit(:name, :email, :password, :specialization, :availability, :bio, :rating, :languages, :emergency_contact, :current_clients, :certifications, :photos, :plans, :achievements, :user_id)
   end
 end

@@ -57,3 +57,9 @@ end
 
 # Add TailwindCSS for styling
 gem 'tailwindcss-rails'
+
+# Add Devise for user authentication
+gem 'devise'
+
+# Add Hotwire for real-time updates
+gem 'hotwire-rails'

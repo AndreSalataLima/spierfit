@@ -1,19 +1,22 @@
 class WorkoutsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_workout, only: [:show, :edit, :update, :destroy]
+  # before_action :set_user, only: [:index, :new, :create]
 
   def index
-    @workouts = Workout.all
+    @workouts = current_user.workouts
   end
 
   def show
+    # Workout.find(params[:id])
   end
 
   def new
-    @workout = Workout.new
+    @workout = @user.workouts.build
   end
 
   def create
-    @workout = Workout.new(workout_params)
+    @workout = current_user.workouts.build(workout_params)
     if @workout.save
       redirect_to @workout, notice: 'Workout was successfully created.'
     else
@@ -22,6 +25,7 @@ class WorkoutsController < ApplicationController
   end
 
   def edit
+    @workout
   end
 
   def update

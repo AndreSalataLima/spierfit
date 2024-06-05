@@ -35,7 +35,10 @@ class GymsController < ApplicationController
 
   def destroy
     @gym.destroy
-    redirect_to gyms_url, notice: 'Gym was successfully destroyed.'
+    respond_to do |format|
+      format.html { redirect_to gyms_url, notice: 'Gym was successfully destroyed.' }
+      format.turbo_stream
+    end
   end
 
   private

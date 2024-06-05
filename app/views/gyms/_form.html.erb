@@ -1,0 +1,72 @@
+<%= form_with(model: gym, local: true) do |form| %>
+  <% if gym.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(gym.errors.count, "error") %> prohibited this gym from being saved:</h2>
+
+      <ul>
+        <% gym.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :location %>
+    <%= form.text_field :location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_info %>
+    <%= form.text_area :contact_info %>
+  </div>
+
+  <div class="field">
+    <%= form.label :hours_of_operation %>
+    <%= form.text_area :hours_of_operation %>
+  </div>
+
+  <div class="field">
+    <%= form.label :equipment_list %>
+    <%= form.text_area :equipment_list %>
+  </div>
+
+  <div class="field">
+    <%= form.label :policies %>
+    <%= form.text_area :policies %>
+  </div>
+
+  <div class="field">
+    <%= form.label :subscriptions %>
+    <%= form.text_area :subscriptions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :photos %>
+    <%= form.text_area :photos %>
+  </div>
+
+  <div class="field">
+    <%= form.label :events %>
+    <%= form.text_area :events %>
+  </div>
+
+  <div class="field">
+    <%= form.label :capacity %>
+    <%= form.number_field :capacity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :safety_protocols %>
+    <%= form.text_area :safety_protocols %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

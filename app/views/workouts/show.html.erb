@@ -1,4 +1,11 @@
-<div>
-  <h1 class="font-bold text-4xl">Workouts#show</h1>
-  <p>Find me in app/views/workouts/show.html.erb</p>
-</div>
+<h1>Workout Details</h1>
+<p>Type: <%= @workout.workout_type %></p>
+<p>Goal: <%= @workout.goal %></p>
+<p>Duration: <%= @workout.duration %> minutes</p>
+<p>Intensity: <%= @workout.intensity %></p>
+<p>Feedback: <%= @workout.feedback %></p>
+<p>Modifications: <%= @workout.modifications %></p>
+<p>Performance Score: <%= @workout.performance_score %></p>
+<p>Auto Adjustments: <%= @workout.auto_adjustments %></p>
+<%= link_to 'Edit', edit_workout_path(@workout) %>
+<%= link_to 'Back', workouts_path %>

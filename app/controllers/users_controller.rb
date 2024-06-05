@@ -15,13 +15,16 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      redirect_to @user, notice: 'User was successfully created.'
+      flash[:notice] = "User created successfully!"
+      redirect_to users_path
+      puts @user.inspect
     else
       render :new
     end
   end
 
   def edit
+    @user = User.find(params[:id])
   end
 
   def update
@@ -33,9 +36,15 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    @user = User.find(params[:id])
     @user.destroy
-    redirect_to users_url, notice: 'User was successfully destroyed.'
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@user) }
+      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+    end
   end
+
 
   private
   def set_user

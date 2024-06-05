@@ -1,4 +1,72 @@
-<div>
-  <h1 class="font-bold text-4xl">Personals#show</h1>
-  <p>Find me in app/views/personals/show.html.erb</p>
-</div>
+<p>
+  <strong>Name:</strong>
+  <%= @personal.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @personal.email %>
+</p>
+
+<p>
+  <strong>Specialization:</strong>
+  <%= @personal.specialization %>
+</p>
+
+<p>
+  <strong>Availability:</strong>
+  <%= @personal.availability %>
+</p>
+
+<p>
+  <strong>Bio:</strong>
+  <%= @personal.bio %>
+</p>
+
+<p>
+  <strong>Rating:</strong>
+  <%= @personal.rating %>
+</p>
+
+<p>
+  <strong>Languages:</strong>
+  <%= @personal.languages %>
+</p>
+
+<p>
+  <strong>Emergency Contact:</strong>
+  <%= @personal.emergency_contact %>
+</p>
+
+<p>
+  <strong>Current Clients:</strong>
+  <%= @personal.current_clients %>
+</p>
+
+<p>
+  <strong>Certifications:</strong>
+  <%= @personal.certifications %>
+</p>
+
+<p>
+  <strong>Photos:</strong>
+  <%= @personal.photos %>
+</p>
+
+<p>
+  <strong>Plans:</strong>
+  <%= @personal.plans %>
+</p>
+
+<p>
+  <strong>Achievements:</strong>
+  <%= @personal.achievements %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @personal.user&.name %>
+</p>
+
+<%= link_to 'Edit', edit_personal_path(@personal) %> |
+<%= link_to 'Back', personals_path %>

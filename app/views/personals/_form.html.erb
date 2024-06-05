@@ -1,0 +1,92 @@
+<%= form_with(model: personal, local: true) do |form| %>
+  <% if personal.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(personal.errors.count, "error") %> prohibited this personal from being saved:</h2>
+
+      <ul>
+        <% personal.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :specialization %>
+    <%= form.text_area :specialization %>
+  </div>
+
+  <div class="field">
+    <%= form.label :availability %>
+    <%= form.text_area :availability %>
+  </div>
+
+  <div class="field">
+    <%= form.label :bio %>
+    <%= form.text_area :bio %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rating %>
+    <%= form.text_field :rating %>
+  </div>
+
+  <div class="field">
+    <%= form.label :languages %>
+    <%= form.text_field :languages %>
+  </div>
+
+  <div class="field">
+    <%= form.label :emergency_contact %>
+    <%= form.text_field :emergency_contact %>
+  </div>
+
+  <div class="field">
+    <%= form.label :current_clients %>
+    <%= form.number_field :current_clients %>
+  </div>
+
+  <div class="field">
+    <%= form.label :certifications %>
+    <%= form.text_area :certifications %>
+  </div>
+
+  <div class="field">
+    <%= form.label :photos %>
+    <%= form.text_area :photos %>
+  </div>
+
+  <div class="field">
+    <%= form.label :plans %>
+    <%= form.text_area :plans %>
+  </div>
+
+  <div class="field">
+    <%= form.label :achievements %>
+    <%= form.text_area :achievements %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.collection_select :user_id, User.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
