@@ -35,12 +35,10 @@ class PersonalsController < ApplicationController
   end
 
   def destroy
-    @personal = Personal.find(params[:id])
     @personal.destroy
-
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove(@personal) }
       format.html { redirect_to personals_url, notice: 'Personal was successfully destroyed.' }
+      format.turbo_stream
     end
   end
 

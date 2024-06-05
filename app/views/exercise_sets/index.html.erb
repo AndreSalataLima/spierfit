@@ -1,4 +1,46 @@
-<div>
-  <h1 class="font-bold text-4xl">ExerciseSets#index</h1>
-  <p>Find me in app/views/exercise_sets/index.html.erb</p>
-</div>
+<h1>Exercise Sets</h1>
+
+<%= link_to 'New Exercise Set', new_exercise_set_path %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Workout</th>
+      <th>Exercise</th>
+      <th>Reps</th>
+      <th>Sets</th>
+      <th>Weight</th>
+      <th>Duration</th>
+      <th>Rest Time</th>
+      <th>Intensity</th>
+      <th>Feedback</th>
+      <th>Max Reps</th>
+      <th>Performance Score</th>
+      <th>Effort Level</th>
+      <th>Energy Consumed</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @exercise_sets.each do |exercise_set| %>
+      <tr id="<%= dom_id(exercise_set) %>">
+        <td><%= exercise_set.workout&.workout_type %></td>
+        <td><%= exercise_set.exercise&.name %></td>
+        <td><%= exercise_set.reps %></td>
+        <td><%= exercise_set.sets %></td>
+        <td><%= exercise_set.weight %></td>
+        <td><%= exercise_set.duration %></td>
+        <td><%= exercise_set.rest_time %></td>
+        <td><%= exercise_set.intensity %></td>
+        <td><%= exercise_set.feedback %></td>
+        <td><%= exercise_set.max_reps %></td>
+        <td><%= exercise_set.performance_score %></td>
+        <td><%= exercise_set.effort_level %></td>
+        <td><%= exercise_set.energy_consumed %></td>
+        <td><%= link_to 'Show', exercise_set %></td>
+        <td><%= link_to 'Edit', edit_exercise_set_path(exercise_set) %></td>
+        <td><%= link_to 'Destroy', exercise_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

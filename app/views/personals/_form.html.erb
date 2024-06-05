@@ -28,7 +28,7 @@
 
   <div class="field">
     <%= form.label :specialization %>
-    <%= form.text_area :specialization %>
+    <%= form.text_field :specialization %>
   </div>
 
   <div class="field">
@@ -79,11 +79,6 @@
   <div class="field">
     <%= form.label :achievements %>
     <%= form.text_area :achievements %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.collection_select :user_id, User.all, :id, :name, include_blank: true %>
   </div>
 
   <div class="actions">

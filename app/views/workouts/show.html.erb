@@ -1,11 +1,76 @@
-<h1>Workout Details</h1>
-<p>Type: <%= @workout.workout_type %></p>
-<p>Goal: <%= @workout.goal %></p>
-<p>Duration: <%= @workout.duration %> minutes</p>
-<p>Intensity: <%= @workout.intensity %></p>
-<p>Feedback: <%= @workout.feedback %></p>
-<p>Modifications: <%= @workout.modifications %></p>
-<p>Performance Score: <%= @workout.performance_score %></p>
-<p>Auto Adjustments: <%= @workout.auto_adjustments %></p>
-<%= link_to 'Edit', edit_workout_path(@workout) %>
+<p id="notice"><%= notice %></p>
+
+<h1>Workout</h1>
+
+<p>
+  <strong>User:</strong>
+  <%= @workout.user&.name %>
+</p>
+
+<p>
+  <strong>Personal:</strong>
+  <%= @workout.personal&.name %>
+</p>
+
+<p>
+  <strong>Gym:</strong>
+  <%= @workout.gym&.name %>
+</p>
+
+<p>
+  <strong>Workout Type:</strong>
+  <%= @workout.workout_type %>
+</p>
+
+<p>
+  <strong>Goal:</strong>
+  <%= @workout.goal %>
+</p>
+
+<p>
+  <strong>Duration:</strong>
+  <%= @workout.duration %>
+</p>
+
+<p>
+  <strong>Calories Burned:</strong>
+  <%= @workout.calories_burned %>
+</p>
+
+<p>
+  <strong>Intensity:</strong>
+  <%= @workout.intensity %>
+</p>
+
+<p>
+  <strong>Feedback:</strong>
+  <%= @workout.feedback %>
+</p>
+
+<p>
+  <strong>Modifications:</strong>
+  <%= @workout.modifications %>
+</p>
+
+<p>
+  <strong>Intensity General:</strong>
+  <%= @workout.intensity_general %>
+</p>
+
+<p>
+  <strong>Difficulty Perceived:</strong>
+  <%= @workout.difficulty_perceived %>
+</p>
+
+<p>
+  <strong>Performance Score:</strong>
+  <%= @workout.performance_score %>
+</p>
+
+<p>
+  <strong>Auto Adjustments:</strong>
+  <%= @workout.auto_adjustments %>
+</p>
+
+<%= link_to 'Edit', edit_workout_path(@workout) %> |
 <%= link_to 'Back', workouts_path %>

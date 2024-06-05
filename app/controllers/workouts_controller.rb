@@ -1,31 +1,28 @@
 class WorkoutsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_workout, only: [:show, :edit, :update, :destroy]
-  # before_action :set_user, only: [:index, :new, :create]
+  before_action :set_workout, only: %i[show edit update destroy]
 
   def index
-    @workouts = current_user.workouts
+    @workouts = Workout.all
   end
 
   def show
-    # Workout.find(params[:id])
   end
 
   def new
-    @workout = @user.workouts.build
+    @workout = Workout.new
+  end
+
+  def edit
   end
 
   def create
-    @workout = current_user.workouts.build(workout_params)
+    @workout = Workout.new(workout_params)
+
     if @workout.save
       redirect_to @workout, notice: 'Workout was successfully created.'
     else
       render :new
     end
-  end
-
-  def edit
-    @workout
   end
 
   def update
@@ -38,7 +35,10 @@ class WorkoutsController < ApplicationController
 
   def destroy
     @workout.destroy
-    redirect_to workouts_url, notice: 'Workout was successfully destroyed.'
+    respond_to do |format|
+      format.html { redirect_to workouts_url, notice: 'Workout was successfully destroyed.' }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@workout) }
+    end
   end
 
   private
@@ -48,6 +48,6 @@ class WorkoutsController < ApplicationController
   end
 
   def workout_params
-    params.require(:workout).permit(:user_id, :personal_id, :gym_id, :exercise_id, :date, :time, :duration, :intensity, :calories_burned, :notes, :photos, :videos)
+    params.require(:workout).permit(:user_id, :personal_id, :gym_id, :workout_type, :goal, :duration, :calories_burned, :intensity, :feedback, :modifications, :intensity_general, :difficulty_perceived, :performance_score, :auto_adjustments)
   end
 end

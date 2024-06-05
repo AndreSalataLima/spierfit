@@ -15,8 +15,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_180711) do
   enable_extension "plpgsql"
 
   create_table "exercise_sets", force: :cascade do |t|
-    t.bigint "workout_id", null: false
-    t.bigint "exercise_id", null: false
+    t.bigint "workout_id"
+    t.bigint "exercise_id"
     t.integer "reps"
     t.integer "sets"
     t.integer "weight"
@@ -132,8 +132,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_180711) do
   end
 
   create_table "workouts", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "personal_id", null: false
+    t.bigint "user_id"
+    t.bigint "personal_id"
     t.bigint "gym_id"
     t.string "workout_type"
     t.string "goal"
@@ -153,12 +153,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_180711) do
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
-  add_foreign_key "exercise_sets", "exercises"
-  add_foreign_key "exercise_sets", "workouts"
+  add_foreign_key "exercise_sets", "exercises", on_delete: :nullify
+  add_foreign_key "exercise_sets", "workouts", on_delete: :nullify
   add_foreign_key "personals", "users", on_delete: :nullify
   add_foreign_key "users", "gyms", on_delete: :nullify
   add_foreign_key "users", "personals", on_delete: :nullify
   add_foreign_key "workouts", "gyms", on_delete: :nullify
-  add_foreign_key "workouts", "personals"
-  add_foreign_key "workouts", "users"
+  add_foreign_key "workouts", "personals", on_delete: :nullify
+  add_foreign_key "workouts", "users", on_delete: :nullify
 end
