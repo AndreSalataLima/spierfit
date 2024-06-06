@@ -49,6 +49,6 @@ class PersonalsController < ApplicationController
   end
 
   def personal_params
-    params.require(:personal).permit(:name, :email, :password, :specialization, :availability, :bio, :rating, :languages, :emergency_contact, :current_clients, :certifications, :photos, :plans, :achievements, :user_id)
+    params.require(:personal).permit(:user_id, :specialization, :availability, :bio, :rating, :languages, :emergency_contact, :current_clients, :certifications, :photos, :plans, :achievements)
   end
 end

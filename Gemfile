@@ -63,3 +63,6 @@ gem 'devise'
 
 # Add Hotwire for real-time updates
 gem 'hotwire-rails'
+
+# Add HTTParty for making HTTP requests
+gem 'httparty'
