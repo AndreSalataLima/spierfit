@@ -1,4 +1,57 @@
-<div>
-  <h1 class="font-bold text-4xl">Gyms#show</h1>
-  <p>Find me in app/views/gyms/show.html.erb</p>
-</div>
+<p>
+  <strong>Name:</strong>
+  <%= @gym.name %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @gym.location %>
+</p>
+
+<p>
+  <strong>Contact Info:</strong>
+  <%= @gym.contact_info %>
+</p>
+
+<p>
+  <strong>Hours of Operation:</strong>
+  <%= @gym.hours_of_operation %>
+</p>
+
+<p>
+  <strong>Equipment List:</strong>
+  <%= @gym.equipment_list %>
+</p>
+
+<p>
+  <strong>Policies:</strong>
+  <%= @gym.policies %>
+</p>
+
+<p>
+  <strong>Subscriptions:</strong>
+  <%= @gym.subscriptions %>
+</p>
+
+<p>
+  <strong>Photos:</strong>
+  <%= @gym.photos %>
+</p>
+
+<p>
+  <strong>Events:</strong>
+  <%= @gym.events %>
+</p>
+
+<p>
+  <strong>Capacity:</strong>
+  <%= @gym.capacity %>
+</p>
+
+<p>
+  <strong>Safety Protocols:</strong>
+  <%= @gym.safety_protocols %>
+</p>
+
+<%= link_to 'Edit', edit_gym_path(@gym) %> |
+<%= link_to 'Back', gyms_path %>

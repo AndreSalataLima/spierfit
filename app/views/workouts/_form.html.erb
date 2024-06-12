@@ -1,0 +1,87 @@
+<%= form_with(model: workout, local: true) do |form| %>
+  <% if workout.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(workout.errors.count, "error") %> prohibited this workout from being saved:</h2>
+
+      <ul>
+        <% workout.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.collection_select :user_id, User.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :personal_id %>
+    <%= form.collection_select :personal_id, Personal.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gym_id %>
+    <%= form.collection_select :gym_id, Gym.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :workout_type %>
+    <%= form.text_field :workout_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :goal %>
+    <%= form.text_field :goal %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.number_field :duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :calories_burned %>
+    <%= form.number_field :calories_burned %>
+  </div>
+
+  <div class="field">
+    <%= form.label :intensity %>
+    <%= form.text_field :intensity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :feedback %>
+    <%= form.text_area :feedback %>
+  </div>
+
+  <div class="field">
+    <%= form.label :modifications %>
+    <%= form.text_area :modifications %>
+  </div>
+
+  <div class="field">
+    <%= form.label :intensity_general %>
+    <%= form.text_field :intensity_general %>
+  </div>
+
+  <div class="field">
+    <%= form.label :difficulty_perceived %>
+    <%= form.text_field :difficulty_perceived %>
+  </div>
+
+  <div class="field">
+    <%= form.label :performance_score %>
+    <%= form.number_field :performance_score %>
+  </div>
+
+  <div class="field">
+    <%= form.label :auto_adjustments %>
+    <%= form.text_area :auto_adjustments %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

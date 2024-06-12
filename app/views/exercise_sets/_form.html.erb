@@ -1,0 +1,82 @@
+<%= form_with(model: exercise_set, local: true) do |form| %>
+  <% if exercise_set.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(exercise_set.errors.count, "error") %> prohibited this exercise set from being saved:</h2>
+
+      <ul>
+        <% exercise_set.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :workout_id %>
+    <%= form.collection_select :workout_id, Workout.all, :id, :workout_type, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :exercise_id %>
+    <%= form.collection_select :exercise_id, Exercise.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reps %>
+    <%= form.number_field :reps %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sets %>
+    <%= form.number_field :sets %>
+  </div>
+
+  <div class="field">
+    <%= form.label :weight %>
+    <%= form.number_field :weight %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.number_field :duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rest_time %>
+    <%= form.number_field :rest_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :intensity %>
+    <%= form.text_field :intensity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :feedback %>
+    <%= form.text_area :feedback %>
+  </div>
+
+  <div class="field">
+    <%= form.label :max_reps %>
+    <%= form.number_field :max_reps %>
+  </div>
+
+  <div class="field">
+    <%= form.label :performance_score %>
+    <%= form.number_field :performance_score %>
+  </div>
+
+  <div class="field">
+    <%= form.label :effort_level %>
+    <%= form.text_field :effort_level %>
+  </div>
+
+  <div class="field">
+    <%= form.label :energy_consumed %>
+    <%= form.number_field :energy_consumed %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

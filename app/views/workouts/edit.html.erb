@@ -1,4 +1,6 @@
-<div>
-  <h1 class="font-bold text-4xl">Workouts#edit</h1>
-  <p>Find me in app/views/workouts/edit.html.erb</p>
-</div>
+<h1>Editing Workout</h1>
+
+<%= render 'form', workout: @workout %>
+
+<%= link_to 'Show', @workout %> |
+<%= link_to 'Back', workouts_path %>

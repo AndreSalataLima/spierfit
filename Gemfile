@@ -57,3 +57,18 @@ end
 
 # Add TailwindCSS for styling
 gem 'tailwindcss-rails'
+
+# Add Devise for user authentication
+gem 'devise'
+
+# Add Hotwire for real-time updates
+gem 'hotwire-rails'
+
+# Add HTTParty for making HTTP requests
+gem 'httparty'
+
+# Add Rest-Client for making HTTP requests
+gem 'rest-client'
+
+# Add dotenv-rails for managing environment variables
+gem 'dotenv-rails'
