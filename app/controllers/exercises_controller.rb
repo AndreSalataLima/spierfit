@@ -1,49 +1,53 @@
-class ExercisesController < ApplicationController
-  before_action :set_exercise, only: [:show, :edit, :update, :destroy]
+class ExerciseSetsController < ApplicationController
+  before_action :set_exercise_set, only: %i[show edit update destroy]
 
   def index
-    @exercises = Exercise.all
+    @exercise_sets = ExerciseSet.all
   end
 
   def show
   end
 
   def new
-    @exercises = Exercise.new
-  end
-
-  def create
-    @exercise = Exercise.new(exercise_params)
-    if @exercise.save
-      redirect_to @exercise, notice: 'Exercise was successfully created.'
-    else
-      render :new
-    end
+    @exercise_set = ExerciseSet.new
   end
 
   def edit
   end
 
+  def create
+    @exercise_set = ExerciseSet.new(exercise_set_params)
+
+    if @exercise_set.save
+      redirect_to @exercise_set, notice: 'Exercise set was successfully created.'
+    else
+      render :new
+    end
+  end
+
   def update
-    if @exercise.update(exercise_params)
-      redirect_to @exercise, notice: 'Exercise was successfully updated.'
+    if @exercise_set.update(exercise_set_params)
+      redirect_to @exercise_set, notice: 'Exercise set was successfully updated.'
     else
       render :edit
     end
   end
 
   def destroy
-    @exercise.destroy
-    redirect_to exercises_url, notice: 'Exercise was successfully destroyed.'
+    @exercise_set.destroy
+    respond_to do |format|
+      format.html { redirect_to exercise_sets_url, notice: 'Exercise set was successfully destroyed.' }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@exercise_set) }
+    end
   end
 
   private
 
-  def set_exercise
-    @exercise = Exercise.find(params[:id])
+  def set_exercise_set
+    @exercise_set = ExerciseSet.find(params[:id])
   end
 
-  def exercise_params
-    params.require(:exercise).permit(:name, :description, :muscle_group, :difficulty, :instructions, :variants, :equipment_needed, :contraindications, :benefits, :duration_suggested, :frequency_recommended, :progression_levels)
+  def exercise_set_params
+    params.require(:exercise_set).permit(:workout_id, :exercise_id, :reps, :sets, :weight, :duration, :rest_time, :intensity, :feedback, :max_reps, :performance_score, :effort_level, :energy_consumed)
   end
 end

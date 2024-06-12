@@ -1,4 +1,3 @@
-<div>
-  <h1 class="font-bold text-4xl">Personals#edit</h1>
-  <p>Find me in app/views/personals/edit.html.erb</p>
-</div>
+<h1>Editing Personal</h1>
+<%= render 'form', personal: @personal %>
+<%= link_to 'Back', personal_path(@personal) %>

@@ -1,0 +1,77 @@
+<%= form_with(model: exercise, local: true) do |form| %>
+  <% if exercise.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(exercise.errors.count, "error") %> prohibited this exercise from being saved:</h2>
+
+      <ul>
+        <% exercise.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :muscle_group %>
+    <%= form.text_field :muscle_group %>
+  </div>
+
+  <div class="field">
+    <%= form.label :difficulty %>
+    <%= form.text_field :difficulty %>
+  </div>
+
+  <div class="field">
+    <%= form.label :instructions %>
+    <%= form.text_area :instructions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :variants %>
+    <%= form.text_area :variants %>
+  </div>
+
+  <div class="field">
+    <%= form.label :equipment_needed %>
+    <%= form.text_area :equipment_needed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contraindications %>
+    <%= form.text_area :contraindications %>
+  </div>
+
+  <div class="field">
+    <%= form.label :benefits %>
+    <%= form.text_area :benefits %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration_suggested %>
+    <%= form.number_field :duration_suggested %>
+  </div>
+
+  <div class="field">
+    <%= form.label :frequency_recommended %>
+    <%= form.number_field :frequency_recommended %>
+  </div>
+
+  <div class="field">
+    <%= form.label :progression_levels %>
+    <%= form.text_area :progression_levels %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

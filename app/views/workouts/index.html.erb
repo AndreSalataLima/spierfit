@@ -1,4 +1,48 @@
-<div>
-  <h1 class="font-bold text-4xl">Workouts#index</h1>
-  <p>Find me in app/views/workouts/index.html.erb</p>
-</div>
+<h1>Workouts</h1>
+
+<%= link_to 'New Workout', new_workout_path %>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Personal</th>
+      <th>Gym</th>
+      <th>Workout Type</th>
+      <th>Goal</th>
+      <th>Duration</th>
+      <th>Calories Burned</th>
+      <th>Intensity</th>
+      <th>Feedback</th>
+      <th>Modifications</th>
+      <th>Intensity General</th>
+      <th>Difficulty Perceived</th>
+      <th>Performance Score</th>
+      <th>Auto Adjustments</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @workouts.each do |workout| %>
+      <tr id="<%= dom_id(workout) %>">
+        <td><%= workout.user&.name %></td>
+        <td><%= workout.personal&.name %></td>
+        <td><%= workout.gym&.name %></td>
+        <td><%= workout.workout_type %></td>
+        <td><%= workout.goal %></td>
+        <td><%= workout.duration %></td>
+        <td><%= workout.calories_burned %></td>
+        <td><%= workout.intensity %></td>
+        <td><%= workout.feedback %></td>
+        <td><%= workout.modifications %></td>
+        <td><%= workout.intensity_general %></td>
+        <td><%= workout.difficulty_perceived %></td>
+        <td><%= workout.performance_score %></td>
+        <td><%= workout.auto_adjustments %></td>
+        <td><%= link_to 'Show', workout %></td>
+        <td><%= link_to 'Edit', edit_workout_path(workout) %></td>
+        <td><%= link_to 'Destroy', workout, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

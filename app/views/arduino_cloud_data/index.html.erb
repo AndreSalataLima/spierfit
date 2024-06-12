@@ -1,0 +1,8 @@
+<!-- app/views/arduino_cloud_data/index.html.erb -->
+<h1>Dados do Arduino</h1>
+
+<% if @data %>
+  <pre><%= JSON.pretty_generate(@data) %></pre>
+<% elsif @error %>
+  <p><%= @error %></p>
+<% end %>
