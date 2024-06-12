@@ -57,6 +57,10 @@ def update_data():
         fetch_data()
         time.sleep(1)
 
+@app.route('/', methods=['GET'])
+def home():
+    return "API Arduino Cloud está funcionando! Acesse /arduino-data para os dados."
+
 @app.route('/arduino-data', methods=['GET'])
 def get_arduino_data():
     if DATA_CACHE:
