@@ -1,10 +1,8 @@
 class Personal < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  belongs_to :user, optional: true
-  has_many :workouts, dependent: :nullify
-  has_many :clients, through: :workouts, source: :user
+  has_and_belongs_to_many :gyms
+  has_and_belongs_to_many :users
+  has_many :workouts
 end

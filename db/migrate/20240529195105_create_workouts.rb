@@ -1,9 +1,9 @@
 class CreateWorkouts < ActiveRecord::Migration[7.1]
   def change
     create_table :workouts do |t|
-      t.references :user, null: true, foreign_key: { on_delete: :nullify }
-      t.references :personal, null: true, foreign_key: { on_delete: :nullify }
-      t.references :gym, null: true, foreign_key: { on_delete: :nullify }
+      t.references :user, null: true, foreign_key: { optional: true }
+      t.references :personal, null: true, foreign_key: { optional: true }
+      t.references :gym, null: true, foreign_key: { optional: true }
       t.string :workout_type
       t.string :goal
       t.integer :duration

@@ -1,4 +1,5 @@
 class Exercise < ApplicationRecord
-  has_many :exercise_sets, dependent: :nullify
-  has_many :workouts, through: :exercise_sets
+  has_many :exercise_sets
+  has_and_belongs_to_many :machines
+
 end

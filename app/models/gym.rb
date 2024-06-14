@@ -1,8 +1,9 @@
 class Gym < ApplicationRecord
-  has_many :users, dependent: :nullify
-  has_many :workouts, dependent: :nullify
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
 
-  validates :name, presence: true
-  validates :photos, presence: true
-  validates :capacity, presence: true
+  has_and_belongs_to_many :users
+  has_and_belongs_to_many :personals
+  has_many :machines
+  has_many :workouts, through: :machines
 end

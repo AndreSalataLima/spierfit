@@ -8,9 +8,9 @@ class CreateGyms < ActiveRecord::Migration[7.1]
       t.text :equipment_list
       t.text :policies
       t.text :subscriptions
-      t.text :photos, null: false
+      t.text :photos
       t.text :events
-      t.integer :capacity, null: false
+      t.integer :capacity
       t.text :safety_protocols
 
       t.timestamps
