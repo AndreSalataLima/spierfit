@@ -1,8 +1,8 @@
 class CreateExerciseSets < ActiveRecord::Migration[7.1]
   def change
     create_table :exercise_sets do |t|
-      t.references :workout, null: true, foreign_key: { on_delete: :nullify }
-      t.references :exercise, null: true, foreign_key: { on_delete: :nullify }
+      t.references :workout, null: true, foreign_key: { optional: true }
+      t.references :exercise, null: true, foreign_key: { optional: true }
       t.integer :reps
       t.integer :sets
       t.integer :weight

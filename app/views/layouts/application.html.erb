@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Spierfit</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+<head>
+  <title>SpierFit</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_importmap_tags %>
+</head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
-  </body>
+<body>
+  <header>
+    <nav>
+      <% if gym_signed_in? %>
+        <%= link_to 'Profile', gym_path(current_gym) %> |
+        <%= link_to 'Edit Profile', edit_gym_registration_path(current_gym) %> |
+        <%= button_to("Log Out", destroy_gym_session_path, method: :delete) %>
+      <% else %>
+        <%= link_to 'Login', new_gym_session_path %> |
+        <%= link_to 'Cadastre-se', new_gym_registration_path %>
+      <% end %>
+    </nav>
+  </header>
+
+  <%= yield %>
+</body>
 </html>

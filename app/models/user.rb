@@ -4,8 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  belongs_to :gym, optional: true
-  belongs_to :personal, optional: true
+  has_and_belongs_to_many :gyms
+  has_and_belongs_to_many :personals
   has_many :workouts
-  
+  has_many :exercisesets, through: :workouts
+
 end

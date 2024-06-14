@@ -1,3 +1,4 @@
+<!-- app/views/gyms/_form.html.erb -->
 <%= form_with(model: gym, local: true) do |form| %>
   <% if gym.errors.any? %>
     <div id="error_explanation">
@@ -14,6 +15,16 @@
   <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
   </div>
 
   <div class="field">
