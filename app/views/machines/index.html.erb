@@ -1,6 +1,5 @@
 <h1>Machines</h1>
-
-<%= link_to 'New Machine', new_gym_machine_path(@gym) %>
+<%= link_to 'New Machine', new_machine_path, class: 'btn btn-primary' %>
 
 <table>
   <thead>
@@ -9,7 +8,7 @@
       <th>Description</th>
       <th>Compatible Exercises</th>
       <th>Status</th>
-      <th>Actions</th>
+      <th colspan="3">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -19,11 +18,8 @@
         <td><%= machine.description %></td>
         <td><%= machine.compatible_exercises.join(', ') %></td>
         <td><%= machine.status %></td>
-        <td>
-          <%= link_to 'Show', gym_machine_path(@gym, machine) %>
-          <%= link_to 'Edit', edit_gym_machine_path(@gym, machine) %>
-          <%= link_to 'Destroy', gym_machine_path(@gym, machine), method: :delete, data: { confirm: 'Are you sure?' } %>
-        </td>
+        <td><%= link_to 'Show', machine_path(machine) %></td> 
+        <td><%= link_to 'Edit', edit_machine_path(machine) %></td>
       </tr>
     <% end %>
   </tbody>
