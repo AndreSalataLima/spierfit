@@ -16,9 +16,9 @@
       <tr>
         <td><%= machine.name %></td>
         <td><%= machine.description %></td>
-        <td><%= machine.compatible_exercises.join(', ') %></td>
+        <td><%= machine.compatible_exercises.reject(&:blank?).join(', ') %></td>
         <td><%= machine.status %></td>
-        <td><%= link_to 'Show', machine_path(machine) %></td> 
+        <td><%= link_to 'Show', machine_path(machine) %></td>
         <td><%= link_to 'Edit', edit_machine_path(machine) %></td>
       </tr>
     <% end %>

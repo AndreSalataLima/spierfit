@@ -1,7 +1,4 @@
-<p>
-  <strong>Name:</strong>
-  <%= @exercise.name %>
-</p>
+<h1><%= @exercise.name %></h1>
 
 <p>
   <strong>Description:</strong>
@@ -59,4 +56,5 @@
 </p>
 
 <%= link_to 'Edit', edit_exercise_path(@exercise) %> |
-<%= link_to 'Back', exercises_path %>
+<%= link_to 'Back', exercises_path %> |
+<%= button_to 'Destroy', exercise_path(@exercise), method: :delete, data: { confirm: 'Are you sure?' } %>

@@ -1,6 +1,7 @@
 class MachinesController < ApplicationController
   before_action :authenticate_gym!
   before_action :set_machine, only: [:show, :edit, :update, :destroy]
+  before_action :set_equipment_list, only: [:new, :create, :edit, :update]
 
   def index
     @machines = current_gym.machines
@@ -11,23 +12,25 @@ class MachinesController < ApplicationController
 
   def new
     @machine = current_gym.machines.build
+    @muscle_groups = Exercise.pluck(:muscle_group).uniq
   end
 
   def create
-    @machine = current_gym.machines.build(machine_creation_params)
+    @machine = current_gym.machines.build(machine_params)
     if @machine.save
-      redirect_to @machine, notice: 'Machine was successfully created.'
+      redirect_to machine_path(@machine), notice: 'Machine was successfully created.'
     else
       render :new
     end
   end
 
   def edit
+    @muscle_groups = Exercise.pluck(:muscle_group).uniq
   end
 
   def update
-    if @machine.update(machine_update_params)
-      redirect_to @machine, notice: 'Machine was successfully updated.'
+    if @machine.update(machine_params)
+      redirect_to machine_path(@machine), notice: 'Machine was successfully updated.'
     else
       render :edit
     end
@@ -44,15 +47,11 @@ class MachinesController < ApplicationController
     @machine = current_gym.machines.find(params[:id])
   end
 
-  def machine_creation_params
-    params.require(:machine).permit(:name, :description, :status).tap do |machine_params|
-      machine_params[:compatible_exercises] = params[:machine][:compatible_exercises].split(',').map(&:strip)
-    end
+  def machine_params
+    params.require(:machine).permit(:name, :description, :status, compatible_exercises: [])
   end
 
-  def machine_update_params
-    params.require(:machine).permit(:name, :description, :status).tap do |machine_params|
-      machine_params[:compatible_exercises] = params[:machine][:compatible_exercises].split(',').map(&:strip)
-    end
+  def set_equipment_list
+    @equipment_list = EQUIPMENT_LIST
   end
 end
