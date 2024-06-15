@@ -7,7 +7,7 @@
 
 <p>
   <strong>Compatible Exercises:</strong>
-  <%= @machine.compatible_exercises.join(', ') %>
+  <%= @machine.compatible_exercises.reject(&:blank?).join(', ') %>
 </p>
 
 <p>

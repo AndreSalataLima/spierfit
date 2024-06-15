@@ -124,4 +124,12 @@ Exercise.create!(
   progression_levels: "Aumentar o peso da barra conforme a força aumenta"
 )
 
+# Processar e armazenar equipamentos únicos e formatar corretamente
+equipment_list = Exercise.pluck(:equipment_needed).flat_map { |e| e.split(',').map(&:strip) }.map do |equipment|
+  equipment.gsub(/[^a-zA-Z\s]/, '').strip.capitalize
+end.uniq
+
+File.write(Rails.root.join('config/equipment_list.yml'), equipment_list.to_yaml)
+
+
 puts "Seed data created successfully!"

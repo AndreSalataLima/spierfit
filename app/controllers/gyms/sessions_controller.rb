@@ -7,13 +7,13 @@ class Gyms::SessionsController < Devise::SessionsController
     super
   end
 
-  def create
-    super
-  end
+  # def create
+  #   super
+  # end
 
-  def destroy
-    super
-  end
+  # def destroy
+  #   super
+  # end
 
   protected
 

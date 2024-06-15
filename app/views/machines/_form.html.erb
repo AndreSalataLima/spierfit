@@ -12,7 +12,7 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.select :name, options_for_select(@equipment_list), { prompt: 'Select Equipment' } %>
   </div>
 
   <div class="field">
@@ -22,7 +22,7 @@
 
   <div class="field">
     <%= form.label :compatible_exercises %>
-    <%= form.text_area :compatible_exercises, value: @machine.compatible_exercises.join(', ') %>
+    <%= form.select :compatible_exercises, options_for_select(Exercise.all.pluck(:name), @machine.compatible_exercises), { prompt: 'Select Exercises' }, { multiple: true } %>
   </div>
 
   <% if action_name == 'edit' %>
