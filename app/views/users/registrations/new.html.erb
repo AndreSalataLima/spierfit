@@ -1,6 +1,6 @@
-<h2>Edit User</h2>
+<h2>Cadastre-se</h2>
 
-<%= form_with(model: @user, local: true) do |form| %>
+<%= form_with(model: resource, as: resource_name, url: registration_path(resource_name), local: true) do |form| %>
   <%= devise_error_messages! %>
 
   <div class="field">
@@ -53,14 +53,9 @@
     <%= form.number_field :weight %>
   </div>
 
-  <div class="field">
-    <%= form.label :gyms %>
-    <%= form.collection_select :gym_ids, Gym.all, :id, :name, {}, { multiple: true } %>
-  </div>
-
   <div class="actions">
-    <%= form.submit "Update" %>
+    <%= form.submit "Cadastre-se" %>
   </div>
 <% end %>
 
-<%= link_to 'Back', users_path %>
+<%= render "devise/shared/links" %>

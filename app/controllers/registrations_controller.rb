@@ -1,24 +1,43 @@
 class RegistrationsController < Devise::RegistrationsController
-  # skip_before_action :require_no_authentication, only: [:create]
   before_action :configure_sign_up_params, only: [:create]
-  # before_action :configure_account_update_params, only: [:update]
+  before_action :configure_account_update_params, only: [:update]
 
   protected
 
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [
-      :name, :location, :contact_info, :hours_of_operation, :equipment_list,
-      :policies, :subscriptions, :photos, :events, :capacity, :safety_protocols,
+      :name, :phone, :address, :status, :date_of_birth, :height, :weight,
       :email, :password, :password_confirmation
     ])
   end
 
-  def after_sign_in_path_for(resource)
-    if resource.is_a?(Gym)
+  def configure_account_update_params
+    devise_parameter_sanitizer.permit(:account_update, keys: [
+      :name, :phone, :address, :status, :date_of_birth, :height, :weight,
+      :email, :password, :password_confirmation, :current_password
+    ])
+  end
+
+  def after_sign_up_path_for(resource)
+    case resource
+    when Gym
       gym_path(resource)
-    elsif resource.is_a?(User)
+    when User
       user_path(resource)
-    elsif resource.is_a?(Personal)
+    when Personal
+      personal_path(resource)
+    else
+      super
+    end
+  end
+
+  def after_update_path_for(resource)
+    case resource
+    when Gym
+      gym_path(resource)
+    when User
+      user_path(resource)
+    when Personal
       personal_path(resource)
     else
       super
