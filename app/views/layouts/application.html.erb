@@ -12,16 +12,17 @@
 
 <body>
   <header>
-    <nav>
-      <% if gym_signed_in? %>
-        <%= link_to 'Profile', gym_path(current_gym) %> |
-        <%= link_to 'Edit Profile', edit_gym_registration_path(current_gym) %> |
-        <%= button_to("Log Out", destroy_gym_session_path, method: :delete) %>
-      <% else %>
-        <%= link_to 'Login', new_gym_session_path %> |
-        <%= link_to 'Cadastre-se', new_gym_registration_path %>
-      <% end %>
-    </nav>
+    <% if user_signed_in? || personal_signed_in? || gym_signed_in? %>
+      <nav>
+        <% if user_signed_in? %>
+          <%= button_to "Log Out", destroy_user_session_path, method: :delete, class: 'btn btn-danger' %>
+        <% elsif personal_signed_in? %>
+          <%= button_to "Log Out", destroy_personal_session_path, method: :delete, class: 'btn btn-danger' %>
+        <% elsif gym_signed_in? %>
+          <%= button_to "Log Out", destroy_gym_session_path, method: :delete, class: 'btn btn-danger' %>
+        <% end %>
+      </nav>
+    <% end %>
   </header>
 
   <%= yield %>
