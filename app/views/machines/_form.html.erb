@@ -1,8 +1,7 @@
-<%= form_with(model: [ @gym, @machine ], local: true) do |form| %>
+<%= form_with(model: @machine, local: true) do |form| %>
   <% if @machine.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@machine.errors.count, "error") %> prohibited this machine from being saved:</h2>
-
       <ul>
         <% @machine.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -23,13 +22,15 @@
 
   <div class="field">
     <%= form.label :compatible_exercises %>
-    <%= form.text_field :compatible_exercises %>
+    <%= form.text_area :compatible_exercises, value: @machine.compatible_exercises.join(', ') %>
   </div>
 
-  <div class="field">
-    <%= form.label :status %>
-    <%= form.text_field :status %>
-  </div>
+  <% if action_name == 'edit' %>
+    <div class="field">
+      <%= form.label :status %>
+      <%= form.select :status, ['ativo', 'inativo'] %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= form.submit %>

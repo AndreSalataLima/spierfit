@@ -10,10 +10,13 @@ Rails.application.routes.draw do
   resources :personals
   resources :users
   resources :exercise_sets
-  resources :gyms
 
   resources :users do
     resources :workouts, only: [:index, :new, :create]
+  end
+
+  resources :gyms do
+    resources :machines, only: [:index, :new, :create]
   end
 
   devise_scope :gym do
