@@ -6,8 +6,10 @@ Rails.application.routes.draw do
   resources :machines
   resources :workouts
   resources :exercises
-  resources :machines
   resources :personals
+  resources :exercise_sets
+  resources :arduino_cloud_data, only: [:index]
+
   resources :users do
     resources :workouts, only: [:index, :new, :create]
   end
@@ -15,6 +17,13 @@ Rails.application.routes.draw do
   resources :gyms do
     resources :machines, only: [:index, :new, :create]
   end
+
+  resources :machines do
+    member do
+      get 'exercises', to: 'machines#exercises'
+    end
+  end
+
 
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
