@@ -1,14 +1,27 @@
 Rails.application.routes.draw do
   devise_for :gyms, controllers: { registrations: 'registrations', sessions: 'gyms/sessions' }
-  devise_for :users, controllers: { registrations: 'registrations', sessions: 'devise/sessions' }
+  devise_for :users, controllers: { registrations: 'registrations' }
   devise_for :personals, controllers: { registrations: 'registrations' }
 
-  resources :machines
+
   resources :workouts
-  resources :exercises
   resources :personals
   resources :exercise_sets
   resources :arduino_cloud_data, only: [:index]
+
+  resources :exercise_sets do
+    member do
+      post 'complete', to: 'exercise_sets#complete', as: 'complete'
+    end
+  end
+
+
+  resources :machines do
+  member do
+      get 'exercises', to: 'machines#exercises'
+      get 'start_exercise_set/:exercise_id', to: 'machines#start_exercise_set', as: 'start_exercise_set'
+    end
+  end
 
   resources :users do
     resources :workouts, only: [:index, :new, :create]
@@ -16,12 +29,6 @@ Rails.application.routes.draw do
 
   resources :gyms do
     resources :machines, only: [:index, :new, :create]
-  end
-
-  resources :machines do
-    member do
-      get 'exercises', to: 'machines#exercises'
-    end
   end
 
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
