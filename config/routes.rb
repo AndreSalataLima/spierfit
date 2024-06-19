@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :gyms, controllers: { registrations: 'registrations', sessions: 'gyms/sessions' }
-  devise_for :users, controllers: { registrations: 'registrations' }
+  devise_for :users, controllers: { registrations: 'registrations', sessions: 'devise/sessions' }
   devise_for :personals, controllers: { registrations: 'registrations' }
 
   resources :machines
@@ -23,7 +23,6 @@ Rails.application.routes.draw do
       get 'exercises', to: 'machines#exercises'
     end
   end
-
 
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
