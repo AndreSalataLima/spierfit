@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_15_112714) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_18_182153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_15_112714) do
     t.datetime "recorded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "exercise_set_id"
+    t.index ["exercise_set_id"], name: "index_arduino_data_on_exercise_set_id"
   end
 
   create_table "exercise_sets", force: :cascade do |t|
@@ -56,6 +58,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_15_112714) do
     t.text "progression_levels"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "exercises_machines", id: false, force: :cascade do |t|
+    t.bigint "exercise_id", null: false
+    t.bigint "machine_id", null: false
+    t.index ["exercise_id", "machine_id"], name: "index_exercises_machines_on_exercise_id_and_machine_id", unique: true
+    t.index ["exercise_id"], name: "index_exercises_machines_on_exercise_id"
+    t.index ["machine_id"], name: "index_exercises_machines_on_machine_id"
   end
 
   create_table "gyms", force: :cascade do |t|

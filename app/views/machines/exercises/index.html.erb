@@ -1,23 +1,20 @@
-<h1>Exercícios Disponíveis</h1>
+<!-- app/views/machines/exercises/index.html.erb -->
+<h1>Exercícios para <%= @machine.name %></h1>
 
 <table>
   <thead>
     <tr>
       <th>Nome</th>
-      <th>Descrição</th>
       <th>Grupo Muscular</th>
-      <th>Dificuldade</th>
-      <th></th>
+      <th>Descrição</th>
     </tr>
   </thead>
   <tbody>
     <% @exercises.each do |exercise| %>
       <tr>
         <td><%= exercise.name %></td>
-        <td><%= exercise.description %></td>
         <td><%= exercise.muscle_group %></td>
-        <td><%= exercise.difficulty %></td>
-        <td><%= link_to 'Selecionar', new_exercise_set_path(exercise_id: exercise.id) %></td>
+        <td><%= exercise.description %></td>
       </tr>
     <% end %>
   </tbody>
