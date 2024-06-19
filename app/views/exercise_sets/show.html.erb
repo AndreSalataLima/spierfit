@@ -1,71 +1,17 @@
-<p id="notice"><%= notice %></p>
+<h1>Detalhes do ExerciseSet</h1>
 
-<h1>Exercise Set</h1>
+<p><strong>Exercício:</strong> <%= @exercise_set.exercise.name %></p>
+<p><strong>Máquina:</strong> <%= @exercise_set.machine.name %></p>
+<p><strong>Reps:</strong> <%= @exercise_set.reps %></p>
+<p><strong>Sets:</strong> <%= @exercise_set.sets %></p>
+<p><strong>Peso:</strong> <%= @exercise_set.weight %></p>
+<p><strong>Duração:</strong> <%= @exercise_set.duration %></p>
+<p><strong>Descanso:</strong> <%= @exercise_set.rest_time %></p>
+<p><strong>Intensidade:</strong> <%= @exercise_set.intensity %></p>
+<p><strong>Feedback:</strong> <%= @exercise_set.feedback %></p>
+<p><strong>Máximo de Reps:</strong> <%= @exercise_set.max_reps %></p>
+<p><strong>Performance:</strong> <%= @exercise_set.performance_score %></p>
+<p><strong>Nível de Esforço:</strong> <%= @exercise_set.effort_level %></p>
+<p><strong>Energia Consumida:</strong> <%= @exercise_set.energy_consumed %></p>
 
-<p>
-  <strong>Workout:</strong>
-  <%= @exercise_set.workout&.workout_type %>
-</p>
-
-<p>
-  <strong>Exercise:</strong>
-  <%= @exercise_set.exercise&.name %>
-</p>
-
-<p>
-  <strong>Reps:</strong>
-  <%= @exercise_set.reps %>
-</p>
-
-<p>
-  <strong>Sets:</strong>
-  <%= @exercise_set.sets %>
-</p>
-
-<p>
-  <strong>Weight:</strong>
-  <%= @exercise_set.weight %>
-</p>
-
-<p>
-  <strong>Duration:</strong>
-  <%= @exercise_set.duration %>
-</p>
-
-<p>
-  <strong>Rest Time:</strong>
-  <%= @exercise_set.rest_time %>
-</p>
-
-<p>
-  <strong>Intensity:</strong>
-  <%= @exercise_set.intensity %>
-</p>
-
-<p>
-  <strong>Feedback:</strong>
-  <%= @exercise_set.feedback %>
-</p>
-
-<p>
-  <strong>Max Reps:</strong>
-  <%= @exercise_set.max_reps %>
-</p>
-
-<p>
-  <strong>Performance Score:</strong>
-  <%= @exercise_set.performance_score %>
-</p>
-
-<p>
-  <strong>Effort Level:</strong>
-  <%= @exercise_set.effort_level %>
-</p>
-
-<p>
-  <strong>Energy Consumed:</strong>
-  <%= @exercise_set.energy_consumed %>
-</p>
-
-<%= link_to 'Edit', edit_exercise_set_path(@exercise_set) %> |
-<%= link_to 'Back', exercise_sets_path %>
+<%= button_to 'Concluir ExerciseSet', complete_exercise_set_path(@exercise_set), method: :post %>

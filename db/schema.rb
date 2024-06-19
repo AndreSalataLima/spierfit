@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_18_182153) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_19_141104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -39,7 +39,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_182153) do
     t.integer "energy_consumed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "completed", default: false
+    t.bigint "machine_id"
     t.index ["exercise_id"], name: "index_exercise_sets_on_exercise_id"
+    t.index ["machine_id"], name: "index_exercise_sets_on_machine_id"
     t.index ["workout_id"], name: "index_exercise_sets_on_workout_id"
   end
 
@@ -174,12 +177,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_182153) do
     t.text "auto_adjustments"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "completed", default: false
     t.index ["gym_id"], name: "index_workouts_on_gym_id"
     t.index ["personal_id"], name: "index_workouts_on_personal_id"
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
   add_foreign_key "exercise_sets", "exercises"
+  add_foreign_key "exercise_sets", "machines"
   add_foreign_key "exercise_sets", "workouts"
   add_foreign_key "machines", "gyms"
   add_foreign_key "personals", "users"

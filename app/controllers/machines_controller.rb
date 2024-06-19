@@ -1,7 +1,7 @@
 class MachinesController < ApplicationController
-  before_action :authenticate_gym!, except: [:exercises]
-  before_action :authenticate_user!, only: [:exercises]
-  before_action :set_machine, only: [:show, :edit, :update, :destroy, :exercises]
+  before_action :authenticate_gym!, except: [:exercises, :start_exercise_set]
+  before_action :authenticate_user!, only: [:exercises, :start_exercise_set]
+  before_action :set_machine, only: [:show, :edit, :update, :destroy, :exercises, :start_exercise_set]
   before_action :set_equipment_list, only: [:new, :create, :edit, :update]
 
   def index
@@ -58,6 +58,36 @@ class MachinesController < ApplicationController
     end
   end
 
+  def start_exercise_set
+    if current_user
+      workout = current_user.workouts.find_or_create_by!(completed: false) do |workout|
+        workout.gym_id = @machine.gym_id
+        workout.workout_type = 'General'
+        workout.goal = 'Fitness'
+      end
+
+      exercise_set = workout.exercise_sets.create!(
+        exercise_id: params[:exercise_id],
+        machine_id: @machine.id,
+        reps: 0,
+        sets: 0,
+        weight: 0,
+        duration: 0,
+        rest_time: 0,
+        intensity: '',
+        feedback: '',
+        max_reps: 0,
+        performance_score: 0,
+        effort_level: '',
+        energy_consumed: 0
+      )
+
+      redirect_to exercise_set_path(exercise_set)
+    else
+      redirect_to new_user_session_path
+    end
+  end
+
   private
 
   def set_machine
@@ -77,5 +107,4 @@ class MachinesController < ApplicationController
   def set_equipment_list
     @equipment_list = EQUIPMENT_LIST
   end
-
 end
