@@ -1,0 +1,13 @@
+<h1>Máquinas Disponíveis</h1>
+
+<% if @machines.any? %>
+  <% @machines.each do |machine| %>
+    <div class="machine">
+      <h2><%= machine.name %></h2>
+      <p><%= machine.description %></p>
+      <%= link_to 'Ver Exercícios', machine_exercises_machine_path(machine) %>
+    </div>
+  <% end %>
+<% else %>
+  <p>Nenhuma máquina disponível.</p>
+<% end %>

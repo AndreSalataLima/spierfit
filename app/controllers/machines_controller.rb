@@ -1,11 +1,25 @@
 class MachinesController < ApplicationController
-  before_action :authenticate_gym!, except: [:exercises, :start_exercise_set]
-  before_action :authenticate_user!, only: [:exercises, :start_exercise_set]
+  before_action :authenticate_gym!, except: [:exercises, :start_exercise_set, :user_index]
+  before_action :authenticate_user!, only: [:exercises, :start_exercise_set, :user_index]
   before_action :set_machine, only: [:show, :edit, :update, :destroy, :exercises, :start_exercise_set]
   before_action :set_equipment_list, only: [:new, :create, :edit, :update]
 
   def index
     @machines = current_gym.machines
+  end
+
+  def user_index
+    if current_user
+      workout = current_user.workouts.where(completed: false).last
+      if workout
+        @machines = Machine.where(gym_id: workout.gym_id)
+        Rails.logger.info "Loaded Machines: #{@machines.map(&:name)}"
+      else
+        redirect_to root_path, alert: 'No active workout found'
+      end
+    else
+      redirect_to new_user_session_path
+    end
   end
 
   def show
@@ -50,8 +64,6 @@ class MachinesController < ApplicationController
     if current_user
       current_user.update(gym_id: @machine.gym_id) if @machine.gym_id.present?
       @exercises = @machine.exercises
-      Rails.logger.info "Machine ID: #{params[:id]}"
-      Rails.logger.info "Exercises loaded: #{@exercises.map(&:name)}"
       render 'machines/exercises/index'
     else
       redirect_to new_user_session_path
