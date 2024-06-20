@@ -10,12 +10,12 @@ class MachinesController < ApplicationController
 
   def user_index
     if current_user
-      # Verificar se o usuário está associado a uma academia
-      if current_user.gym_id.present?
-        @machines = Machine.where(gym_id: current_user.gym_id)
-        Rails.logger.info "Loaded Machines: #{@machines.map(&:name)}"
+      @current_workout = current_user.workouts.find_by(completed: false)
+      if @current_workout
+        @machines = Machine.where(gym_id: @current_workout.gym_id)
       else
-        redirect_to root_path, alert: 'No gym associated with user'
+        @machines = []
+        flash[:alert] = 'No active workout found'
       end
     else
       redirect_to new_user_session_path

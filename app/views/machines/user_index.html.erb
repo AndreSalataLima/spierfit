@@ -11,3 +11,7 @@
 <% else %>
   <p>Nenhuma máquina disponível</p>
 <% end %>
+
+<% if @current_workout %>
+  <%= button_to 'Finalizar Workout', complete_workout_path(@current_workout), method: :post %>
+<% end %>
