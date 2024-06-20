@@ -3,7 +3,7 @@ class ExerciseSetsController < ApplicationController
   before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete]
 
   def index
-    @exercise_sets = ExerciseSet.all
+    @exercise_sets = current_user.exercise_sets
   end
 
   def show
