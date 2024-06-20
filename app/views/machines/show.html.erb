@@ -1,0 +1,19 @@
+<h1><%= @machine.name %></h1>
+
+<p>
+  <strong>Description:</strong>
+  <%= @machine.description %>
+</p>
+
+<p>
+  <strong>Compatible Exercises:</strong>
+  <%= @machine.compatible_exercises.reject(&:blank?).join(', ') %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @machine.status %>
+</p>
+
+<%= link_to 'Edit', edit_machine_path(@machine) %> |
+<%= link_to 'Back', machines_path %>

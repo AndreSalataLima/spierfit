@@ -1,0 +1,14 @@
+<h1>Welcome Page</h1>
+
+<% if user_signed_in? %>
+  <p>Bem vindo, <%= current_user.name %> e <%= current_user.email %>. Você está logado.</p>
+<% elsif personal_signed_in? %>
+  <p>Bem vindo, <%= current_personal.name %> e <%= current_personal.email %>. Você está logado.</p>
+<% elsif gym_signed_in? %>
+  <p>Bem vindo, <%= current_gym.name %> e <%= current_gym.email %>. Você está logado.</p>
+  <%= link_to 'Create New Machine', new_machine_path(current_gym), class: 'btn btn-primary' %>
+<% else %>
+  <p>Atleta, por favor, <a href="<%= new_user_session_path %>">faça login</a> ou <a href="<%= new_user_registration_path %>">inscreva-se</a>.</p>
+  <p>Personal, por favor, <a href="<%= new_personal_session_path %>">faça login</a> ou <a href="<%= new_personal_registration_path %>">inscreva-se</a>.</p>
+  <p>Academia, por favor, <a href="<%= new_gym_session_path %>">faça login</a> ou <a href="<%= new_gym_registration_path %>">inscreva-se</a>.</p>
+<% end %>

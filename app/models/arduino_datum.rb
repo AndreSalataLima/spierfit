@@ -1,9 +1,4 @@
 class ArduinoDatum < ApplicationRecord
-  def change
-    create_table :arduino_data do |t|
-      t.string :key
-      t.string :value
-      t.timestamps
-    end
-  end
+  belongs_to :exercise_set, optional: true, class_name: 'ExerciseSet'
+
 end

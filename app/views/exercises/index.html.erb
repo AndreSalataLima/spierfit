@@ -1,43 +1,23 @@
-<h1>Exercises</h1>
-
-<%= link_to 'New Exercise', new_exercise_path %>
+<h1>Exercícios Disponíveis</h1>
 
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Muscle Group</th>
-      <th>Difficulty</th>
-      <th>Instructions</th>
-      <th>Variants</th>
-      <th>Equipment Needed</th>
-      <th>Contraindications</th>
-      <th>Benefits</th>
-      <th>Duration Suggested</th>
-      <th>Frequency Recommended</th>
-      <th>Progression Levels</th>
-      <th colspan="3">Actions</th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Grupo Muscular</th>
+      <th>Dificuldade</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @exercises.each do |exercise| %>
-      <tr id="<%= dom_id(exercise) %>">
+      <tr>
         <td><%= exercise.name %></td>
         <td><%= exercise.description %></td>
         <td><%= exercise.muscle_group %></td>
         <td><%= exercise.difficulty %></td>
-        <td><%= exercise.instructions %></td>
-        <td><%= exercise.variants %></td>
-        <td><%= exercise.equipment_needed %></td>
-        <td><%= exercise.contraindications %></td>
-        <td><%= exercise.benefits %></td>
-        <td><%= exercise.duration_suggested %></td>
-        <td><%= exercise.frequency_recommended %></td>
-        <td><%= exercise.progression_levels %></td>
-        <td><%= link_to 'Show', exercise %></td>
-        <td><%= link_to 'Edit', edit_exercise_path(exercise) %></td>
-        <td><%= link_to 'Destroy', exercise, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Selecionar', new_exercise_set_path(exercise_id: exercise.id) %></td>
       </tr>
     <% end %>
   </tbody>

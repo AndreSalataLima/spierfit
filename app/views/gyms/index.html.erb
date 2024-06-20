@@ -1,44 +1,43 @@
-<h1>Gyms</h1>
+<h1>Index de Gyms</h1>
 
-<%= link_to 'New Gym', new_gym_path %>
+<%= link_to 'Add New Gym', new_gym_path %>
 
-<%= turbo_frame_tag "gyms_list" do %>
-  <table>
-    <thead>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Location</th>
+      <th>Contact Info</th>
+      <th>Hours of Operation</th>
+      <th>Equipment List</th>
+      <th>Policies</th>
+      <th>Subscriptions</th>
+      <th>Photos</th>
+      <th>Events</th>
+      <th>Capacity</th>
+      <th>Safety Protocols</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @gyms.each do |gym| %>
       <tr>
-        <th>Name</th>
-        <th>Location</th>
-        <th>Contact Info</th>
-        <th>Hours of Operation</th>
-        <th>Equipment List</th>
-        <th>Policies</th>
-        <th>Subscriptions</th>
-        <th>Photos</th>
-        <th>Events</th>
-        <th>Capacity</th>
-        <th>Safety Protocols</th>
-        <th colspan="3">Actions</th>
+        <td><%= gym.name %></td>
+        <td><%= gym.email %></td>
+        <td><%= gym.location %></td>
+        <td><%= gym.contact_info %></td>
+        <td><%= gym.hours_of_operation %></td>
+        <td><%= gym.equipment_list %></td>
+        <td><%= gym.policies %></td>
+        <td><%= gym.subscriptions %></td>
+        <td><%= gym.photos %></td>
+        <td><%= gym.events %></td>
+        <td><%= gym.capacity %></td>
+        <td><%= gym.safety_protocols %></td>
+        <td><%= link_to 'Show', gym %></td>
+        <td><%= link_to 'Edit', edit_gym_path(gym) %></td>
       </tr>
-    </thead>
-    <tbody>
-      <% @gyms.each do |gym| %>
-        <tr id="<%= dom_id(gym) %>">
-          <td><%= gym.name %></td>
-          <td><%= gym.location %></td>
-          <td><%= gym.contact_info %></td>
-          <td><%= gym.hours_of_operation %></td>
-          <td><%= gym.equipment_list %></td>
-          <td><%= gym.policies %></td>
-          <td><%= gym.subscriptions %></td>
-          <td><%= gym.photos %></td>
-          <td><%= gym.events %></td>
-          <td><%= gym.capacity %></td>
-          <td><%= gym.safety_protocols %></td>
-          <td><%= link_to 'Show', gym, data: { turbo: false } %></td>
-          <td><%= link_to 'Edit', edit_gym_path(gym), data: { turbo: false } %></td>
-          <td><%= link_to 'Destroy', gym, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+    <% end %>
+  </tbody>
+</table>

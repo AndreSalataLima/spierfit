@@ -1,8 +1,8 @@
 class WorkoutsController < ApplicationController
-  before_action :set_workout, only: %i[show edit update destroy]
+  before_action :set_workout, only: %i[show edit update destroy complete]
 
   def index
-    @workouts = Workout.all
+    @workouts = current_user.workouts
   end
 
   def show
@@ -39,6 +39,11 @@ class WorkoutsController < ApplicationController
       format.html { redirect_to workouts_url, notice: 'Workout was successfully destroyed.' }
       format.turbo_stream { render turbo_stream: turbo_stream.remove(@workout) }
     end
+  end
+
+  def complete
+    @workout.update(completed: true)
+    redirect_to user_index_machines_path, notice: 'Workout was successfully completed.'
   end
 
   private

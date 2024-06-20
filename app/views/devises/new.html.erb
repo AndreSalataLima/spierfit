@@ -1,64 +1,80 @@
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<h2>Cadastre-se</h2>
+
+<%= form_with(model: resource, as: resource_name, url: registration_path(resource_name), local: true) do |form| %>
   <%= devise_error_messages! %>
 
   <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= form.label :name %>
+    <%= form.text_field :name, autofocus: true %>
   </div>
 
   <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+    <%= form.label :email %>
+    <%= form.email_field :email %>
   </div>
 
   <div class="field">
-    <%= f.label :phone %><br />
-    <%= f.text_field :phone %>
+    <%= form.label :password %>
+    <%= form.password_field :password, autocomplete: "new-password" %>
   </div>
 
   <div class="field">
-    <%= f.label :address %><br />
-    <%= f.text_field :address %>
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
 
   <div class="field">
-    <%= f.label :status %><br />
-    <%= f.text_field :status %>
+    <%= form.label :location %>
+    <%= form.text_field :location %>
   </div>
 
   <div class="field">
-    <%= f.label :date_of_birth %><br />
-    <%= f.date_select :date_of_birth %>
+    <%= form.label :contact_info %>
+    <%= form.text_area :contact_info %>
   </div>
 
   <div class="field">
-    <%= f.label :height %><br />
-    <%= f.number_field :height %>
+    <%= form.label :hours_of_operation %>
+    <%= form.text_area :hours_of_operation %>
   </div>
 
   <div class="field">
-    <%= f.label :weight %><br />
-    <%= f.number_field :weight %>
+    <%= form.label :equipment_list %>
+    <%= form.text_area :equipment_list %>
   </div>
 
   <div class="field">
-    <%= f.label :gym_id %><br />
-    <%= f.collection_select :gym_id, Gym.all, :id, :name %>
-  </div>
-
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
+    <%= form.label :policies %>
+    <%= form.text_area :policies %>
   </div>
 
   <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <%= form.label :subscriptions %>
+    <%= form.text_area :subscriptions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :photos %>
+    <%= form.text_area :photos %>
+  </div>
+
+  <div class="field">
+    <%= form.label :events %>
+    <%= form.text_area :events %>
+  </div>
+
+  <div class="field">
+    <%= form.label :capacity %>
+    <%= form.number_field :capacity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :safety_protocols %>
+    <%= form.text_area :safety_protocols %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Sign up" %>
+    <%= form.submit "Cadastre-se" %>
   </div>
 <% end %>
 
