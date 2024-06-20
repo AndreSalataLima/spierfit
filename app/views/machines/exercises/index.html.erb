@@ -10,12 +10,18 @@
     </tr>
   </thead>
   <tbody>
-    <% @exercises.each do |exercise| %>
+    <% if @exercises.any? %>
+      <% @exercises.each do |exercise| %>
+        <tr>
+          <td><%= exercise.name %></td>
+          <td><%= exercise.muscle_group %></td>
+          <td><%= exercise.description %></td>
+          <td><%= link_to 'Iniciar Exercício', start_exercise_set_machine_path(@machine, exercise.id) %></td>
+        </tr>
+      <% end %>
+    <% else %>
       <tr>
-        <td><%= exercise.name %></td>
-        <td><%= exercise.muscle_group %></td>
-        <td><%= exercise.description %></td>
-        <td><%= link_to 'Iniciar Exercício', start_exercise_set_machine_path(@machine, exercise_id: exercise.id) %></td>
+        <td colspan="4">Nenhum exercício disponível</td>
       </tr>
     <% end %>
   </tbody>

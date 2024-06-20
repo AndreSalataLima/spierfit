@@ -21,8 +21,13 @@
   </div>
 
   <div class="field">
-    <%= form.label :compatible_exercises %>
-    <%= form.select :compatible_exercises, options_for_select(Exercise.all.pluck(:name), @machine.compatible_exercises), { prompt: 'Select Exercises' }, { multiple: true } %>
+    <%= form.label :exercises %>
+    <%= form.collection_check_boxes :exercise_ids, Exercise.all, :id, :name do |b| %>
+      <div class="checkbox">
+        <%= b.check_box %>
+        <%= b.label %>
+      </div>
+    <% end %>
   </div>
 
   <% if action_name == 'edit' %>
