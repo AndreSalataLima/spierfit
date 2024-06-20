@@ -58,7 +58,7 @@ class ExerciseSetsController < ApplicationController
 
   def complete
     @exercise_set.update(completed: true)
-    redirect_to exercises_machine_path(@exercise_set.machine), notice: 'Exercise set was successfully completed.'
+    redirect_to user_index_machines_path, notice: 'Exercise set was successfully completed.'
   end
 
   private

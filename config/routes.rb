@@ -3,25 +3,25 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'registrations' }
   devise_for :personals, controllers: { registrations: 'registrations' }
 
-
-  resources :workouts
-  resources :personals
-  resources :exercise_sets
-  resources :arduino_cloud_data, only: [:index]
-
-  resources :exercise_sets do
-    member do
-      post 'complete', to: 'exercise_sets#complete', as: 'complete'
-    end
-  end
-
-
   resources :machines do
-  member do
-      get 'exercises', to: 'machines#exercises'
+    member do
+      get 'exercises', to: 'machines#exercises', as: 'machine_exercises'
       get 'start_exercise_set/:exercise_id', to: 'machines#start_exercise_set', as: 'start_exercise_set'
     end
+    collection do
+      get 'user_index', to: 'machines#user_index'
+    end
   end
+
+  resources :workouts
+  resources :exercises
+  resources :personals
+  resources :exercise_sets do
+    member do
+      post 'complete', to: 'exercise_sets#complete'
+    end
+  end
+  resources :arduino_cloud_data, only: [:index]
 
   resources :users do
     resources :workouts, only: [:index, :new, :create]
