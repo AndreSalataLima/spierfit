@@ -10,17 +10,18 @@ class MachinesController < ApplicationController
 
   def user_index
     if current_user
-      workout = current_user.workouts.where(completed: false).last
-      if workout
-        @machines = Machine.where(gym_id: workout.gym_id)
+      # Verificar se o usuário está associado a uma academia
+      if current_user.gym_id.present?
+        @machines = Machine.where(gym_id: current_user.gym_id)
         Rails.logger.info "Loaded Machines: #{@machines.map(&:name)}"
       else
-        redirect_to root_path, alert: 'No active workout found'
+        redirect_to root_path, alert: 'No gym associated with user'
       end
     else
       redirect_to new_user_session_path
     end
   end
+
 
   def show
   end
@@ -41,11 +42,6 @@ class MachinesController < ApplicationController
     end
   end
 
-  def edit
-    @equipment_list = EQUIPMENT_LIST
-    @muscle_groups = Exercise.pluck(:muscle_group).uniq
-  end
-
   def update
     if @machine.update(machine_params)
       redirect_to machine_path(@machine), notice: 'Machine was successfully updated.'
@@ -54,6 +50,12 @@ class MachinesController < ApplicationController
       render :edit
     end
   end
+
+  # def edit
+  #   @equipment_list = EQUIPMENT_LIST
+  #   @muscle_groups = Exercise.pluck(:muscle_group).uniq
+  # end
+
 
   def destroy
     @machine.destroy
@@ -64,6 +66,8 @@ class MachinesController < ApplicationController
     if current_user
       current_user.update(gym_id: @machine.gym_id) if @machine.gym_id.present?
       @exercises = @machine.exercises
+      Rails.logger.info "Machine ID: #{params[:id]}"
+      Rails.logger.info "Exercises loaded: #{@exercises.map(&:name)}"
       render 'machines/exercises/index'
     else
       redirect_to new_user_session_path
@@ -113,7 +117,7 @@ class MachinesController < ApplicationController
   end
 
   def machine_params
-    params.require(:machine).permit(:name, :description, :status, compatible_exercises: [])
+    params.require(:machine).permit(:name, :description, :status, exercise_ids: [])
   end
 
   def set_equipment_list
