@@ -1,12 +1,4 @@
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
+<h1><%= @user.name %></h1>
 
 <p>
   <strong>Phone:</strong>
@@ -39,13 +31,16 @@
 </p>
 
 <p>
-  <strong>Gym:</strong>
-  <%= @user.gym.try(:name) %>
-</p>
-
-<p>
-  <strong>Personal:</strong>
-  <%= @user.personal.try(:name) %>
+  <strong>Gyms:</strong>
+  <% if @user.gyms.any? %>
+    <ul>
+      <% @user.gyms.each do |gym| %>
+        <li><%= gym.name %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No gyms associated.</p>
+  <% end %>
 </p>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
