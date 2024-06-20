@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'registrations' }
   devise_for :personals, controllers: { registrations: 'registrations' }
 
+  resources :exercises
+  resources :personals
+
   resources :machines do
     member do
       get 'exercises', to: 'machines#exercises', as: 'machine_exercises'
@@ -13,9 +16,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :workouts
-  resources :exercises
-  resources :personals
+  resources :workouts do
+    member do
+      post 'complete', to: 'workouts#complete'
+    end
+  end
+
   resources :exercise_sets do
     member do
       post 'complete', to: 'exercise_sets#complete'

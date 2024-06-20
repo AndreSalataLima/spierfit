@@ -37,6 +37,8 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: 0
     )
 
+    Rails.logger.info "Workout ID: #{@workout.id}, ExerciseSet ID: #{@exercise_set.id}"
+
     redirect_to exercise_set_path(@exercise_set)
   end
 
