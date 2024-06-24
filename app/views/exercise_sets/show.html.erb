@@ -14,4 +14,11 @@
 <p><strong>Nível de Esforço:</strong> <%= @exercise_set.effort_level %></p>
 <p><strong>Energia Consumida:</strong> <%= @exercise_set.energy_consumed %></p>
 
+<h2>Dados do Arduino</h2>
+<ul>
+  <% @exercise_set.arduino_data.each do |datum| %>
+    <li><strong>Valor:</strong> <%= datum.value %> - <strong>Registrado em:</strong> <%= datum.recorded_at %></li>
+  <% end %>
+</ul>
+
 <%= button_to 'Concluir ExerciseSet', complete_exercise_set_path(@exercise_set), method: :post %>

@@ -37,6 +37,9 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: 0
     )
 
+    # Armazenar o exercise_set_id na sessão
+    session[:current_exercise_set_id] = @exercise_set.id
+
     Rails.logger.info "Workout ID: #{@workout.id}, ExerciseSet ID: #{@exercise_set.id}"
 
     redirect_to exercise_set_path(@exercise_set)
@@ -60,6 +63,8 @@ class ExerciseSetsController < ApplicationController
 
   def complete
     @exercise_set.update(completed: true)
+    # Remover o exercise_set_id da sessão após completar
+    session.delete(:current_exercise_set_id)
     redirect_to user_index_machines_path, notice: 'Exercise set was successfully completed.'
   end
 
