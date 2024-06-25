@@ -72,3 +72,9 @@ gem 'rest-client'
 
 # Add dotenv-rails for managing environment variables
 gem 'dotenv-rails'
+
+# Add Chartkick for creating charts
+gem 'chartkick'
+
+# Add Groupdate for grouping data
+gem 'groupdate'
