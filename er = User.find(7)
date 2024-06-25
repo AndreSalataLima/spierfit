@@ -1,0 +1,20 @@
+=> 
+[32m#<ExerciseSet:0x00007f6e7575cae8[0m
+ id: [34m[1m30[0m,
+ workout_id: [34m[1m14[0m,
+ exercise_id: [34m[1m1[0m,
+ reps: [36m[1mnil[0m,
+ sets: [36m[1mnil[0m,
+ weight: [36m[1mnil[0m,
+ duration: [36m[1mnil[0m,
+ rest_time: [36m[1mnil[0m,
+ intensity: [36m[1mnil[0m,
+ feedback: [36m[1mnil[0m,
+ max_reps: [36m[1mnil[0m,
+ performance_score: [36m[1mnil[0m,
+ effort_level: [36m[1mnil[0m,
+ energy_consumed: [36m[1mnil[0m,
+ created_at: Mon, 24 Jun 2024 19:22:20.502294000 UTC +00:00,
+ updated_at: Mon, 24 Jun 2024 19:22:20.502294000 UTC +00:00,
+ completed: [36m[1mfalse[0m,
+ machine_id: [34m[1m1[0m[32m>[0m

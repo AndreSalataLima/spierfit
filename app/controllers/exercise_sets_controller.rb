@@ -2,16 +2,25 @@ class ExerciseSetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete]
 
-  def index
-    @exercise_sets = current_user.exercise_sets
-  end
-
   def show
+    @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
+    @distance_variation = calculate_distance_variation(@arduino_data)
+    @repetitions = calculate_repetitions(@distance_variation)
+
+    duration = calculate_duration(@arduino_data)
+    rest_time = calculate_rest_time(@arduino_data)
+    sets = calculate_sets(@arduino_data) # Corrigido para calcular sets
+
+    # Atualizar os atributos do ExerciseSet
+    @exercise_set.update(
+      reps: @repetitions,
+      duration: duration,
+      rest_time: rest_time,
+      sets: sets, # Atualizar sets
+      updated_at: Time.now
+    )
   end
 
-  def new
-    @exercise_set = ExerciseSet.new
-  end
 
   def create
     @machine = Machine.find(params[:machine_id])
@@ -37,34 +46,13 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: 0
     )
 
-    # Armazenar o exercise_set_id na sessão
-    session[:current_exercise_set_id] = @exercise_set.id
-
     Rails.logger.info "Workout ID: #{@workout.id}, ExerciseSet ID: #{@exercise_set.id}"
 
     redirect_to exercise_set_path(@exercise_set)
   end
 
-  def edit
-  end
-
-  def update
-    if @exercise_set.update(exercise_set_params)
-      redirect_to @exercise_set, notice: 'Exercise set was successfully updated.'
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @exercise_set.destroy
-    redirect_to exercise_sets_url, notice: 'Exercise set was successfully destroyed.'
-  end
-
   def complete
     @exercise_set.update(completed: true)
-    # Remover o exercise_set_id da sessão após completar
-    session.delete(:current_exercise_set_id)
     redirect_to user_index_machines_path, notice: 'Exercise set was successfully completed.'
   end
 
@@ -76,5 +64,69 @@ class ExerciseSetsController < ApplicationController
 
   def exercise_set_params
     params.require(:exercise_set).permit(:workout_id, :exercise_id, :machine_id, :reps, :sets, :weight, :duration, :rest_time, :intensity, :feedback, :max_reps, :performance_score, :effort_level, :energy_consumed)
+  end
+
+  def calculate_distance_variation(data)
+    data.each_cons(2).map { |a, b| b.value - a.value }
+  end
+
+  def calculate_repetitions(variations)
+    concentric = false
+    reps = 0
+
+    variations.each do |variation|
+      if variation > 0
+        concentric = true
+      elsif variation < 0 && concentric
+        reps += 1
+        concentric = false
+      end
+    end
+
+    reps
+  end
+
+  def calculate_duration(data)
+    (data.last.recorded_at - data.first.recorded_at).to_i
+  end
+
+  def calculate_rest_time(data)
+    rest_time = 0
+    in_rest = false
+    start_time = nil
+
+    data.each do |datum|
+      if datum.value == -55
+        unless in_rest
+          in_rest = true
+          start_time = datum.recorded_at
+        end
+      else
+        if in_rest
+          in_rest = false
+          rest_time += (datum.recorded_at - start_time).to_i
+        end
+      end
+    end
+
+    rest_time
+  end
+
+  def calculate_sets(data)
+    sets = 0
+    in_set = false
+
+    data.each do |datum|
+      if datum.value != -55
+        unless in_set
+          in_set = true
+          sets += 1
+        end
+      else
+        in_set = false
+      end
+    end
+
+    sets
   end
 end
