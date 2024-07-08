@@ -131,42 +131,6 @@
 
 # File.write(Rails.root.join('config/equipment_list.yml'), equipment_list.to_yaml)
 
-def simulate_arduino_data(exercise_set_id)
-  values = []
-  series_count = 3
-  pause_durations = [20, 30, 40] # Pausas em segundos
-  rep_count = 10 # Número de repetições por série
-
-  series_count.times do |i|
-    # Aumenta de 250 para 650
-    value = 250
-    rep_count.times do
-      while value <= 650
-        values << value
-        value += 50
-      end
-      # Diminui de 650 para 250
-      value = 650
-      while value >= 250
-        values << value
-        value -= 25
-      end
-    end
-    # Adiciona pausa entre as séries
-    pause_durations[i].times do
-      values << -55 # Valor que representa pausa
-    end
-  end
-
-  current_time = Time.now.utc
-  values.each_with_index do |val, index|
-    ArduinoDatum.create!(
-      value: val,
-      recorded_at: current_time + index.seconds,
-      exercise_set_id: exercise_set_id
-    )
-  end
-end
 
 # Simulando dados para um ExerciseSet específico
 exercise_set = ExerciseSet.create!(

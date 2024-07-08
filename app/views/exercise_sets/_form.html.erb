@@ -1,4 +1,4 @@
-<%= form_with(model: exercise_set, local: true) do |form| %>
+<%= form_with(model: exercise_set) do |form| %>
   <% if exercise_set.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(exercise_set.errors.count, "error") %> prohibited this exercise set from being saved:</h2>

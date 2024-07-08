@@ -1,6 +1,6 @@
 <h2>Cadastre-se</h2>
 
-<%= form_with(model: resource, as: resource_name, url: registration_path(resource_name), local: true) do |form| %>
+<%= form_with(model: resource, as: resource_name, url: registration_path(resource_name)) do |form| %>
   <%= devise_error_messages! %>
 
   <div class="field">
