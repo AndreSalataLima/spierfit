@@ -86,8 +86,13 @@ class ExerciseSetsController < ApplicationController
     reps
   end
 
+
   def calculate_duration(data)
-    (data.last.recorded_at - data.first.recorded_at).to_i
+    if data.last
+      (data.last.recorded_at - data.first.recorded_at).to_i
+    else
+      0
+    end
   end
 
   def calculate_rest_time(data)
