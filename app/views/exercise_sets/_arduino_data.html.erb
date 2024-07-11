@@ -1,0 +1,4 @@
+<!-- app/views/exercise_sets/_arduino_data.html.erb -->
+<%= turbo_frame_tag("arduino_chart") do %>
+  <%= line_chart arduino_data.map { |datum| [datum.recorded_at, datum.value] }, height: "300px", width: "100vw", colors: ["#fa2327"], id: "chart-1" %>
+<% end %>

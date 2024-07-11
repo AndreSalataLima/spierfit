@@ -1,0 +1,10 @@
+development:
+  adapter: redis
+  url: redis://localhost:6379/1
+  channel_prefix: spierfit_app_development
+
+
+production:
+  adapter: redis
+  url: redis://localhost:6379/1
+  channel_prefix: spierfit_app_production
