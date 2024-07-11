@@ -64,72 +64,82 @@
 # end
 
 
-Exercise.create!(
-  name: "Supino Reto Barra",
-  description: "Exercício básico para o desenvolvimento da massa muscular do peitoral, utilizando uma barra para aumentar a resistência.",
-  muscle_group: "Peitoral",
-  difficulty: "Intermediário",
-  instructions: "Deite-se em um banco plano, segure a barra com as mãos espaçadas na largura dos ombros, retire-a do suporte e abaixe até o peito, depois empurre-a para cima até estender completamente os braços.",
-  variants: "Supino com pegada fechada, Supino com pegada ampla",
-  equipment_needed: "Banco de supino, Barra livre",
-  contraindications: "Evitar em caso de lesões no ombro ou na região cervical",
-  benefits: "Aumento da massa muscular, fortalecimento dos músculos do peitoral e dos tríceps",
-  duration_suggested: "45 segundos por série",
-  frequency_recommended: "2-3 vezes por semana",
-  progression_levels: "Aumentar peso ou repetições conforme a adaptação"
+# Exercise.create!(
+#   name: "Supino Reto Barra",
+#   description: "Exercício básico para o desenvolvimento da massa muscular do peitoral, utilizando uma barra para aumentar a resistência.",
+#   muscle_group: "Peitoral",
+#   difficulty: "Intermediário",
+#   instructions: "Deite-se em um banco plano, segure a barra com as mãos espaçadas na largura dos ombros, retire-a do suporte e abaixe até o peito, depois empurre-a para cima até estender completamente os braços.",
+#   variants: "Supino com pegada fechada, Supino com pegada ampla",
+#   equipment_needed: "Banco de supino, Barra livre",
+#   contraindications: "Evitar em caso de lesões no ombro ou na região cervical",
+#   benefits: "Aumento da massa muscular, fortalecimento dos músculos do peitoral e dos tríceps",
+#   duration_suggested: "45 segundos por série",
+#   frequency_recommended: "2-3 vezes por semana",
+#   progression_levels: "Aumentar peso ou repetições conforme a adaptação"
+# )
+
+# Exercise.create!(
+#   name: "Levantamento Terra",
+#   description: "Um dos exercícios mais completos para o desenvolvimento da força e massa muscular, trabalhando principalmente os músculos dorsais, além de pernas e lombar.",
+#   muscle_group: "Dorsais",
+#   difficulty: "Avançado",
+#   instructions: "Com os pés na largura dos ombros, abaixe-se e segure a barra com as mãos um pouco mais largas que os joelhos. Levante a barra mantendo-a próxima ao corpo, estenda completamente os quadris e joelhos.",
+#   variants: "Levantamento terra sumô, levantamento terra com pegada mista.",
+#   equipment_needed: "Barra livre",
+#   contraindications: "Lesões lombares prévias, problemas de coluna.",
+#   benefits: "Aumento da força global, melhoria da postura, ganho de massa muscular.",
+#   duration_suggested: "30 segundos por série",
+#   frequency_recommended: "2 vezes por semana",
+#   progression_levels: "Aumento progressivo do peso"
+# )
+
+# Exercise.create!(
+#   name: "Curls de Bíceps com Halteres",
+#   description: "Exercício clássico para desenvolver os músculos dos bíceps, utilizando halteres para permitir um movimento mais natural e isolado.",
+#   muscle_group: "Bíceps",
+#   difficulty: "Iniciante",
+#   instructions: "Em pé, segure um haltere em cada mão ao lado do corpo, palmas voltadas para frente. Flexione os cotovelos para levantar os halteres em direção aos ombros, mantendo os cotovelos fixos ao lado do corpo.",
+#   variants: "Curl martelo, Curl concentrado.",
+#   equipment_needed: "Halteres",
+#   contraindications: "Lesões no cotovelo ou antebraço.",
+#   benefits: "Aumento da massa muscular dos bíceps, melhoria da força de preensão.",
+#   duration_suggested: "30 segundos por série",
+#   frequency_recommended: "2-3 vezes por semana",
+#   progression_levels: "Aumentar o peso dos halteres conforme a força aumenta"
+# )
+
+# Exercise.create!(
+#   name: "Agachamento Livre",
+#   description: "Exercício fundamental para o desenvolvimento das coxas, envolvendo múltiplos grupos musculares incluindo quadríceps, isquiotibiais e glúteos.",
+#   muscle_group: "Coxas",
+#   difficulty: "Intermediário",
+#   instructions: "Com os pés na largura dos ombros, segure uma barra sobre os ombros atrás do pescoço. Agache-se até que as coxas estejam paralelas ao chão, mantendo as costas retas e os joelhos alinhados com os pés. Retorne à posição inicial.",
+#   variants: "Agachamento frontal, agachamento com halteres.",
+#   equipment_needed: "Barra livre, rack de agachamento.",
+#   contraindications: "Lesões no joelho ou lombar, problemas de coluna.",
+#   benefits: "Fortalecimento de toda a musculatura inferior, melhoria da força e estabilidade do núcleo corporal, aumento da massa muscular.",
+#   duration_suggested: "45 segundos por série",
+#   frequency_recommended: "2-3 vezes por semana",
+#   progression_levels: "Aumentar o peso da barra conforme a força aumenta"
+# )
+
+# # Processar e armazenar equipamentos únicos e formatar corretamente
+# equipment_list = Exercise.pluck(:equipment_needed).flat_map { |e| e.split(',').map(&:strip) }.map do |equipment|
+#   equipment.gsub(/[^a-zA-Z\s]/, '').strip.capitalize
+# end.uniq
+
+# File.write(Rails.root.join('config/equipment_list.yml'), equipment_list.to_yaml)
+
+
+# Simulando dados para um ExerciseSet específico
+exercise_set = ExerciseSet.create!(
+  workout_id: Workout.last.id,
+  exercise_id: Exercise.first.id,
+  machine_id: Machine.first.id,
+  completed: false
 )
 
-Exercise.create!(
-  name: "Levantamento Terra",
-  description: "Um dos exercícios mais completos para o desenvolvimento da força e massa muscular, trabalhando principalmente os músculos dorsais, além de pernas e lombar.",
-  muscle_group: "Dorsais",
-  difficulty: "Avançado",
-  instructions: "Com os pés na largura dos ombros, abaixe-se e segure a barra com as mãos um pouco mais largas que os joelhos. Levante a barra mantendo-a próxima ao corpo, estenda completamente os quadris e joelhos.",
-  variants: "Levantamento terra sumô, levantamento terra com pegada mista.",
-  equipment_needed: "Barra livre",
-  contraindications: "Lesões lombares prévias, problemas de coluna.",
-  benefits: "Aumento da força global, melhoria da postura, ganho de massa muscular.",
-  duration_suggested: "30 segundos por série",
-  frequency_recommended: "2 vezes por semana",
-  progression_levels: "Aumento progressivo do peso"
-)
-
-Exercise.create!(
-  name: "Curls de Bíceps com Halteres",
-  description: "Exercício clássico para desenvolver os músculos dos bíceps, utilizando halteres para permitir um movimento mais natural e isolado.",
-  muscle_group: "Bíceps",
-  difficulty: "Iniciante",
-  instructions: "Em pé, segure um haltere em cada mão ao lado do corpo, palmas voltadas para frente. Flexione os cotovelos para levantar os halteres em direção aos ombros, mantendo os cotovelos fixos ao lado do corpo.",
-  variants: "Curl martelo, Curl concentrado.",
-  equipment_needed: "Halteres",
-  contraindications: "Lesões no cotovelo ou antebraço.",
-  benefits: "Aumento da massa muscular dos bíceps, melhoria da força de preensão.",
-  duration_suggested: "30 segundos por série",
-  frequency_recommended: "2-3 vezes por semana",
-  progression_levels: "Aumentar o peso dos halteres conforme a força aumenta"
-)
-
-Exercise.create!(
-  name: "Agachamento Livre",
-  description: "Exercício fundamental para o desenvolvimento das coxas, envolvendo múltiplos grupos musculares incluindo quadríceps, isquiotibiais e glúteos.",
-  muscle_group: "Coxas",
-  difficulty: "Intermediário",
-  instructions: "Com os pés na largura dos ombros, segure uma barra sobre os ombros atrás do pescoço. Agache-se até que as coxas estejam paralelas ao chão, mantendo as costas retas e os joelhos alinhados com os pés. Retorne à posição inicial.",
-  variants: "Agachamento frontal, agachamento com halteres.",
-  equipment_needed: "Barra livre, rack de agachamento.",
-  contraindications: "Lesões no joelho ou lombar, problemas de coluna.",
-  benefits: "Fortalecimento de toda a musculatura inferior, melhoria da força e estabilidade do núcleo corporal, aumento da massa muscular.",
-  duration_suggested: "45 segundos por série",
-  frequency_recommended: "2-3 vezes por semana",
-  progression_levels: "Aumentar o peso da barra conforme a força aumenta"
-)
-
-# Processar e armazenar equipamentos únicos e formatar corretamente
-equipment_list = Exercise.pluck(:equipment_needed).flat_map { |e| e.split(',').map(&:strip) }.map do |equipment|
-  equipment.gsub(/[^a-zA-Z\s]/, '').strip.capitalize
-end.uniq
-
-File.write(Rails.root.join('config/equipment_list.yml'), equipment_list.to_yaml)
-
+simulate_arduino_data(exercise_set.id)
 
 puts "Seed data created successfully!"

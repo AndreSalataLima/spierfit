@@ -82,6 +82,10 @@ GEM
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     builder (3.2.4)
+    chartkick (5.0.7)
+    clockwork (3.0.2)
+      activesupport
+      tzinfo
     concurrent-ruby (1.3.1)
     connection_pool (2.4.1)
     crass (1.0.6)
@@ -106,6 +110,8 @@ GEM
     drb (2.2.1)
     erubi (1.12.0)
     globalid (1.2.1)
+      activesupport (>= 6.1)
+    groupdate (6.4.0)
       activesupport (>= 6.1)
     haml (6.3.0)
       temple (>= 0.8.2)
@@ -185,6 +191,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.0)
     rack (3.0.11)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-session (2.0.0)
       rack (>= 3.0.0)
     rack-test (2.1.0)
@@ -224,6 +232,10 @@ GEM
     rake (13.2.1)
     rdoc (6.7.0)
       psych (>= 4.0.0)
+    redis (5.2.0)
+      redis-client (>= 0.22.0)
+    redis-client (0.22.2)
+      connection_pool
     reline (0.5.8)
       io-console (~> 0.5)
     responders (3.1.1)
@@ -309,16 +321,21 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  chartkick
+  clockwork
   debug
   devise
   dotenv-rails
+  groupdate
   haml-rails
   hotwire-rails
   httparty
   importmap-rails
   pg (~> 1.1)
   puma (>= 5.0)
+  rack-cors
   rails (~> 7.1.3, >= 7.1.3.3)
+  redis
   rest-client
   rspec-rails
   sprockets-rails

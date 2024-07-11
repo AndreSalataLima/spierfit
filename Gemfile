@@ -72,3 +72,18 @@ gem 'rest-client'
 
 # Add dotenv-rails for managing environment variables
 gem 'dotenv-rails'
+
+# Add Chartkick for creating charts
+gem 'chartkick'
+
+# Add Groupdate for grouping data
+gem 'groupdate'
+
+# Add Clockwork for scheduling tasks
+gem 'clockwork'
+
+# Add Redis for caching
+gem 'redis'
+
+# Add Sidekiq for background jobs
+gem 'rack-cors', require: 'rack/cors'
