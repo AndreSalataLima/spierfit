@@ -8,9 +8,10 @@ class ArduinoDatum < ApplicationRecord
   def broadcast_datum
     Rails.logger.info "Broadcasting data for ExerciseSet: #{exercise_set.id}"
     arduino_data = ArduinoDatum.where(exercise_set: exercise_set).order(:recorded_at)
-    broadcast_replace_to "arduino_data_channel",
-                         target: "arduino_data",
-                         partial: "exercise_sets/arduino_data",
-                         locals: { arduino_data: arduino_data }
+    data_to_broadcast = arduino_data.map { |datum| { id: datum.id, value: datum.value, recorded_at: datum.recorded_at } }
+    ActionCable.server.broadcast "arduino_data_channel", { data: data_to_broadcast }
+    Rails.logger.info "Broadcasted data: #{data_to_broadcast}"
+  rescue StandardError => e
+    Rails.logger.error "Error broadcasting data: #{e.message}"
   end
 end
