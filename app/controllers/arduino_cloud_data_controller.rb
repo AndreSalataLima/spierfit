@@ -2,6 +2,7 @@
 class ArduinoCloudDataController < ApplicationController
   def index
     response = HTTParty.get('http://127.0.0.1:5000/arduino-data')
+    Rails.logger.info "Received data from Arduino Cloud: #{response.body}"
 
     if response.success?
       @data = response.parsed_response

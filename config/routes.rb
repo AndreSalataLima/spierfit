@@ -37,6 +37,8 @@ Rails.application.routes.draw do
     resources :machines, only: [:index, :new, :create]
   end
 
+  mount ActionCable.server => '/cable'
+
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 

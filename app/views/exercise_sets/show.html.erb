@@ -23,3 +23,35 @@
 
 
 <%= button_to 'Concluir ExerciseSet', complete_exercise_set_path(@exercise_set), method: :post %>
+
+
+
+<!-- app/views/exercise_sets/show.html.erb -->
+<div class="container mx-auto px-4">
+  <h1 class="text-center font-bold text-xl my-4">Título da página</h1>
+  <div class="bg-white rounded-lg shadow p-4">
+    <div class="text-center font-semibold"><%= @exercise_set.exercise.name %></div>
+    <%= turbo_stream_from "arduino_data_channel" %>
+    <%= turbo_frame_tag 'arduino_chart' do %>
+      <%= render 'arduino_data', arduino_data: @arduino_data %>
+    <% end %>
+    <div class="flex justify-around my-4">
+      <div>Reps: <%= @exercise_set.reps %></div>
+      <div>Série: <%= @exercise_set.sets %></div>
+      <div>Carga: <%= @exercise_set.weight %>kg</div>
+      <div>Calorias: <%= @exercise_set.energy_consumed %> CAL</div>
+    </div>
+    <div class="text-center my-2">Tempo de repouso: <%= @exercise_set.rest_time %>s</div>
+    <div class="flex justify-center gap-2 my-4">
+      <button class="bg-red-500 text-white rounded-full px-6 py-2">15</button>
+      <button class="bg-red-500 text-white rounded-full px-6 py-2">25</button>
+      <button class="bg-red-500 text-white rounded-full px-6 py-2">30</button>
+    </div>
+    <div class="flex justify-center my-4">
+      <button class="bg-gray-200 rounded-full w-10 h-10 mx-2">-</button>
+      <button class="bg-gray-200 rounded-full w-10 h-10 mx-2">||</button>
+      <button class="bg-gray-200 rounded-full w-10 h-10 mx-2">+</button>
+    </div>
+    <%= button_to 'Concluir ExerciseSet', complete_exercise_set_path(@exercise_set), method: :post %>
+  </div>
+</div>
