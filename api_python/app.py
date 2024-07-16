@@ -1,12 +1,11 @@
+import time
 import requests
 import json
-import time
 from threading import Thread
 from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-# Configurações de autenticação e endereço da API
 CLIENT_ID = 'V8YjaN9Ob9eTUAEMYzSdi6NnhogLYlyz'
 CLIENT_SECRET = '2ZQH1Z7lg56d9IOntFATQieg8LTy275wa5m4VUTdrwWkD36kecBDMnOKDjNUhqwm'
 THING_ID = '488d0b17-fa7a-41e1-bcdc-2424e06110b9'
@@ -17,7 +16,6 @@ ACCESS_TOKEN = None
 DATA_CACHE = None
 
 def get_access_token():
-    """Obtém o token de acesso da API do Arduino usando as credenciais do cliente."""
     global ACCESS_TOKEN
     response = requests.post(
         TOKEN_URL,
@@ -37,7 +35,6 @@ def get_access_token():
         print(f"Response: {response.text}")
 
 def fetch_data():
-    """Busca os dados atualizados do Arduino Cloud."""
     global DATA_CACHE
     if ACCESS_TOKEN:
         headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
@@ -49,25 +46,21 @@ def fetch_data():
             print(f"Response: {response.text}")
 
 def refresh_token():
-    """Atualiza o token de acesso periodicamente."""
     while True:
         get_access_token()
-        time.sleep(280)  # Refresca o token a cada 280 segundos
+        time.sleep(280)
 
 def update_data():
-    """Atualiza os dados de forma periódica e envia para o servidor Rails."""
     while True:
         fetch_data()
-        if DATA_CACHE:
-            send_data_to_rails(DATA_CACHE)
+        send_data_to_rails(DATA_CACHE)
         time.sleep(1)
 
 def send_data_to_rails(data):
-    """Envia dados para o servidor Rails."""
     url = 'http://localhost:3001/arduino_cloud_data/receive_data'
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'TokenSecret'  # Token de API
+        'Authorization': 'Bearer TokenSecret'
     }
     response = requests.post(url, data=json.dumps({'data': data}), headers=headers)
     if response.status_code == 200:
@@ -81,14 +74,12 @@ def home():
 
 @app.route('/arduino-data', methods=['GET'])
 def get_arduino_data():
-    """Endpoint que fornece os dados coletados."""
     if DATA_CACHE:
         return jsonify(DATA_CACHE)
     else:
         return jsonify({"error": "Data not available"}), 500
 
 if __name__ == '__main__':
-    # Iniciar threads para atualizar o token e buscar dados periodicamente
     token_thread = Thread(target=refresh_token)
     data_thread = Thread(target=update_data)
 
@@ -98,4 +89,4 @@ if __name__ == '__main__':
     token_thread.start()
     data_thread.start()
 
-    app.run(debug=True, port=5000)
+    app.run(debug=True)
