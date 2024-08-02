@@ -39,6 +39,7 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
+  post 'arduino_cloud_data/receive_data', to: 'arduino_cloud_data#receive_data'
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 
