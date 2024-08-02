@@ -10,8 +10,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body class="bg-[#0e0e0e] min-h-screen flex flex-col">
-  <% unless current_page?(new_user_session_path) %>
-    <header class="p-4 bg-gray-900 w-full">
+  <% if current_page?(root_path) %>
+    <header class="p-4 bg-gray-900 w-full flex justify-between items-center">
+      <!-- Logo -->
+      <div>
+        <%= image_tag 'logo_300x175.png', alt: 'Logo SpierFit', class: 'h-8' %>
+      </div>
       <% if user_signed_in? || personal_signed_in? || gym_signed_in? %>
         <nav class="flex justify-end">
           <% if user_signed_in? %>

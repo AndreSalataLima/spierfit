@@ -46,6 +46,11 @@ class WorkoutsController < ApplicationController
     redirect_to user_index_machines_path, notice: 'Workout was successfully completed.'
   end
 
+  def dashboard
+    @gym = current_gym
+    # Adicione aqui a lógica específica para carregar os dados do dashboard do usuário
+  end
+
   private
 
   def set_workout

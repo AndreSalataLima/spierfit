@@ -88,4 +88,5 @@ gem 'redis'
 # Add Sidekiq for background jobs
 gem 'rack-cors', require: 'rack/cors'
 
-
+# Add Font Awesome for icons
+gem 'font-awesome-sass'
