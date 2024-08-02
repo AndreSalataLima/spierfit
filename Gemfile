@@ -87,3 +87,5 @@ gem 'redis'
 
 # Add Sidekiq for background jobs
 gem 'rack-cors', require: 'rack/cors'
+
+
