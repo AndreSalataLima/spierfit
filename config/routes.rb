@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   devise_for :personals, controllers: { registrations: 'registrations' }
 
   resources :exercises
-  resources :personals
+
+  resources :personals do
+    member do
+      get 'dashboard', to: 'personals#dashboard'
+    end
+  end
 
   resources :machines do
     member do
@@ -27,13 +32,20 @@ Rails.application.routes.draw do
       post 'complete', to: 'exercise_sets#complete'
     end
   end
+
   resources :arduino_cloud_data, only: [:index]
 
   resources :users do
+    member do
+      get 'dashboard', to: 'users#dashboard'
+    end
     resources :workouts, only: [:index, :new, :create]
   end
 
   resources :gyms do
+    member do
+      get 'dashboard', to: 'gyms#dashboard'
+    end
     resources :machines, only: [:index, :new, :create]
   end
 

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :dashboard]
 
   def index
     @users = User.all
@@ -36,6 +36,11 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     redirect_to users_url, notice: 'User was successfully destroyed.'
+  end
+
+  def dashboard
+    # @user já está definido pelo before_action :set_user
+    # Adicione aqui a lógica específica para carregar os dados do dashboard do usuário
   end
 
   private
