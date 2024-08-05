@@ -1,8 +1,9 @@
 @import "font-awesome";
 @import "application.tailwind";
 
-// @layer components {
-//   .btn-primary {
-//     @apply py-2 px-4 bg-blue-200;
-//   }
-// }
+// Estilos globais para remover margens e paddings extras
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

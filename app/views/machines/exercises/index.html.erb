@@ -1,28 +1,47 @@
-<h1>Exercícios para <%= @machine.name %></h1>
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <!-- Back Button -->
+      <div class="w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center">
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      </div>
+      <!-- Title -->
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Cross 1</div>
+      </div>
+    </div>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Grupo Muscular</th>
-      <th>Descrição</th>
-      <th>Ação</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if @exercises.any? %>
-      <% @exercises.each do |exercise| %>
-        <tr>
-          <td><%= exercise.name %></td>
-          <td><%= exercise.muscle_group %></td>
-          <td><%= exercise.description %></td>
-          <td><%= link_to 'Iniciar Exercício', start_exercise_set_machine_path(@machine, exercise.id) %></td>
-        </tr>
+  <!-- Header -->
+  <div class="w-full max-w-[428px] mb-4 text-center">
+    <h1 class="text-white text-base font-semibold">Selecione o exercício</h1>
+  </div>
+
+  <!-- Lista de Exercícios -->
+  <div class="w-full max-w-[428px] space-y-3 mb-4">
+    <% @exercises.each_with_index do |exercise, index| %>
+      <%= link_to start_exercise_set_machine_path(@machine, exercise.id), class: "block" do %>
+        <div class="w-full bg-[#303030] rounded-[100px] px-3 py-2 flex items-center gap-3 <%= 'bg-[#a52502]' if index == 1 %>">
+          <div class="w-[28px] h-[28px] bg-[#d9d9d9] rounded-full"></div>
+          <div class="text-white text-sm font-['Manrope'] <%= 'font-semibold' if index == 1 %>"><%= exercise.name %></div>
+        </div>
       <% end %>
-    <% else %>
-      <tr>
-        <td colspan="4">Nenhum exercício disponível</td>
-      </tr>
     <% end %>
-  </tbody>
-</table>
+    <% if @exercises.empty? %>
+      <div class="text-white text-center">Nenhum exercício disponível</div>
+    <% end %>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+    <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+    <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
+    <div class="bg-[#a52502] rounded-full p-3">
+      <i class="fa fa-dumbbell text-white text-sm"></i>
+    </div>
+    <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+    <div class="text-white text-sm"><i class="fa fa-user"></i></div>
+  </div>
+</div>
