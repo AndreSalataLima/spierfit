@@ -1,57 +1,72 @@
 <!-- app/views/exercise_sets/show.html.erb -->
-<h1>Detalhes do ExerciseSet</h1>
-
-<p><strong>Exercício:</strong> <%= @exercise_set.exercise.name %></p>
-<p><strong>Máquina:</strong> <%= @exercise_set.machine.name %></p>
-<p><strong>Reps:</strong> <%= @exercise_set.reps %></p>
-<p><strong>Sets:</strong> <%= @exercise_set.sets %></p>
-<p><strong>Peso:</strong> <%= @exercise_set.weight %></p>
-<p><strong>Duração:</strong> <%= @exercise_set.duration %></p>
-<p><strong>Descanso:</strong> <%= @exercise_set.rest_time %></p>
-<p><strong>Intensidade:</strong> <%= @exercise_set.intensity %></p>
-<p><strong>Feedback:</strong> <%= @exercise_set.feedback %></p>
-<p><strong>Máximo de Reps:</strong> <%= @exercise_set.max_reps %></p>
-<p><strong>Performance:</strong> <%= @exercise_set.performance_score %></p>
-<p><strong>Nível de Esforço:</strong> <%= @exercise_set.effort_level %></p>
-<p><strong>Energia Consumida:</strong> <%= @exercise_set.energy_consumed %></p>
-
-<h2>Dados do Arduino</h2>
-<%= turbo_stream_from "arduino_data_channel" %>
-<%= turbo_frame_tag 'arduino_chart' do %>
-  <%= render 'arduino_data', arduino_data: @arduino_data %>
-<% end %>
-
-
-<%= button_to 'Concluir ExerciseSet', complete_exercise_set_path(@exercise_set), method: :post %>
-
-
-
-<!-- app/views/exercise_sets/show.html.erb -->
-<div class="container mx-auto px-4">
-  <h1 class="text-center font-bold text-xl my-4">Título da página</h1>
-  <div class="bg-white rounded-lg shadow p-4">
-    <div class="text-center font-semibold"><%= @exercise_set.exercise.name %></div>
-    <%= turbo_stream_from "arduino_data_channel" %>
-    <%= turbo_frame_tag 'arduino_chart' do %>
-      <%= render 'arduino_data', arduino_data: @arduino_data %>
-    <% end %>
-    <div class="flex justify-around my-4">
-      <div>Reps: <%= @exercise_set.reps %></div>
-      <div>Série: <%= @exercise_set.sets %></div>
-      <div>Carga: <%= @exercise_set.weight %>kg</div>
-      <div>Calorias: <%= @exercise_set.energy_consumed %> CAL</div>
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <!-- Back Button -->
+      <div class="w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center">
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      </div>
+      <!-- Title -->
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Executando treino</div>
+      </div>
     </div>
-    <div class="text-center my-2">Tempo de repouso: <%= @exercise_set.rest_time %>s</div>
-    <div class="flex justify-center gap-2 my-4">
-      <button class="bg-red-500 text-white rounded-full px-6 py-2">15</button>
-      <button class="bg-red-500 text-white rounded-full px-6 py-2">25</button>
-      <button class="bg-red-500 text-white rounded-full px-6 py-2">30</button>
+  </div>
+
+  <!-- Exercise Details -->
+  <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-2">
+    <div class="text-white text-base font-semibold mb-2"><%= @exercise_set.exercise.name %></div>
+    <div class="w-full max-w-[400px] h-[200px] space-y-4 mb-4 flex items-center justify-center mx-auto">
+      <%= turbo_stream_from "arduino_data_channel" %>
+      <%= turbo_frame_tag 'arduino_chart' do %>
+        <%= render 'arduino_data', arduino_data: @arduino_data %>
+      <% end %>
     </div>
-    <div class="flex justify-center my-4">
-      <button class="bg-gray-200 rounded-full w-10 h-10 mx-2">-</button>
-      <button class="bg-gray-200 rounded-full w-10 h-10 mx-2">||</button>
-      <button class="bg-gray-200 rounded-full w-10 h-10 mx-2">+</button>
+
+    <div class="flex justify-between my-3 text-white text-sm">
+      <div class="flex flex-col items-center">
+        <div class="text-base font-semibold"><%= @exercise_set.reps %></div>
+        <div class="text-[#9c9c9c] text-xs">Repetições</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-base font-semibold"><%= @exercise_set.sets %></div>
+        <div class="text-[#9c9c9c] text-xs">Série</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-base font-semibold"><%= @exercise_set.weight %>kg</div>
+        <div class="text-[#9c9c9c] text-xs">Carga</div>
+      </div>
     </div>
-    <%= button_to 'Concluir ExerciseSet', complete_exercise_set_path(@exercise_set), method: :post %>
+
+    <div class="flex justify-between my-3 text-white text-sm">
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
+        <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
+        <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Counter Buttons -->
+  <div class="w-full max-w-[428px] flex justify-center items-center my-1 space-x-4">
+    <button class="bg-[#912002] text-white rounded-full w-10 h-10 flex items-center justify-center text-lg">-</button>
+    <div class="text-center text-white text-[60px] flex items-center justify-center mx-1">150</div>
+    <button class="bg-[#912002] text-white rounded-full w-10 h-10 flex items-center justify-center text-lg">+</button>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+    <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+    <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
+    <div class="bg-[#a52502] rounded-full p-3">
+      <i class="fa fa-dumbbell text-white text-sm"></i>
+    </div>
+    <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+    <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
 </div>
