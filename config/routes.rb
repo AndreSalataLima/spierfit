@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   devise_for :gyms, controllers: { registrations: 'registrations', sessions: 'gyms/sessions' }
   devise_for :users, controllers: { registrations: 'registrations' }
