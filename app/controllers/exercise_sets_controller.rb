@@ -21,6 +21,16 @@ class ExerciseSetsController < ApplicationController
     )
   end
 
+  def edit
+  end
+
+  def update
+    if @exercise_set.update(exercise_set_params)
+      redirect_to @exercise_set, notice: 'Exercise set was successfully updated.'
+    else
+      render :edit
+    end
+  end
 
   def create
     @machine = Machine.find(params[:machine_id])
@@ -63,7 +73,7 @@ class ExerciseSetsController < ApplicationController
   end
 
   def exercise_set_params
-    params.require(:exercise_set).permit(:workout_id, :exercise_id, :machine_id, :reps, :sets, :weight, :duration, :rest_time, :intensity, :feedback, :max_reps, :performance_score, :effort_level, :energy_consumed)
+    params.require(:exercise_set).permit(:reps, :sets, :weight, :rest_time, :energy_consumed)
   end
 
   def calculate_distance_variation(data)
@@ -85,7 +95,6 @@ class ExerciseSetsController < ApplicationController
 
     reps
   end
-
 
   def calculate_duration(data)
     if data.last
