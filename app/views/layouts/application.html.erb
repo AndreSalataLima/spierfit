@@ -4,14 +4,10 @@
   <title>SpierFit</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-  <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "tailwind", "inter-font", "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<%# <body class="min-h-screen flex flex-col"> %>
 <body class="bg-[#0e0e0e] min-h-screen flex flex-col">
   <% if current_page?(root_path) %>
     <header class="p-4 bg-gray-900 w-full flex justify-between items-center">

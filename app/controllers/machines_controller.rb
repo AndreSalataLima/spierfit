@@ -1,5 +1,5 @@
 class MachinesController < ApplicationController
-  before_action :authenticate_gym!, except: [:exercises, :start_exercise_set, :user_index]
+  before_action :authenticate_gym!, except: [:exercises, :start_exercise_set, :user_index, :select_equipment]
   before_action :authenticate_user!, only: [:exercises, :start_exercise_set, :user_index]
   before_action :set_machine, only: [:show, :edit, :update, :destroy, :exercises, :start_exercise_set]
   before_action :set_equipment_list, only: [:new, :create, :edit, :update]
@@ -21,7 +21,6 @@ class MachinesController < ApplicationController
       redirect_to new_user_session_path
     end
   end
-
 
   def show
   end
@@ -50,12 +49,6 @@ class MachinesController < ApplicationController
       render :edit
     end
   end
-
-  # def edit
-  #   @equipment_list = EQUIPMENT_LIST
-  #   @muscle_groups = Exercise.pluck(:muscle_group).uniq
-  # end
-
 
   def destroy
     @machine.destroy
@@ -102,6 +95,10 @@ class MachinesController < ApplicationController
     else
       redirect_to new_user_session_path
     end
+  end
+
+  def select_equipment
+    # Aqui você pode adicionar qualquer lógica necessária para a view
   end
 
   private
