@@ -1,14 +1,29 @@
-<h1>Welcome Page</h1>
+<div class="w-full min-h-screen flex flex-col items-center justify-center bg-[#0e0e0e] p-4">
+  <div class="w-full max-w-[350px] space-y-8">
+    <%= image_tag 'logo_300x175.png', alt: 'Logo SpierFit', class: 'w-full max-w-[250px] h-auto mx-auto mt-4 mb-8' %>
 
-<% if user_signed_in? %>
-  <p>Bem vindo, <%= current_user.name %> e <%= current_user.email %>. Você está logado.</p>
-<% elsif personal_signed_in? %>
-  <p>Bem vindo, <%= current_personal.name %> e <%= current_personal.email %>. Você está logado.</p>
-<% elsif gym_signed_in? %>
-  <p>Bem vindo, <%= current_gym.name %> e <%= current_gym.email %>. Você está logado.</p>
-  <%= link_to 'Create New Machine', new_machine_path(current_gym), class: 'btn btn-primary' %>
-<% else %>
-  <p>Atleta, por favor, <a href="<%= new_user_session_path %>">faça login</a> ou <a href="<%= new_user_registration_path %>">inscreva-se</a>.</p>
-  <p>Personal, por favor, <a href="<%= new_personal_session_path %>">faça login</a> ou <a href="<%= new_personal_registration_path %>">inscreva-se</a>.</p>
-  <p>Academia, por favor, <a href="<%= new_gym_session_path %>">faça login</a> ou <a href="<%= new_gym_registration_path %>">inscreva-se</a>.</p>
-<% end %>
+    <% if user_signed_in? %>
+      <p class="text-center text-white text-lg">Bem vindo, <%= current_user.name %> e <%= current_user.email %>. Você está logado.</p>
+      <div class="w-full bg-[#a52502] rounded-[100px] flex justify-center items-center gap-6 py-4">
+        <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-center text-white text-lg font-bold font-["Manrope"]' %>
+      </div>
+    <% elsif personal_signed_in? %>
+      <p class="text-center text-white text-lg">Bem vindo, <%= current_personal.name %> e <%= current_personal.email %>. Você está logado.</p>
+      <div class="w-full bg-[#a52502] rounded-[100px] flex justify-center items-center gap-6 py-4">
+        <%= button_to 'Logout', destroy_personal_session_path, method: :delete, class: 'text-center text-white text-lg font-bold font-["Manrope"]' %>
+      </div>
+    <% elsif gym_signed_in? %>
+      <p class="text-center text-white text-lg">Bem vindo, <%= current_gym.name %> e <%= current_gym.email %>. Você está logado.</p>
+      <div class="w-full bg-[#a52502] rounded-[100px] flex justify-center items-center gap-6 py-4">
+        <%= button_to 'Logout', destroy_gym_session_path, method: :delete, class: 'text-center text-white text-lg font-bold font-["Manrope"]' %>
+      </div>
+      <div class="w-full bg-[#303030] rounded-[100px] flex justify-center items-center gap-6 py-4">
+        <%= link_to 'Create New Machine', new_machine_path(current_gym), class: 'text-center text-white text-lg font-bold font-["Manrope"]' %>
+      </div>
+    <% else %>
+      <p class="text-center text-white text-lg">Atleta, por favor, <a href="<%= new_user_session_path %>" class="text-blue-500">faça login</a> ou <a href="<%= new_user_registration_path %>" class="text-blue-500">inscreva-se</a>.</p>
+      <p class="text-center text-white text-lg">Personal, por favor, <a href="<%= new_personal_session_path %>" class="text-blue-500">faça login</a> ou <a href="<%= new_personal_registration_path %>" class="text-blue-500">inscreva-se</a>.</p>
+      <p class="text-center text-white text-lg">Academia, por favor, <a href="<%= new_gym_session_path %>" class="text-blue-500">faça login</a> ou <a href="<%= new_gym_registration_path %>" class="text-blue-500">inscreva-se</a>.</p>
+    <% end %>
+  </div>
+</div>
