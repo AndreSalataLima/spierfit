@@ -39,8 +39,9 @@ class UsersController < ApplicationController
   end
 
   def dashboard
-    # @user já está definido pelo before_action :set_user
-    # Adicione aqui a lógica específica para carregar os dados do dashboard do usuário
+    @calories_burned_per_day = @user.workouts.group_by_day_of_week(:created_at, format: "%a").sum(:calories_burned)
+    today = Date.today
+    @user_age = today.year - @user.date_of_birth.year - ((today.month > @user.date_of_birth.month || (today.month == @user.date_of_birth.month && today.day >= @user.date_of_birth.day)) ? 0 : 1)
   end
 
   private
