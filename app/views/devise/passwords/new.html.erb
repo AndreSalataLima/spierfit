@@ -1,0 +1,22 @@
+<!-- app/views/devise/passwords/new.html.erb -->
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background-color: #0e0e0e; padding: 16px;">
+  <div style="width: 100%; max-width: 350px; margin-top: 32px; margin-bottom: 32px;">
+    <%= image_tag 'logo_300x175.png', alt: 'Logo SpierFit', style: 'width: 100%; max-width: 250px; height: auto; margin: 0 auto 32px;' %>
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), local: true) do |f| %>
+      <%= devise_error_messages! %>
+
+      <div style="background-color: #303030; border-radius: 999px; padding: 12px 24px; display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+        <span style="color: white; font-size: 16px; font-weight: 500; flex-shrink: 0;">E-mail</span>
+        <%= f.email_field :email, autofocus: true, style: "background: transparent; border: none; color: white; flex-grow: 1; font-size: 16px;" %>
+      </div>
+
+      <div style="background-color: #a52502; border-radius: 999px; display: flex; justify-content: center; align-items: center; padding: 12px;">
+        <%= f.submit "Enviar instruções de recuperação", style: "color: white; font-size: 16px; font-weight: bold; width: 100%; text-align: center;" %>
+      </div>
+    <% end %>
+
+    <p style="text-align: center; color: white; margin-top: 16px;">
+      Lembre-se da senha? <%= link_to "Login", new_user_session_path, style: "color: #007bff; text-decoration: underline;" %>
+    </p>
+  </div>
+</div>
