@@ -66,9 +66,9 @@
   <div class="w-full max-w-[450px] bg-[#0e0e0e] rounded-t-[30px] p-4 flex justify-around items-center mt-auto">
     <div class="text-white"><i class="fa fa-home"></i></div>
     <div class="text-white"><i class="fa-solid fa-chart-column"></i></div>
-    <div class="bg-[#a52502] rounded-full p-4">
+    <%= link_to select_equipment_machines_path, class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center" do %>
       <i class="fa fa-dumbbell text-white"></i>
-    </div>
+    <% end %>
     <div class="text-white"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white"><i class="fa fa-user"></i></div>
   </div>
