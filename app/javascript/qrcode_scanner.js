@@ -1,3 +1,5 @@
+// app/javascript/qrcode_scanner.js
+
 document.addEventListener("turbo:load", function () {
   const startCameraButton = document.getElementById("start-camera");
   const reader = document.getElementById("reader");
@@ -21,7 +23,7 @@ document.addEventListener("turbo:load", function () {
             console.log("Html5Qrcode is defined");
 
             const html5QrCode = new Html5Qrcode("reader");
-            console.log("Html5Qrcode instance created:", html5QrCode);
+            console.log("Html5QrCode instance created:", html5QrCode);
 
             html5QrCode.start(
               { facingMode: "environment" },
@@ -31,9 +33,15 @@ document.addEventListener("turbo:load", function () {
               },
               (decodedText, decodedResult) => {
                 console.log(`Code matched = ${decodedText}`, decodedResult);
-                // Construir a URL correta
-                const machineId = decodedText.match(/\/machines\/(\d+)\/exercises/)[1];
-                Turbo.visit(`/machines/${machineId}/exercises`);
+                // Parar a leitura do QR Code
+                html5QrCode.stop().then(() => {
+                  console.log("QR Code scanning stopped.");
+                  // Construir a URL correta
+                  const machineId = decodedText.match(/\/machines\/(\d+)\/exercises/)[1];
+                  Turbo.visit(`/machines/${machineId}/exercises`);
+                }).catch((err) => {
+                  console.error("Unable to stop scanning", err);
+                });
               },
               (errorMessage) => {
                 console.log(`QR Code no match. Error: ${errorMessage}`);
