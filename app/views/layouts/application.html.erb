@@ -7,7 +7,10 @@
   <%= stylesheet_link_tag "tailwind", "inter-font", "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js" as="script">
+  <%= yield :head %>
 </head>
+
 <body class="bg-[#0e0e0e] min-h-screen flex flex-col">
   <% if current_page?(root_path) %>
     <header class="p-4 bg-gray-900 w-full flex justify-between items-center">
@@ -15,6 +18,7 @@
       <div>
         <%= image_tag 'logo_300x175.png', alt: 'Logo SpierFit', class: 'h-8' %>
       </div>
+      <!-- Navigation for logged-in users -->
       <% if user_signed_in? || personal_signed_in? || gym_signed_in? %>
         <nav class="flex justify-end">
           <% if user_signed_in? %>
@@ -27,9 +31,12 @@
         </nav>
       <% end %>
     </header>
+  <% else %>
+    <!-- Outro conteúdo de cabeçalho para páginas não-raiz pode ser colocado aqui -->
   <% end %>
   <main class="flex-grow flex items-center justify-center">
     <%= yield %>
   </main>
+  <%= javascript_include_tag "qrcode_scanner" %> <!-- Garantindo que o scanner de QR Code seja carregado em todas as páginas -->
 </body>
 </html>
