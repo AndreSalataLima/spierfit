@@ -4,13 +4,11 @@
   <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2">
     <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
     <div class="absolute inset-0 flex items-center justify-between px-4">
-      <!-- Back Button -->
-      <div class="w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
         <i class="fa fa-arrow-left text-white text-sm"></i>
-      </div>
-      <!-- Title -->
+      <% end %>
       <div class="flex-1 text-center">
-        <div class="text-white text-base font-semibold">Executando treino</div>
+        <div class="text-white text-base font-semibold">Execução</div>
       </div>
     </div>
   </div>
@@ -35,7 +33,7 @@
         <div class="text-[#9c9c9c] text-xs">Série</div>
       </div>
       <div class="flex flex-col items-center">
-        <div class="text-base font-semibold"><%= @exercise_set.weight %>kg</div>
+        <div class="text-base font-semibold">150kg</div> <!-- Fixo por enquanto -->
         <div class="text-[#9c9c9c] text-xs">Carga</div>
       </div>
     </div>
@@ -53,12 +51,10 @@
   </div>
 
   <!-- Counter Buttons -->
-  <div data-controller="weight" data-weight-value="150">
-    <div class="w-full max-w-[428px] flex justify-center items-center my-1 space-x-2">
-      <button data-action="click->weight#decrease" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">-</button>
-      <div data-weight-target="value" class="text-center text-white text-[50px] flex items-center justify-center mx-2">150kg</div>
-      <button data-action="click->weight#increase" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">+</button>
-    </div>
+  <div data-controller="weight" class="flex items-center justify-center">
+    <button data-action="click->weight#decrease" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">-</button>
+    <div data-weight-target="value" class="text-center text-white text-[50px] mx-2">150kg</div>
+    <button data-action="click->weight#increase" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">+</button>
   </div>
 
 
@@ -72,3 +68,4 @@
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
+</div>
