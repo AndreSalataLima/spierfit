@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :exercise_sets do
     member do
       post 'complete', to: 'exercise_sets#complete'
+      patch 'update_weight', to: 'exercise_sets#update_weight'  # Adicionando esta linha
     end
   end
 
