@@ -1,6 +1,6 @@
 <%= turbo_frame_tag("arduino_chart") do %>
 <%# <%= area_chart arduino_data.order(created_at: :desc).limit(3).map { |datum| [datum.recorded_at, datum.value] }, %>
-<%= area_chart arduino_data.order(created_at: :desc).map { |datum| [datum.recorded_at, -datum.value] },
+<%= area_chart arduino_data.order(created_at: :desc).map { |datum| [datum.recorded_at, datum.value] },
                  height: "300px",
                  width: "100vw",
                  colors: ["#fa2327"],
