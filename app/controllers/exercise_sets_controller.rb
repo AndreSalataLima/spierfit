@@ -89,22 +89,53 @@ class ExerciseSetsController < ApplicationController
   end
 
   def calculate_distance_variation(data)
-    data.each_cons(2).map { |a, b| b.value - a.value }
+    variations = data.each_cons(2).map { |a, b| b.value - a.value }
+    variations.each_with_index do |variation, index|
+      Rails.logger.info "Variação #{index + 1}: #{variation}"
+    end
+    variations
   end
 
-  def calculate_repetitions(variations)
+  def calculate_repetitions(data)
+    limite_em_serie = 50
+    limite_fora_serie = 150
     concentric = false
+    em_serie = false
     reps = 0
 
-    variations.each do |variation|
-      if variation > 0
-        concentric = true
-      elsif variation < 0 && concentric
-        reps += 1
-        concentric = false
+    data.each_cons(2) do |a, b|
+      variacao = b - a
+      variacao_abs = variacao.abs
+
+      if em_serie
+        # Se estiver em série, consideramos variações acima de 50
+        if variacao_abs > limite_em_serie
+          if variacao > 0
+            concentric = true
+          elsif variacao < 0 && concentric
+            reps += 1
+            concentric = false
+          end
+        else
+          em_serie = false # Se a variação for menor que o limite, sai da série
+          Rails.logger.info "Fim de série detectado no tempo #{b}. Total de repetições: #{reps}"
+        end
+      else
+        # Se não estiver em série, consideramos variações acima de 150
+        if variacao_abs > limite_fora_serie
+          em_serie = true
+          Rails.logger.info "Início de uma nova série detectado com variação #{variacao_abs}."
+          if variacao > 0
+            concentric = true
+          elsif variacao < 0 && concentric
+            reps += 1
+            concentric = false
+          end
+        end
       end
     end
 
+    Rails.logger.info "Total de repetições detectadas: #{reps}"
     reps
   end
 
@@ -139,20 +170,43 @@ class ExerciseSetsController < ApplicationController
   end
 
   def calculate_sets(data)
-    sets = 0
-    in_set = false
+    limite_inicio_serie = 150
+    limite_manutencao_serie = 50
+    series = 0
+    em_serie = false
+    contador_consecutivo_baixo = 0
+    distancia_inicial = nil
 
-    data.each do |datum|
-      if datum.value != -55
-        unless in_set
-          in_set = true
-          sets += 1
+    data.each_cons(2).with_index do |(a, b), i|
+      variacao = b.value - a.value
+
+      Rails.logger.info "Variação #{i + 1}: #{variacao}"
+
+      if em_serie
+        # Manutenção da série
+        if variacao.abs > limite_manutencao_serie
+          contador_consecutivo_baixo = 0
+        else
+          contador_consecutivo_baixo += 1
+          # Verifica se a série deve ser finalizada
+          if contador_consecutivo_baixo >= 5
+            em_serie = false
+            Rails.logger.info "Fim de série detectado no tempo #{b.recorded_at}. Total de séries: #{series}"
+          end
         end
       else
-        in_set = false
+        # Início de uma nova série
+        if variacao > limite_inicio_serie
+          series += 1
+          em_serie = true
+          contador_consecutivo_baixo = 0
+          distancia_inicial = a.value
+          Rails.logger.info "Início de uma nova série detectado no tempo #{b.recorded_at} com variação #{variacao}. Total de séries: #{series}"
+        end
       end
     end
 
-    sets
+    Rails.logger.info "Total de séries detectadas: #{series}"
+    series
   end
 end

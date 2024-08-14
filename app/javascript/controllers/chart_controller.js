@@ -1,6 +1,11 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
+    static values = {
+        data: Array,
+        labels: Array
+    }
+
     connect() {
         console.log("ChartController connected");
 
@@ -8,32 +13,36 @@ export default class extends Controller {
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],  // Exemplo de labels
+                labels: this.labelsValue,  // Labels passadas do backend
                 datasets: [{
-                    label: '',  // Título removido
-                    data: [12, 19, 3, 5, 2, 3],  // Dados de exemplo
+                    label: '',
+                    data: this.dataValue,  // Dados passados do backend
                     borderColor: '#fa2327',
-                    fill: true,  // Preenche a área abaixo da linha
-                    backgroundColor: 'rgba(250, 35, 39, 0.3)',  // Cor de preenchimento
-                    pointRadius: 0,  // Remove os pontos do gráfico
-                    borderJoinStyle: 'round',  // Arredonda as junções das linhas
-                    tension: 0.4  // Adiciona suavização às curvas das linhas
+                    fill: true,
+                    backgroundColor: 'rgba(250, 35, 39, 0.3)',
+                    pointRadius: 0,
+                    borderJoinStyle: 'round',
+                    tension: 0.4
                 }]
             },
             options: {
-                responsive: false,  // Desativa a responsividade
-                maintainAspectRatio: false,  // Não mantém a proporção
+                responsive: false,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false  // Remove a legenda
+                        display: false
                     }
                 },
                 scales: {
                     x: {
-                        display: false  // Oculta o eixo X
+                        display: false
                     },
                     y: {
-                        display: false  // Oculta o eixo Y
+                        display: false,
+                        ticks: {
+                            suggestedMin: -1100,
+                            suggestedMax: -1030
+                        }
                     }
                 }
             }
