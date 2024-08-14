@@ -1,6 +1,6 @@
 class ExerciseSetsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete]
+  before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete, :update_weight]
 
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
@@ -9,28 +9,20 @@ class ExerciseSetsController < ApplicationController
 
     duration = calculate_duration(@arduino_data)
     rest_time = calculate_rest_time(@arduino_data)
-    sets = calculate_sets(@arduino_data) # Corrigido para calcular sets
+    sets = calculate_sets(@arduino_data)
 
     # Atualizar os atributos do ExerciseSet
     @exercise_set.update(
       reps: @repetitions,
       duration: duration,
       rest_time: rest_time,
-      sets: sets, # Atualizar sets
+      sets: sets,
       updated_at: Time.now
     )
   end
 
   def edit
   end
-
-  # def update
-  #   if @exercise_set.update(exercise_set_params)
-  #     redirect_to @exercise_set, notice: 'Exercise set was successfully updated.'
-  #   else
-  #     render :edit
-  #   end
-  # end
 
   def update
     respond_to do |format|
@@ -44,6 +36,13 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
+  def update_weight
+    if @exercise_set.update(weight: params[:exercise_set][:weight])
+      render json: { status: "success", weight: @exercise_set.weight }
+    else
+      render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+  end
 
   def create
     @machine = Machine.find(params[:machine_id])
@@ -156,13 +155,4 @@ class ExerciseSetsController < ApplicationController
 
     sets
   end
-
-  def update_weight
-    if @exercise_set.update(weight: params[:exercise_set][:weight])
-      render json: { status: "success", weight: @exercise_set.weight }
-    else
-      render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity
-    end
-  end
-  
 end
