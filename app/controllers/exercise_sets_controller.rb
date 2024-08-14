@@ -24,13 +24,26 @@ class ExerciseSetsController < ApplicationController
   def edit
   end
 
+  # def update
+  #   if @exercise_set.update(exercise_set_params)
+  #     redirect_to @exercise_set, notice: 'Exercise set was successfully updated.'
+  #   else
+  #     render :edit
+  #   end
+  # end
+
   def update
-    if @exercise_set.update(exercise_set_params)
-      redirect_to @exercise_set, notice: 'Exercise set was successfully updated.'
-    else
-      render :edit
+    respond_to do |format|
+      if @exercise_set.update(exercise_set_params)
+        format.html { redirect_to @exercise_set, notice: 'Exercise set was successfully updated.' }
+        format.json { render json: { status: "success", weight: @exercise_set.weight } }
+      else
+        format.html { render :edit }
+        format.json { render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity }
+      end
     end
   end
+
 
   def create
     @machine = Machine.find(params[:machine_id])
@@ -143,4 +156,13 @@ class ExerciseSetsController < ApplicationController
 
     sets
   end
+
+  def update_weight
+    if @exercise_set.update(weight: params[:exercise_set][:weight])
+      render json: { status: "success", weight: @exercise_set.weight }
+    else
+      render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+  end
+  
 end

@@ -14,49 +14,55 @@
   </div>
 
   <!-- Exercise Details -->
-  <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-2">
+  <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-4">
     <div class="text-white text-base font-semibold mb-2"><%= @exercise_set.exercise.name %></div>
-    <div class="w-full max-w-[400px] h-[200px] space-y-4 mb-4 flex items-center justify-center mx-auto">
-      <%= turbo_stream_from "arduino_data_channel" %>
-      <%= turbo_frame_tag 'arduino_chart' do %>
-        <%= render 'arduino_data', arduino_data: @arduino_data %>
-      <% end %>
-    </div>
 
-    <div class="flex justify-between my-3 text-white text-sm">
-      <div class="flex flex-col items-center">
-        <div class="text-base font-semibold"><%= @exercise_set.reps %></div>
-        <div class="text-[#9c9c9c] text-xs">Repetições</div>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="text-base font-semibold"><%= @exercise_set.sets %></div>
-        <div class="text-[#9c9c9c] text-xs">Série</div>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="text-base font-semibold">150kg</div> <!-- Fixo por enquanto -->
-        <div class="text-[#9c9c9c] text-xs">Carga</div>
+    <!-- Gráfico Container -->
+    <%= turbo_stream_from "arduino_data_channel" %>
+    <div class="mb-4">
+      <div class="w-full md:w-96 h-52 relative" data-controller="chart">
+        <%= turbo_frame_tag 'arduino_chart' do %>
+          <canvas id="myChart" class="w-full h-full"></canvas>
+        <% end %>
       </div>
     </div>
 
-    <div class="flex justify-between my-3 text-white text-sm">
-      <div class="flex flex-col items-center">
-        <div class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
-        <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
+    <!-- Details Section -->
+    <div>
+      <div class="flex justify-between my-3 text-white text-sm">
+        <div class="flex flex-col items-center">
+          <div class="text-base font-semibold"><%= @exercise_set.reps %></div>
+          <div class="text-[#9c9c9c] text-xs">Repetições</div>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="text-base font-semibold"><%= @exercise_set.sets %></div>
+          <div class="text-[#9c9c9c] text-xs">Séries</div>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="text-base font-semibold" id="fixed-weight"><%= @exercise_set.weight %>kg</div>
+          <div class="text-[#9c9c9c] text-xs">Carga</div>
+        </div>
       </div>
-      <div class="flex flex-col items-center">
-        <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
-        <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
+
+      <div class="flex justify-between my-3 text-white text-sm">
+        <div class="flex flex-col items-center">
+          <div class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
+          <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
+          <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Counter Buttons -->
-  <div data-controller="weight" class="flex items-center justify-center">
+  <div data-controller="weight" data-exercise-set-id="<%= @exercise_set.id %>" class="flex items-center justify-center mb-4">
     <button data-action="click->weight#decrease" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">-</button>
-    <div data-weight-target="value" class="text-center text-white text-[50px] mx-2">150kg</div>
+    <div data-weight-target="value" class="text-center text-white text-[50px] mx-2"><%= @exercise_set.weight %>kg</div>
     <button data-action="click->weight#increase" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">+</button>
   </div>
-
 
   <!-- Bottom Navigation -->
   <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">

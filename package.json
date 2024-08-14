@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
+    "chart.js": "^4.4.3",
     "html5-qrcode": "^2.3.8"
   }
 }
