@@ -1,4 +1,3 @@
-// app/javascript/controllers/weight_controller.js
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
@@ -17,12 +16,14 @@ export default class extends Controller {
   }
 
   adjustWeight(delta) {
+    // Obtenha o valor atual do peso
     let currentValue = Number(this.valueTarget.textContent.replace('kg', ''));
+    // Atualize o valor do peso no frontend
     currentValue = Math.max(0, currentValue + delta);
     this.valueTarget.textContent = `${currentValue}kg`;
     document.getElementById('fixed-weight').textContent = `${currentValue}kg`;
 
-    // Enviar o novo peso para o servidor
+    // Enviar o novo peso para o servidor via PATCH
     fetch(`/exercise_sets/${this.element.dataset.exerciseSetId}/update_weight`, {
       method: 'PATCH',
       headers: {
