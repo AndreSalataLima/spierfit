@@ -17,12 +17,13 @@ export default class extends Controller {
                 datasets: [{
                     label: '',
                     data: this.dataValue,  // Dados passados do backend
-                    borderColor: '#fa2327',
-                    fill: true,
-                    backgroundColor: 'rgba(250, 35, 39, 0.3)',
-                    pointRadius: 0,
-                    borderJoinStyle: 'round',
-                    tension: 0.4
+                    borderColor: 'rgba(250, 35, 39, 0.5)',  // Cor da borda suavizada. Alterar para '#fa2327' para cor vermelha
+                    fill: true,  // Preenche a área abaixo da linha
+                    backgroundColor: 'rgba(250, 35, 39, 0.3)',  // Cor de preenchimento
+                    pointRadius: 0,  // Remove os pontos do gráfico
+                    borderJoinStyle: 'round',  // Arredonda as junções das linhas
+                    tension: 0.4,  // Adiciona suavização às curvas das linhas
+                    fill: 'start',  // Define que a área sombreada deve começar no início (abaixo da linha)
                 }]
             },
             options: {

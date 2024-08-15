@@ -5,15 +5,17 @@ class ExerciseSetsController < ApplicationController
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
     @distance_variation = calculate_distance_variation(@arduino_data)
-    @repetitions = calculate_repetitions(@distance_variation)
+    sets_and_reps = calculate_sets_and_repetitions(@distance_variation)
 
     duration = calculate_duration(@arduino_data)
     rest_time = calculate_rest_time(@arduino_data)
-    sets = calculate_sets(@arduino_data)
+
+    sets = sets_and_reps[:sets]
+    total_reps = sets_and_reps[:total_reps]
 
     # Atualizar os atributos do ExerciseSet
     @exercise_set.update(
-      reps: @repetitions,
+      reps: total_reps,
       duration: duration,
       rest_time: rest_time,
       sets: sets,
@@ -68,7 +70,6 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: 0
     )
 
-    Rails.logger.info "Workout ID: #{@workout.id}, ExerciseSet ID: #{@exercise_set.id}"
 
     redirect_to exercise_set_path(@exercise_set)
   end
@@ -91,53 +92,80 @@ class ExerciseSetsController < ApplicationController
   def calculate_distance_variation(data)
     variations = data.each_cons(2).map { |a, b| b.value - a.value }
     variations.each_with_index do |variation, index|
-      Rails.logger.info "Variação #{index + 1}: #{variation}"
     end
     variations
   end
 
-  def calculate_repetitions(data)
+  # Método atualizado para calcular sets e repetições
+  def calculate_sets_and_repetitions(data)
     limite_em_serie = 50
     limite_fora_serie = 150
     concentric = false
     em_serie = false
-    reps = 0
+    series = 0
+    reps_na_serie_atual = 0
+    total_reps = 0
+    contador_consecutivo_baixo = 0
 
-    data.each_cons(2) do |a, b|
+    data.each_cons(2).with_index do |(a, b), index|
       variacao = b - a
       variacao_abs = variacao.abs
+      log_message = "Variação #{index + 1}: "
 
       if em_serie
-        # Se estiver em série, consideramos variações acima de 50
+        # Manutenção da série
         if variacao_abs > limite_em_serie
           if variacao > 0
             concentric = true
           elsif variacao < 0 && concentric
-            reps += 1
+            reps_na_serie_atual += 1
+            log_message += "Repetição #{reps_na_serie_atual}"
             concentric = false
           end
+          contador_consecutivo_baixo = 0
         else
-          em_serie = false # Se a variação for menor que o limite, sai da série
-          Rails.logger.info "Fim de série detectado no tempo #{b}. Total de repetições: #{reps}"
+          contador_consecutivo_baixo += 1
+          # Se a variação foi baixa por tempo suficiente, encerra a série
+          if contador_consecutivo_baixo >= 5
+            series += 1
+            total_reps += reps_na_serie_atual
+            log_message += "Fim de série com #{reps_na_serie_atual} repetições"
+            em_serie = false
+            reps_na_serie_atual = 0
+          end
         end
       else
-        # Se não estiver em série, consideramos variações acima de 150
+        # Início de uma nova série
         if variacao_abs > limite_fora_serie
           em_serie = true
-          Rails.logger.info "Início de uma nova série detectado com variação #{variacao_abs}."
+          log_message += "Início de série"
           if variacao > 0
             concentric = true
           elsif variacao < 0 && concentric
-            reps += 1
+            reps_na_serie_atual += 1
+            log_message += ", Repetição #{reps_na_serie_atual}"
             concentric = false
           end
         end
       end
+
+      # Log para cada variação
+      Rails.logger.info log_message
     end
 
-    Rails.logger.info "Total de repetições detectadas: #{reps}"
-    reps
+    # Adiciona a última série se ainda estiver aberta
+    if em_serie
+      series += 1
+      total_reps += reps_na_serie_atual
+      Rails.logger.info "Variação final: Fim de série com #{reps_na_serie_atual} repetições"
+    end
+
+    Rails.logger.info "Total de séries detectadas: #{series}, Total de repetições: #{total_reps}"
+
+    { sets: series, total_reps: total_reps }
   end
+
+
 
   def calculate_duration(data)
     if data.last
@@ -167,46 +195,5 @@ class ExerciseSetsController < ApplicationController
     end
 
     rest_time
-  end
-
-  def calculate_sets(data)
-    limite_inicio_serie = 150
-    limite_manutencao_serie = 50
-    series = 0
-    em_serie = false
-    contador_consecutivo_baixo = 0
-    distancia_inicial = nil
-
-    data.each_cons(2).with_index do |(a, b), i|
-      variacao = b.value - a.value
-
-      Rails.logger.info "Variação #{i + 1}: #{variacao}"
-
-      if em_serie
-        # Manutenção da série
-        if variacao.abs > limite_manutencao_serie
-          contador_consecutivo_baixo = 0
-        else
-          contador_consecutivo_baixo += 1
-          # Verifica se a série deve ser finalizada
-          if contador_consecutivo_baixo >= 5
-            em_serie = false
-            Rails.logger.info "Fim de série detectado no tempo #{b.recorded_at}. Total de séries: #{series}"
-          end
-        end
-      else
-        # Início de uma nova série
-        if variacao > limite_inicio_serie
-          series += 1
-          em_serie = true
-          contador_consecutivo_baixo = 0
-          distancia_inicial = a.value
-          Rails.logger.info "Início de uma nova série detectado no tempo #{b.recorded_at} com variação #{variacao}. Total de séries: #{series}"
-        end
-      end
-    end
-
-    Rails.logger.info "Total de séries detectadas: #{series}"
-    series
   end
 end
