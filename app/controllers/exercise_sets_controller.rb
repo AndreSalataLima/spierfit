@@ -4,8 +4,9 @@ class ExerciseSetsController < ApplicationController
 
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-    @distance_variation = calculate_distance_variation(@arduino_data)
-    sets_and_reps = calculate_sets_and_repetitions(@distance_variation)
+
+    # Passando os valores de distância reais para o cálculo de sets e repetições
+    sets_and_reps = calculate_sets_and_repetitions(@arduino_data.map(&:value))
 
     duration = calculate_duration(@arduino_data)
     rest_time = calculate_rest_time(@arduino_data)
@@ -70,7 +71,6 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: 0
     )
 
-
     redirect_to exercise_set_path(@exercise_set)
   end
 
@@ -89,83 +89,108 @@ class ExerciseSetsController < ApplicationController
     params.require(:exercise_set).permit(:reps, :sets, :weight, :rest_time, :energy_consumed)
   end
 
-  def calculate_distance_variation(data)
-    variations = data.each_cons(2).map { |a, b| b.value - a.value }
-    variations.each_with_index do |variation, index|
-    end
-    variations
-  end
-
-  # Método atualizado para calcular sets e repetições
+  # Método atualizado para calcular sets e repetições com base nas distâncias reais
   def calculate_sets_and_repetitions(data)
+    # Definindo os limites para transições
     limite_em_serie = 50
     limite_fora_serie = 150
-    concentric = false
+    limite_concentrico_completo = 300
+    limite_excentrico_completo = 300
+    tolerancia_ruido = 10  # Pequenas variações serão ignoradas
+
+    # Variáveis de controle
+    var_concentrico = 0
+    var_excentrico = 0
     em_serie = false
     series = 0
     reps_na_serie_atual = 0
     total_reps = 0
     contador_consecutivo_baixo = 0
+    fase_concentrica_completa = false
+    fase_excentrica_completa = false
+    meia_repeticao = false
 
+    # Iterar sobre os dados
     data.each_cons(2).with_index do |(a, b), index|
       variacao = b - a
-      variacao_abs = variacao.abs
-      log_message = "Variação #{index + 1}: "
+      distancia_atual = b
+      distancia_anterior = a
+      diferenca = (distancia_atual - distancia_anterior).abs
+
+      log_message = "Variação #{index + 1}: Distância atual: #{distancia_atual}, Diferença: #{diferenca} "
+
+      # Ignorar pequenas variações
+      next if diferenca < tolerancia_ruido
 
       if em_serie
-        # Manutenção da série
-        if variacao_abs > limite_em_serie
-          if variacao > 0
-            concentric = true
-          elsif variacao < 0 && concentric
-            reps_na_serie_atual += 1
-            log_message += "Repetição #{reps_na_serie_atual}"
-            concentric = false
+        if diferenca > limite_em_serie
+          if variacao > 0 # Movimento concêntrico
+            var_concentrico += variacao
+            log_message += "Início de fase concêntrica"
+
+            if var_concentrico >= limite_concentrico_completo
+              fase_concentrica_completa = true
+              log_message += " -> Fase concêntrica completa"
+            end
+
+          elsif variacao < 0 && fase_concentrica_completa # Movimento excêntrico após concêntrico completo
+            var_excentrico += variacao.abs
+            log_message += " -> Início de fase excêntrica"
+
+            if var_excentrico >= limite_excentrico_completo
+              fase_excentrica_completa = true
+              total_reps += 1
+              reps_na_serie_atual += 1
+              log_message += " -> Repetição #{reps_na_serie_atual} completa -> Fim de fase excêntrica"
+
+              # Reseta variáveis após repetição completa
+              var_concentrico = 0
+              var_excentrico = 0
+              fase_concentrica_completa = false
+              fase_excentrica_completa = false
+            end
           end
+
+          # Resetar contador de movimento baixo
           contador_consecutivo_baixo = 0
         else
           contador_consecutivo_baixo += 1
-          # Se a variação foi baixa por tempo suficiente, encerra a série
+
+          # Condição de fim de série
           if contador_consecutivo_baixo >= 5
-            series += 1
-            total_reps += reps_na_serie_atual
-            log_message += "Fim de série com #{reps_na_serie_atual} repetições"
+            if reps_na_serie_atual > 0
+              series += 1
+              log_message += " -> Fim de série com #{reps_na_serie_atual} repetições"
+            else
+              log_message += " -> Fim de série sem repetições"
+            end
             em_serie = false
             reps_na_serie_atual = 0
           end
         end
       else
         # Início de uma nova série
-        if variacao_abs > limite_fora_serie
+        if diferenca > limite_fora_serie
           em_serie = true
           log_message += "Início de série"
-          if variacao > 0
-            concentric = true
-          elsif variacao < 0 && concentric
-            reps_na_serie_atual += 1
-            log_message += ", Repetição #{reps_na_serie_atual}"
-            concentric = false
-          end
         end
       end
 
-      # Log para cada variação
-      Rails.logger.info log_message
+      # Adicionar log para análise
+      Rails.logger.info log_message.strip
     end
 
     # Adiciona a última série se ainda estiver aberta
-    if em_serie
+    if em_serie && reps_na_serie_atual > 0
       series += 1
-      total_reps += reps_na_serie_atual
-      Rails.logger.info "Variação final: Fim de série com #{reps_na_serie_atual} repetições"
+      Rails.logger.info "Fim de série com #{reps_na_serie_atual} repetições"
     end
 
+    # Retorno do resultado
     Rails.logger.info "Total de séries detectadas: #{series}, Total de repetições: #{total_reps}"
 
     { sets: series, total_reps: total_reps }
   end
-
-
 
   def calculate_duration(data)
     if data.last

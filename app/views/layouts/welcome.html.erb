@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SpierFit - Bem-vindo</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "tailwind", "inter-font", "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %> <!-- Utilizando Importmap para JavaScript -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= yield :head %>
+</head>
+
+<body class="bg-gray-900 min-h-screen flex flex-col items-center justify-center">
+  <main class="w-full flex flex-col items-center justify-center">
+    <%= yield %>
+  </main>
+  <footer class="text-center mt-8">
+    <!-- Links para Personal e Academia comentados -->
+    <!--
+    <p class="text-white">Personal Trainer? <a href="<%= new_personal_session_path %>" class="text-blue-500 hover:underline">Faça login</a> ou <a href="<%= new_personal_registration_path %>" class="text-blue-500 hover:underline">Cadastre-se</a>.</p>
+    <p class="text-white">Academia? <a href="<%= new_gym_session_path %>" class="text-blue-500 hover:underline">Faça login</a> ou <a href="<%= new_gym_registration_path %>" class="text-blue-500 hover:underline">Cadastre-se</a>.</p>
+    -->
+  </footer>
+</body>
+</html>
