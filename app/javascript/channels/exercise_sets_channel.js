@@ -7,7 +7,6 @@ document.addEventListener("turbo:load", () => {
 
     consumer.subscriptions.create({ channel: "ExerciseSetsChannel", exercise_set_id: exerciseSetId }, {
       received(data) {
-        console.log("Received data:", data)
         document.getElementById('reps').innerText = data.reps
         document.getElementById('sets').innerText = data.sets
         // Atualize outros campos da mesma maneira
