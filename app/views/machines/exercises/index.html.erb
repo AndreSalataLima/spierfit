@@ -23,17 +23,18 @@
   <!-- Lista de Exercícios -->
   <div class="w-full max-w-[428px] space-y-3 mb-4">
     <% @exercises.each_with_index do |exercise, index| %>
-      <%= link_to start_exercise_set_machine_path(@machine, exercise.id), class: "block" do %>
-      <div data-controller="toggle-class" data-action="click->toggle-class#toggle" class="w-full bg-[#303030] rounded-[100px] px-3 py-2 flex items-center gap-3">
-        <div class="w-[28px] h-[28px] bg-[#d9d9d9] rounded-full"></div>
-        <div class="text-white text-sm font-['Manrope']"><%= exercise.name %></div>
-      </div>
+      <%= link_to start_exercise_set_machine_path(@machine, exercise.id), class: "block", data: { turbo: "false" } do %>
+        <div data-controller="toggle-class" data-action="click->toggle-class#toggle" class="w-full bg-[#303030] rounded-[100px] px-3 py-2 flex items-center gap-3">
+          <div class="w-[28px] h-[28px] bg-[#d9d9d9] rounded-full"></div>
+          <div class="text-white text-sm font-['Manrope']"><%= exercise.name %></div>
+        </div>
       <% end %>
     <% end %>
     <% if @exercises.empty? %>
       <div class="text-white text-center">Nenhum exercício disponível</div>
     <% end %>
   </div>
+
 
   <!-- Bottom Navigation -->
   <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">

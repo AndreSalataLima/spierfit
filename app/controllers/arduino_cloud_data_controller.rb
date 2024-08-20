@@ -27,7 +27,6 @@ class ArduinoCloudDataController < ApplicationController
   end
 
   def receive_data
-    Rails.logger.info "Received data: #{params[:data]}"
     store_data(params[:data])
     render json: { status: 'Success', message: 'Data received and processed' }, status: :ok
   rescue StandardError => e

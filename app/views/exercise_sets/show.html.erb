@@ -18,14 +18,13 @@
     <div class="text-white text-base font-semibold mb-2"><%= @exercise_set.exercise.name %></div>
 
   <!-- Gráfico Container -->
-  <%= turbo_stream_from "arduino_data_channel" %>
   <div class="mb-4">
     <div class="w-full md:w-96 h-52 relative"
         data-controller="chart"
         data-chart-data-value="<%= @arduino_data.map { |datum| datum.value } %>"
         data-chart-labels-value="<%= @arduino_data.map { |datum| datum.recorded_at.strftime('%b %d') } %>">
       <%= turbo_frame_tag 'arduino_chart' do %>
-        <canvas id="myChart" class="w-full h-full"></canvas>
+        <canvas id="chart-1" class="w-full h-full"></canvas>
       <% end %>
     </div>
   </div>

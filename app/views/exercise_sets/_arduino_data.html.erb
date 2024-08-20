@@ -1,39 +1,4 @@
-<%= turbo_frame_tag("arduino_chart") do %>
-<%# <%= area_chart arduino_data.order(created_at: :desc).limit(3).map { |datum| [datum.recorded_at, datum.value] }, %>
-<%= area_chart arduino_data.order(created_at: :desc).map { |datum| [datum.recorded_at, datum.value] },
-                 height: "300px",
-                 width: "100vw",
-                 colors: ["#fa2327"],
-                 id: "chart-1",
-                 library: {
-                   plugins: {
-                     legend: {
-                       display: false  # Remove a legenda do gráfico
-                     }
-                   },
-                   scales: {
-                     x: {
-                       display: false  # Oculta o eixo X
-                     },
-                     y: {
-                       display: false,  # Oculta o eixo Y
-                       ticks: {
-                         suggestedMin: -1100,
-                         suggestedMax: -1030
-                       }
-                     }
-                   },
-                   elements: {
-                     line: {
-                       fill: true,  # Preenche a área abaixo da linha
-                       backgroundColor: 'rgba(250, 35, 39, 0.3)'  # Define a cor do preenchimento da área
-                     },
-                     point: {
-                       radius: 0  # Remove os pontos do gráfico
-                     }
-                   },
-                   responsive: false,  # Torna o gráfico não responsivo
-                   maintainAspectRatio: false  # Desativa a manutenção da proporção
-                 } %>
-
-<% end %>
+<div class="chart-container">
+  <!-- Substituir o area_chart por um canvas -->
+  <canvas id="chart-1" width="100vw" height="300px"></canvas>
+</div>
