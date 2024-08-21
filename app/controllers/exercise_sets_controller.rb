@@ -1,26 +1,51 @@
 class ExerciseSetsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete]
+  before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete, :update_weight]
 
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-    @distance_variation = calculate_distance_variation(@arduino_data)
-    @repetitions = calculate_repetitions(@distance_variation)
+
+    # Passando os valores de distância reais para o cálculo de sets e repetições
+    sets_and_reps = calculate_sets_and_repetitions(@arduino_data.map(&:value))
 
     duration = calculate_duration(@arduino_data)
     rest_time = calculate_rest_time(@arduino_data)
-    sets = calculate_sets(@arduino_data) # Corrigido para calcular sets
+
+    sets = sets_and_reps[:sets]
+    total_reps = sets_and_reps[:total_reps]
 
     # Atualizar os atributos do ExerciseSet
     @exercise_set.update(
-      reps: @repetitions,
+      reps: total_reps,
       duration: duration,
       rest_time: rest_time,
-      sets: sets, # Atualizar sets
+      sets: sets,
       updated_at: Time.now
     )
   end
 
+  def edit
+  end
+
+  def update
+    respond_to do |format|
+      if @exercise_set.update(exercise_set_params)
+        format.html { redirect_to @exercise_set, notice: 'Exercise set was successfully updated.' }
+        format.json { render json: { status: "success", weight: @exercise_set.weight } }
+      else
+        format.html { render :edit }
+        format.json { render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update_weight
+    if @exercise_set.update(weight: params[:exercise_set][:weight])
+      render json: { status: "success", weight: @exercise_set.weight }
+    else
+      render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+  end
 
   def create
     @machine = Machine.find(params[:machine_id])
@@ -46,8 +71,6 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: 0
     )
 
-    Rails.logger.info "Workout ID: #{@workout.id}, ExerciseSet ID: #{@exercise_set.id}"
-
     redirect_to exercise_set_path(@exercise_set)
   end
 
@@ -63,29 +86,111 @@ class ExerciseSetsController < ApplicationController
   end
 
   def exercise_set_params
-    params.require(:exercise_set).permit(:workout_id, :exercise_id, :machine_id, :reps, :sets, :weight, :duration, :rest_time, :intensity, :feedback, :max_reps, :performance_score, :effort_level, :energy_consumed)
+    params.require(:exercise_set).permit(:reps, :sets, :weight, :rest_time, :energy_consumed)
   end
 
-  def calculate_distance_variation(data)
-    data.each_cons(2).map { |a, b| b.value - a.value }
-  end
+  # Método atualizado para calcular sets e repetições com base nas distâncias reais
+  def calculate_sets_and_repetitions(data)
+    # Definindo os limites para transições
+    limite_em_serie = 50
+    limite_fora_serie = 150
+    limite_concentrico_completo = 300
+    limite_excentrico_completo = 300
+    tolerancia_ruido = 10  # Pequenas variações serão ignoradas
 
-  def calculate_repetitions(variations)
-    concentric = false
-    reps = 0
+    # Variáveis de controle
+    var_concentrico = 0
+    var_excentrico = 0
+    em_serie = false
+    series = 0
+    reps_na_serie_atual = 0
+    total_reps = 0
+    contador_consecutivo_baixo = 0
+    fase_concentrica_completa = false
+    fase_excentrica_completa = false
+    meia_repeticao = false
 
-    variations.each do |variation|
-      if variation > 0
-        concentric = true
-      elsif variation < 0 && concentric
-        reps += 1
-        concentric = false
+    # Iterar sobre os dados
+    data.each_cons(2).with_index do |(a, b), index|
+      variacao = b - a
+      distancia_atual = b
+      distancia_anterior = a
+      diferenca = (distancia_atual - distancia_anterior).abs
+
+      log_message = "Variação #{index + 1}: Distância atual: #{distancia_atual}, Diferença: #{diferenca} "
+
+      # Ignorar pequenas variações
+      next if diferenca < tolerancia_ruido
+
+      if em_serie
+        if diferenca > limite_em_serie
+          if variacao > 0 # Movimento concêntrico
+            var_concentrico += variacao
+            log_message += "Início de fase concêntrica"
+
+            if var_concentrico >= limite_concentrico_completo
+              fase_concentrica_completa = true
+              log_message += " -> Fase concêntrica completa"
+            end
+
+          elsif variacao < 0 && fase_concentrica_completa # Movimento excêntrico após concêntrico completo
+            var_excentrico += variacao.abs
+            log_message += " -> Início de fase excêntrica"
+
+            if var_excentrico >= limite_excentrico_completo
+              fase_excentrica_completa = true
+              total_reps += 1
+              reps_na_serie_atual += 1
+              log_message += " -> Repetição #{reps_na_serie_atual} completa -> Fim de fase excêntrica"
+
+              # Reseta variáveis após repetição completa
+              var_concentrico = 0
+              var_excentrico = 0
+              fase_concentrica_completa = false
+              fase_excentrica_completa = false
+            end
+          end
+
+          # Resetar contador de movimento baixo
+          contador_consecutivo_baixo = 0
+        else
+          contador_consecutivo_baixo += 1
+
+          # Condição de fim de série
+          if contador_consecutivo_baixo >= 5
+            if reps_na_serie_atual > 0
+              series += 1
+              log_message += " -> Fim de série com #{reps_na_serie_atual} repetições"
+            else
+              log_message += " -> Fim de série sem repetições"
+            end
+            em_serie = false
+            reps_na_serie_atual = 0
+          end
+        end
+      else
+        # Início de uma nova série
+        if diferenca > limite_fora_serie
+          em_serie = true
+          log_message += "Início de série"
+        end
       end
+
+      # Adicionar log para análise
+      Rails.logger.info log_message.strip
     end
 
-    reps
-  end
+    # Adiciona a última série se ainda estiver aberta
+    if em_serie && reps_na_serie_atual > 0
+      series += 1
+      Rails.logger.info "Fim de série com #{reps_na_serie_atual} repetições"
+    end
 
+    # Retorno do resultado
+    Rails.logger.info "Total de séries detectadas: #{series}, Total de repetições: #{total_reps}"
+
+    { sets: series, total_reps: total_reps }
+  end
 
   def calculate_duration(data)
     if data.last
@@ -115,23 +220,5 @@ class ExerciseSetsController < ApplicationController
     end
 
     rest_time
-  end
-
-  def calculate_sets(data)
-    sets = 0
-    in_set = false
-
-    data.each do |datum|
-      if datum.value != -55
-        unless in_set
-          in_set = true
-          sets += 1
-        end
-      else
-        in_set = false
-      end
-    end
-
-    sets
   end
 end
