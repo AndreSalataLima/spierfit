@@ -1,82 +1,85 @@
-<!-- app/views/gyms/registrations/new.html.erb -->
-<h2>Cadastre-se</h2>
+<div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e]">
+  <div class="w-full max-w-[450px] p-3 space-y-6">
+    <h2 class="text-2xl font-bold text-white mb-6">Cadastre sua Academia</h2>
 
-<%= form_with(model: resource, as: resource_name, url: registration_path(resource_name)) do |form| %>
-  <%= devise_error_messages! %>
+    <%= form_with(model: resource, as: resource_name, url: registration_path(resource_name), class: "space-y-4") do |form| %>
+      <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, autofocus: true %>
+      <div class="field">
+        <%= form.label :name, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_field :name, autofocus: true, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :location, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_field :location, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :contact_info, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :contact_info, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :hours_of_operation, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :hours_of_operation, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :equipment_list, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :equipment_list, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :policies, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :policies, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :subscriptions, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :subscriptions, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :photos, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :photos, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :events, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :events, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :capacity, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.number_field :capacity, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :safety_protocols, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.text_area :safety_protocols, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :email, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.email_field :email, class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :password, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.password_field :password, autocomplete: "new-password", class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :password_confirmation, class: "block text-sm font-medium text-[#6a6a6a]" %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "mt-1 block w-full bg-[#202020] text-white border border-[#393939] rounded-[30px] shadow-sm focus:ring-[#a52502] focus:border-[#a52502]" %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit "Cadastre-se", class: "w-full bg-gradient-to-b from-[#a52502] to-[#390d02] text-white font-bold py-2 px-4 rounded-[30px] hover:bg-[#a52502]" %>
+      </div>
+    <% end %>
+
+    <%= render "devise/shared/links" %>
   </div>
-
-  <div class="field">
-    <%= form.label :location %>
-    <%= form.text_field :location %>
-  </div>
-
-  <div class="field">
-    <%= form.label :contact_info %>
-    <%= form.text_area :contact_info %>
-  </div>
-
-  <div class="field">
-    <%= form.label :hours_of_operation %>
-    <%= form.text_area :hours_of_operation %>
-  </div>
-
-  <div class="field">
-    <%= form.label :equipment_list %>
-    <%= form.text_area :equipment_list %>
-  </div>
-
-  <div class="field">
-    <%= form.label :policies %>
-    <%= form.text_area :policies %>
-  </div>
-
-  <div class="field">
-    <%= form.label :subscriptions %>
-    <%= form.text_area :subscriptions %>
-  </div>
-
-  <div class="field">
-    <%= form.label :photos %>
-    <%= form.text_area :photos %>
-  </div>
-
-  <div class="field">
-    <%= form.label :events %>
-    <%= form.text_area :events %>
-  </div>
-
-  <div class="field">
-    <%= form.label :capacity %>
-    <%= form.number_field :capacity %>
-  </div>
-
-  <div class="field">
-    <%= form.label :safety_protocols %>
-    <%= form.text_area :safety_protocols %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.email_field :email %>
-  </div>
-
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "Cadastre-se" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
