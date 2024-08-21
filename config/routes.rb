@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   devise_for :personals, controllers: { registrations: 'registrations' }
 
   resources :exercises
-  resources :personals
+
+  resources :personals do
+    member do
+      get 'dashboard', to: 'personals#dashboard'
+    end
+  end
 
   resources :machines do
     member do
@@ -13,6 +18,7 @@ Rails.application.routes.draw do
     end
     collection do
       get 'user_index', to: 'machines#user_index'
+      get 'select_equipment', to: 'machines#select_equipment'
     end
   end
 
@@ -25,20 +31,29 @@ Rails.application.routes.draw do
   resources :exercise_sets do
     member do
       post 'complete', to: 'exercise_sets#complete'
+      patch 'update_weight', to: 'exercise_sets#update_weight'  # Adicionando esta linha
     end
   end
+
   resources :arduino_cloud_data, only: [:index]
 
   resources :users do
+    member do
+      get 'dashboard', to: 'users#dashboard'
+    end
     resources :workouts, only: [:index, :new, :create]
   end
 
   resources :gyms do
+    member do
+      get 'dashboard', to: 'gyms#dashboard'
+    end
     resources :machines, only: [:index, :new, :create]
   end
 
   mount ActionCable.server => '/cable'
 
+  post 'arduino_cloud_data/receive_data', to: 'arduino_cloud_data#receive_data'
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 

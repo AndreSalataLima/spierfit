@@ -1,38 +1,47 @@
 import consumer from "./consumer"
 
-// Ensure updateChart is defined in the same scope as the subscription.
-function updateChart(chartData) {
-  const chart = Chartkick.charts["chart-1"];
-  if (chart) {
-    console.log("Updating chart with new data.");
-    chart.updateData(chartData);
-  } else {
-    console.log("No chart found to update.");
+// Usar `window.chart` que foi definido no `chart_controller.js`
+function updateChart(newData) {
+  const updateStartTime = new Date().getTime(); // Tempo de início da atualização
+
+  if (window.chart) {
+    const newLabel = new Date(newData[0]).toLocaleTimeString();
+    const newValue = newData[1];
+
+    const numberElements = 100;
+    if (window.chart.data.labels.length >= numberElements) {
+      window.chart.data.labels.shift();
+      window.chart.data.datasets[0].data.shift();
+    }
+
+    window.chart.data.labels.push(newLabel);
+    window.chart.data.datasets[0].data.push(newValue);
+
+    window.chart.update();
+
+    const updateEndTime = new Date().getTime(); // Tempo em que o gráfico foi atualizado
+    const delay = updateEndTime - updateStartTime; // Calcula o tempo de delay
   }
 }
 
-// Create a subscription to the ArduinoDataChannel
 consumer.subscriptions.create("ArduinoDataChannel", {
-  connected() {
-    // Called when the subscription is ready for use on the server
-    console.log("Connected to ArduinoDataChannel");
-  },
-
-  disconnected() {
-    // Called when the subscription has been terminated by the server
-    console.log("Disconnected from ArduinoDataChannel");
-  },
-
   received(data) {
-    // Called when there's incoming data on the websocket for this channel
-    console.log("Received data:", JSON.stringify(data, null, 2));
+    const receiveTime = new Date().getTime(); // Tempo de recebimento dos dados
+
     if (data && data.data) {
-      console.log("Data is present, updating chart...");
-      // Assuming data.data is an array of { recorded_at, value } objects
-      const chartData = data.data.map(datum => [new Date(datum.recorded_at), datum.value]);
+      // Pegue apenas o último dado recebido
+      const lastData = data.data[data.data.length - 1];
+      const chartData = [new Date(lastData.recorded_at), lastData.value];
+
+      // Captura o tempo original em que os dados foram criados (recorded_at)
+      const recordedAtTime = new Date(lastData.recorded_at).getTime();
+      const totalDelayToRender = receiveTime - recordedAtTime; // Tempo total desde a criação até a renderização
+
+      // Exibe apenas o tempo total de delay desde a criação até a renderização
+      console.log(`Total delay from data creation (Arduino Cloud) to rendering on chart: ${totalDelayToRender} ms`);
+
+      // Atualiza o gráfico
       updateChart(chartData);
-    } else {
-      console.log("No data in the received message.");
     }
   }
 });

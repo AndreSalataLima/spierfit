@@ -1,0 +1,9 @@
+@import "font-awesome";
+@import "application.tailwind";
+
+// Estilos globais para remover margens e paddings extras
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

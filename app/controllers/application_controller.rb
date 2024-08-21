@@ -1,10 +1,19 @@
 class ApplicationController < ActionController::Base
-  # before_action :ensure_https
+  # O resto do seu código existente
 
-  # def ensure_https
-  #   if request.headers['X-Forwarded-Proto'] != 'https'
-  #     redirect_to protocol: 'https://', status: :moved_permanently
-  #   end
-  # end
+  protected
+
+  def after_sign_in_path_for(resource)
+    case resource
+    when User
+      dashboard_user_path(resource)
+    when Gym
+      dashboard_gym_path(resource)  # Assume que esta seja a rota correta
+    when Personal
+      dashboard_personal_path(resource)  # Assume que esta seja a rota correta
+    else
+      super  # Redireciona para a raiz ou outro caminho padrão para outros tipos de recursos
+    end
+  end
 
 end
