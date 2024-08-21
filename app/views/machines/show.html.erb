@@ -1,19 +1,41 @@
-<h1><%= @machine.name %></h1>
+<div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e] p-4">
+  <div class="w-full max-w-[450px] space-y-6">
+    <!-- Título com o nome da máquina -->
+    <h2 class="text-2xl font-bold text-white text-center"><%= @machine.name %></h2>
 
-<p>
-  <strong>Description:</strong>
-  <%= @machine.description %>
-</p>
+    <!-- Descrição -->
+    <div class="w-full bg-[#303030] rounded-[30px] px-6 py-4">
+      <p class="text-white text-sm font-medium">
+        <strong>Descrição:</strong>
+        <%= @machine.description %>
+      </p>
+    </div>
 
-<p>
-  <strong>Compatible Exercises:</strong>
-  <%= @machine.compatible_exercises.reject(&:blank?).join(', ') %>
-</p>
+    <!-- Exercícios Compatíveis -->
+    <div class="w-full bg-[#303030] rounded-[30px] px-6 py-4">
+      <p class="text-white text-sm font-medium">
+        <strong>Exercícios Compatíveis:</strong>
+        <%= @machine.compatible_exercises.reject(&:blank?).join(', ') %>
+      </p>
+    </div>
 
-<p>
-  <strong>Status:</strong>
-  <%= @machine.status %>
-</p>
+    <!-- Status da Máquina -->
+    <div class="w-full bg-[#303030] rounded-[30px] px-6 py-4">
+      <p class="text-white text-sm font-medium">
+        <strong>Status:</strong>
+        <%= @machine.status.capitalize %>
+      </p>
+    </div>
 
-<%= link_to 'Edit', edit_machine_path(@machine) %> |
-<%= link_to 'Back', machines_path %>
+    <!-- Botões de Ação -->
+    <div class="w-full flex justify-between">
+      <%= link_to 'Editar', edit_machine_path(@machine), class: "bg-[#a52502] text-white rounded-[30px] px-4 py-2 text-center text-sm font-bold" %>
+      <%= link_to 'Voltar', dashboard_gym_path(@machine.gym_id), class: "bg-[#202020] text-white rounded-[30px] px-4 py-2 text-center text-sm" %>
+    </div>
+
+    <!-- Botão "Exercícios" com estilização mínima -->
+    <div class="w-full mt-4">
+      <%= link_to 'Exercícios', machine_exercises_machine_path(@machine), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center w-full block" %>
+    </div>
+  </div>
+</div>

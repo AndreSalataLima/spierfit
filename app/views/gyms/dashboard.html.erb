@@ -1,3 +1,46 @@
-<h1>Dashboard da Academia</h1>
-<p>Bem-vindo, <%= @gym.name %>!</p>
-<!-- Adicione aqui o conteúdo específico do dashboard da academia -->
+<div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e]">
+  <!-- Container for Profile Section and Add Machine Button with Padding -->
+  <div class="w-full max-w-[450px] p-3 space-y-6">
+    <!-- Gym Profile Section -->
+    <div class="w-full flex items-center mt-4 mb-4">
+      <div class="w-[60px] h-[60px] bg-[#393939] rounded-full"></div>
+      <div class="ml-4">
+        <div class="text-white text-lg font-semibold"><%= @gym.name %></div>
+        <div class="text-[#6a6a6a] text-xs">Localização: <%= @gym.location %></div>
+      </div>
+    </div>
+
+    <!-- Add Machine Button -->
+    <div class="w-full bg-gradient-to-b from-[#a52502] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer">
+      <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-[30px]"></div>
+      <div class="relative flex flex-col items-center">
+        <div class="text-white text-lg font-semibold">Adicionar Aparelho</div>
+        <%= link_to new_machine_path, class: "bg-[#0e0e0e] text-white rounded-full py-2 px-6 mt-4" do %>
+          <i class="fa fa-plus-circle mr-2"></i>Adicionar Aparelho
+        <% end %>
+      </div>
+    </div>
+
+    <!-- New Button to Consult Machines -->
+    <div class="w-full bg-gradient-to-b from-[#1c8394] to-[#154b52] rounded-[30px] px-4 py-6 relative cursor-pointer">
+      <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-[30px]"></div>
+      <div class="relative flex flex-col items-center">
+        <div class="text-white text-lg font-semibold">Consultar Aparelho</div>
+        <%= link_to machines_path, class: "bg-[#0e0e0e] text-white rounded-full py-2 px-6 mt-4" do %>
+          <i class="fa fa-search mr-2"></i>Consultar Aparelho
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[450px] bg-[#0e0e0e] rounded-t-[30px] p-4 flex justify-around items-center mt-auto">
+    <div class="text-white"><i class="fa fa-home"></i></div>
+    <div class="text-white"><i class="fa-solid fa-chart-column"></i></div>
+    <%= link_to new_machine_path, class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center" do %>
+      <i class="fa fa-cog text-white"></i>
+    <% end %>
+    <div class="text-white"><i class="fa fa-calendar-alt"></i></div>
+    <div class="text-white"><i class="fa fa-user"></i></div>
+  </div>
+</div>

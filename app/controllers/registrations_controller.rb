@@ -18,27 +18,29 @@ class RegistrationsController < Devise::RegistrationsController
     ])
   end
 
+  # Redireciona para o dashboard do recurso após o cadastro
   def after_sign_up_path_for(resource)
     case resource
     when Gym
-      gym_path(resource)
+      dashboard_gym_path(resource) # Ajuste para o dashboard do Gym
     when User
-      user_path(resource)
+      dashboard_user_path(resource) # Ajuste para o dashboard do User
     when Personal
-      personal_path(resource)
+      dashboard_personal_path(resource) # Ajuste para o dashboard do Personal
     else
       super
     end
   end
 
+  # Redireciona para o caminho correto após atualização da conta
   def after_update_path_for(resource)
     case resource
     when Gym
-      gym_path(resource)
+      dashboard_gym_path(resource) # Ajuste para o dashboard do Gym
     when User
-      user_path(resource)
+      dashboard_user_path(resource) # Ajuste para o dashboard do User
     when Personal
-      personal_path(resource)
+      dashboard_personal_path(resource) # Ajuste para o dashboard do Personal
     else
       super
     end
