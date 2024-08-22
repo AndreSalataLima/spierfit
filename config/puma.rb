@@ -41,3 +41,12 @@ ssl_bind '127.0.0.1', '3000', {
   cert: 'config/myserver.crt',
   verify_mode: 'none'
 }
+
+# Apenas ativar SSL no ambiente de desenvolvimento
+if ENV["RAILS_ENV"] == "development"
+  ssl_bind '127.0.0.1', '3000', {
+    key: 'config/myserver.key',
+    cert: 'config/myserver.crt',
+    verify_mode: 'none'
+  }
+end
