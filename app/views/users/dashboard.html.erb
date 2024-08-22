@@ -10,6 +10,14 @@
       </div>
     </div>
 
+    <!-- Logout Button -->
+      <div>
+        <%= button_to destroy_user_session_path, method: :delete, class: "text-[#ff8137] text-sm hover:text-white transition" do %>
+          <i class="fa fa-sign-out-alt"></i> Logout
+        <% end %>
+      </div>
+    </div>
+
     <!-- Progress Card -->
     <div class="w-full bg-[#202020] rounded-[30px] px-4 py-6">
       <div class="text-white text-base font-semibold mb-3">Meu Progresso</div>
