@@ -90,3 +90,5 @@ gem 'rack-cors', require: 'rack/cors'
 
 # Add Font Awesome for icons
 gem 'font-awesome-sass'
+
+gem "ffi", "< 1.17.0"
