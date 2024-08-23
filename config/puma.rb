@@ -1,48 +1,32 @@
-# This configuration file will be evaluated by Puma. The top-level methods that
-# are invoked here are part of Puma's configuration DSL. For more information
-# about methods provided by the DSL, see https://puma.io/puma/Puma/DSL.html.
-
-# Puma can serve each request in a thread from an internal thread pool.
-# The `threads` method setting takes two numbers: a minimum and maximum.
-# Any libraries that use thread pools should be configured to match
-# the maximum value specified for Puma. Default is set to 5 threads for minimum
-# and maximum; this matches the default thread size of Active Record.
-max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+# Definir o número de threads mínimo e máximo.
+# Esses valores controlam quantas requisições simultâneas um worker pode processar.
+max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }  # Ajuste conforme necessário (padrão: 5)
 min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
 threads min_threads_count, max_threads_count
 
-# Specifies that the worker count should equal the number of processors in production.
-if ENV["RAILS_ENV"] == "production"
-  require "concurrent-ruby"
-  worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
-  workers worker_count if worker_count > 1
-end
+# Número de workers em produção:
+# Reduzimos o número de workers para 1 para diminuir o consumo de memória.
+# Para produção no Heroku, definir via ENV ou manter 1 por padrão.
+worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { 1 })  # Inicialmente usar 1 worker
+workers worker_count if worker_count > 1  # Garantir que os workers sejam usados apenas se > 1
 
-# Specifies the `worker_timeout` threshold that Puma will use to wait before
-# terminating a worker in development environments.
+# Timeout mais longo em desenvolvimento para facilitar o debug.
 worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
-# Specifies the `port` that Puma will listen on to receive requests; default is 3000.
+# Porta que o Puma escutará (Heroku define automaticamente a variável PORT).
 port ENV.fetch("PORT") { 3000 }
 
-# Specifies the `environment` that Puma will run in.
+# Ambiente de execução (development, test, production).
 environment ENV.fetch("RAILS_ENV") { "development" }
 
-# Specifies the `pidfile` that Puma will use.
+# Arquivo de PID (process identifier).
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
-# Allow puma to be restarted by `bin/rails restart` command.
+# Permitir que o Puma seja reiniciado com `bin/rails restart`.
 plugin :tmp_restart
 
-
-# Em config/puma.rb
-ssl_bind '127.0.0.1', '3000', {
-  key: 'config/myserver.key',
-  cert: 'config/myserver.crt',
-  verify_mode: 'none'
-}
-
-# Apenas ativar SSL no ambiente de desenvolvimento
+# Configuração SSL (se necessário).
+# Apenas ativar SSL no ambiente de desenvolvimento.
 if ENV["RAILS_ENV"] == "development"
   ssl_bind '127.0.0.1', '3000', {
     key: 'config/myserver.key',
