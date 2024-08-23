@@ -1,48 +1,60 @@
-<h1>Workouts</h1>
+<%= content_for :title, "Treinos - SpierFit" %>
 
-<%= link_to 'New Workout', new_workout_path %>
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <!-- Back Button -->
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <!-- Title -->
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Treinos</div>
+      </div>
+    </div>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Personal</th>
-      <th>Gym</th>
-      <th>Workout Type</th>
-      <th>Goal</th>
-      <th>Duration</th>
-      <th>Calories Burned</th>
-      <th>Intensity</th>
-      <th>Feedback</th>
-      <th>Modifications</th>
-      <th>Intensity General</th>
-      <th>Difficulty Perceived</th>
-      <th>Performance Score</th>
-      <th>Auto Adjustments</th>
-      <th colspan="3">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @workouts.each do |workout| %>
-      <tr id="<%= dom_id(workout) %>">
-        <td><%= workout.user&.name %></td>
-        <td><%= workout.personal&.name %></td>
-        <td><%= workout.gym&.name %></td>
-        <td><%= workout.workout_type %></td>
-        <td><%= workout.goal %></td>
-        <td><%= workout.duration %></td>
-        <td><%= workout.calories_burned %></td>
-        <td><%= workout.intensity %></td>
-        <td><%= workout.feedback %></td>
-        <td><%= workout.modifications %></td>
-        <td><%= workout.intensity_general %></td>
-        <td><%= workout.difficulty_perceived %></td>
-        <td><%= workout.performance_score %></td>
-        <td><%= workout.auto_adjustments %></td>
-        <td><%= link_to 'Show', workout %></td>
-        <td><%= link_to 'Edit', edit_workout_path(workout) %></td>
-        <td><%= link_to 'Destroy', workout, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+  <!-- Main Content -->
+  <div class="flex flex-col items-center w-full max-w-[428px]">
+    <div class="text-white text-lg font-semibold mb-4">Histórico de Treinos:</div>
+    <div class="w-full overflow-x-auto">
+      <table class="min-w-full bg-[#202020] rounded-[30px] text-white">
+        <thead>
+          <tr class="bg-[#303030]">
+            <th class="py-3 px-4 text-left">Data</th>
+            <th class="py-3 px-4 text-left">Calorias</th>
+            <th class="py-3 px-4 text-center">Desempenho</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @workouts.each do |workout| %>
+            <tr class="border-b border-[#393939]">
+              <td class="py-3 px-4"><%= workout.created_at.strftime('%d/%m') %></td>
+              <td class="py-3 px-4"><%= workout.calories_burned %></td>
+              <td class="py-3 px-4 text-center">
+                <%= link_to 'Consultar', workout, class: "text-blue-500 underline" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= link_to new_workout_path, class: 'w-full max-w-[353px] h-[44.68px] bg-[#303030] rounded-[100px] flex items-center justify-center mt-4' do %>
+      <div class="text-white text-sm">Novo Workout</div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+    <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+    <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
+    <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
+      <i class="fa-solid fa-stop text-white text-lg"></i>
+    </a>
+    <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+    <div class="text-white text-sm"><i class="fa fa-user"></i></div>
+  </div>
+</div>
