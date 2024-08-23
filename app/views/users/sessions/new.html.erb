@@ -6,12 +6,12 @@
 
       <div class="w-full bg-[#303030] rounded-[100px] px-6 py-4 flex items-center gap-4">
         <div class="w-32 text-center text-white text-lg font-medium font-['Manrope']">Login</div>
-        <%= form.email_field :email, autofocus: true, class: "bg-transparent border-none text-white flex-1 text-lg" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "off", class: "bg-transparent border-none text-white flex-1 text-lg focus:outline-none focus:ring-0 focus:border-transparent" %>
       </div>
 
       <div class="w-full bg-[#303030] rounded-[100px] px-6 py-4 flex items-center gap-4">
         <div class="w-32 text-center text-white text-lg font-medium font-['Manrope']">Senha</div>
-        <%= form.password_field :password, autocomplete: "current-password", class: "bg-transparent border-none text-white flex-1 text-lg" %>
+        <%= form.password_field :password, autocomplete: "off", class: "bg-transparent border-none text-white flex-1 text-lg focus:outline-none focus:ring-0 focus:border-transparent" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
@@ -19,7 +19,7 @@
           <label class="text-white text-lg flex items-center">
             <%= form.check_box :remember_me, class: "mr-2" %> Remember Me
           </label>
-          <%= link_to "Forgot Password?", new_user_password_path, class: "text-white text-lg" %>
+          <a href="= new_user_password_path" class="text-white text-lg">Forgot Password?</a>
         </div>
       <% end %>
 
