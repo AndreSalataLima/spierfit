@@ -7,16 +7,15 @@
       <div class="ml-4">
         <div class="text-white text-lg font-semibold"><%= @user.name %></div>
         <div class="text-[#6a6a6a] text-xs"><%= @user_age %> anos - <%= @user.weight %> kg - <%= @user.height / 100.0 %> m</div>
-      </div>
-    </div>
-
-    <!-- Logout Button -->
+      <!-- Logout Button -->
       <div>
         <%= button_to destroy_user_session_path, method: :delete, class: "text-[#ff8137] text-sm hover:text-white transition" do %>
           <i class="fa fa-sign-out-alt"></i> Logout
         <% end %>
       </div>
+      </div>
     </div>
+
 
     <!-- Progress Card -->
     <div class="w-full bg-[#202020] rounded-[30px] px-4 py-6">

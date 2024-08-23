@@ -19,7 +19,7 @@
           <label class="text-white text-lg flex items-center">
             <%= form.check_box :remember_me, class: "mr-2" %> Remember Me
           </label>
-          <%# <a href="= new_user_password_path" class="text-white text-lg">Forgot Password?</a> %>
+          <%= link_to "Forgot Password?", new_user_password_path, class: "text-white text-lg" %>
         </div>
       <% end %>
 
@@ -27,6 +27,6 @@
         <%= form.submit "Entrar", class: "text-center text-white text-lg font-bold font-['Manrope']" %>
       </div>
     <% end %>
-    <%# <p class="text-center text-white mt-3 mb-0">Don't have an account? <%= link_to "Sign Up", new_user_registration_path, class: "text-blue-500"</p> %>
+    <p class="text-center text-white mt-3 mb-0">Don't have an account? <%= link_to "Sign Up", new_user_registration_path, class: "text-blue-500" %></p>
   </div>
 </div>
