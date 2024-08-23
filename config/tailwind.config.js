@@ -15,7 +15,8 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    // Remova o plugin de formulários, pois ele está adicionando os estilos indesejados
+    // require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
   ]
