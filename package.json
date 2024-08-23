@@ -1,7 +1,14 @@
 {
+  "name": "spierfit",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "bundle exec rails s",
+    "python-task": "cd api_python && python3 script.py"
+  },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "chart.js": "^4.4.3",
+    "chartkick": "^5.0.1",
     "html5-qrcode": "^2.3.8"
   }
 }

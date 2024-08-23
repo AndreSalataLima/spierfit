@@ -92,3 +92,5 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'font-awesome-sass'
 
 gem "ffi", "< 1.17.0"
+
+gem 'terser'
