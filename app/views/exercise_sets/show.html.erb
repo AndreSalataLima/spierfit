@@ -1,7 +1,7 @@
 <!-- app/views/exercise_sets/show.html.erb -->
 <div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
   <!-- Top Navigation -->
-  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2">
+  <div class="top-navigation w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2" data-controller="navigation" data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
     <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
@@ -48,8 +48,11 @@
       </div>
 
       <div class="flex justify-between my-3 text-white text-sm">
-        <div class="flex flex-col items-center">
-          <div class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
+        <div data-controller="rest-time"
+            data-exercise-set-id="<%= @exercise_set.id %>"
+            data-series-completed="<%= @exercise_set.sets > 0 %>"
+            class="flex flex-col items-center">
+          <div data-rest-time-target="value" class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
           <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
         </div>
         <div class="flex flex-col items-center">
@@ -68,7 +71,7 @@
   </div>
 
   <!-- Bottom Navigation -->
-  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+  <div class="bottom-navigation w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center" data-controller="navigation" data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
     <div class="text-white text-sm"><i class="fa fa-home"></i></div>
     <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
     <%= link_to edit_exercise_set_path(@exercise_set.id), class: "bg-[#a52502] rounded-full p-3" do %>
@@ -77,4 +80,5 @@
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
+
 </div>

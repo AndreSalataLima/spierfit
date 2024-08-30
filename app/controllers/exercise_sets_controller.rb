@@ -1,16 +1,19 @@
 class ExerciseSetsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete, :update_weight]
+  before_action :set_exercise_set, only: [:show, :edit, :update, :destroy, :complete, :update_weight, :update_rest_time]
 
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-
-    # Detect series and repetitions using the updated logic
     results = detect_series_and_reps(@arduino_data.map(&:value))
-
     duration = calculate_duration(@arduino_data)
 
-    # Update the exercise set with the detected number of series and repetitions
+    # Verifica se uma série foi concluída comparando a contagem atual de séries
+    if results[:series_count] > @exercise_set.sets
+      @exercise_set.update(rest_time: 5) # Inicia com 5 segundos após a série terminar
+    elsif results[:series_count] == @exercise_set.sets && results[:reps] == @exercise_set.reps
+      @exercise_set.update(rest_time: @exercise_set.rest_time + 1)
+    end
+
     @exercise_set.update(
       reps: results[:reps],
       sets: results[:series_count],
@@ -74,6 +77,20 @@ class ExerciseSetsController < ApplicationController
     redirect_to user_index_machines_path, notice: 'Exercise set was successfully completed.'
   end
 
+  def update_rest_time
+    if @exercise_set.update(rest_time: params[:rest_time])
+      render json: { status: "success", rest_time: @exercise_set.rest_time }
+    else
+      render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+  end
+
+  def complete
+    @exercise_set = ExerciseSet.find(params[:id])
+    @exercise_set.update(completed: true)
+    render json: { status: "success", completed: @exercise_set.completed }
+  end
+
   private
 
   def set_exercise_set
@@ -101,7 +118,6 @@ class ExerciseSetsController < ApplicationController
     current_series_has_reps = false
 
     data.each_with_index do |value, index|
-      log_message = "Value ID #{index + 1}: #{value}"
 
       # Detect the start of a series
       if !in_series && value > -1400
@@ -109,7 +125,6 @@ class ExerciseSetsController < ApplicationController
         ready_for_new_rep = true
         consecutive_low_values = 0
         current_series_has_reps = false  # Reset for the new series
-        log_message += ", Série iniciada"
       end
 
       # Count repetitions
@@ -118,7 +133,6 @@ class ExerciseSetsController < ApplicationController
           reps += 1
           ready_for_new_rep = false  # Block further repetitions until value drops below -1050
           current_series_has_reps = true  # Mark that this series has at least one repetition
-          log_message += ", Repetição contada"
         end
 
         if value < -1050
@@ -128,7 +142,6 @@ class ExerciseSetsController < ApplicationController
         # End of the series when value remains below -1400 for 50 consecutive readings
         if value <= -1400
           consecutive_low_values += 1
-          log_message += ", Contador de baixa consecutiva: #{consecutive_low_values}"
         else
           consecutive_low_values = 0
         end
@@ -136,21 +149,14 @@ class ExerciseSetsController < ApplicationController
         if consecutive_low_values >= 50
           if current_series_has_reps
             series_count += 1  # Only count the series if it had at least one repetition
-            log_message += ", Série finalizada com repetições"
           else
-            log_message += ", Série descartada (sem repetições)"
           end
           in_series = false  # End the current series
         end
       end
 
-      # Log each step
-      Rails.logger.info(log_message)
     end
 
     { series_count: series_count, reps: reps }
   end
-
-
-
 end
