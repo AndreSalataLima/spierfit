@@ -5,15 +5,15 @@ class ExerciseSetsController < ApplicationController
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
 
-    # Detect series (com lógica para iniciar e finalizar a série)
-    series_count = detect_series(@arduino_data.map(&:value))
+    # Detect series and repetitions using the updated logic
+    results = detect_series_and_reps(@arduino_data.map(&:value))
 
     duration = calculate_duration(@arduino_data)
 
-    # Sobrescrever o número de séries, mesmo que não tenha séries detectadas (zerar se necessário)
+    # Update the exercise set with the detected number of series and repetitions
     @exercise_set.update(
-      reps: 0,  # Temporariamente, sem lógica de repetições
-      sets: series_count,
+      reps: results[:reps],
+      sets: results[:series_count],
       duration: duration,
       updated_at: Time.now
     )
@@ -92,60 +92,64 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
-# Detectar o início e fim da série, com log para todos os values
-def detect_series(data)
-  series_count = 0
-  in_series = false
-  consecutive_low_variations = 0
+  def detect_series_and_reps(data)
+    series_count = 0
+    reps = 0
+    in_series = false
+    ready_for_new_rep = true
+    consecutive_low_values = 0
+    current_series_has_reps = false
 
-  data.each_with_index do |value, index|
-    next if index < 4  # Pular os primeiros valores porque precisamos de 4 valores para calcular as 3 últimas variações
+    data.each_with_index do |value, index|
+      log_message = "Value ID #{index + 1}: #{value}"
 
-    # Calcular as três últimas variações
-    variation_1 = data[index - 3] - data[index - 4]
-    variation_2 = data[index - 2] - data[index - 3]
-    variation_3 = data[index - 1] - data[index - 2]
+      # Detect the start of a series
+      if !in_series && value > -1400
+        in_series = true
+        ready_for_new_rep = true
+        consecutive_low_values = 0
+        current_series_has_reps = false  # Reset for the new series
+        log_message += ", Série iniciada"
+      end
 
-    # Somar as variações (sem valor absoluto)
-    sum_of_variations = variation_1 + variation_2 + variation_3
-
-    # Log para todos os valores
-    log_message = "Value #{index + 1}: Distance: #{value}"
-
-    # Detectar o início de uma série
-    if !in_series && sum_of_variations > 200
-      in_series = true
-      series_count += 1
-      consecutive_low_variations = 0  # Resetar o contador ao iniciar uma nova série
-      log_message += ", Início da série"
-    end
-
-    # Verificar o fim da série apenas após a série ter iniciado
-    if in_series
-      if index > 0
-        variation = (value - data[index - 1]).abs
-
-        if variation < 60
-          consecutive_low_variations += 1
-          log_message += ", Variação consecutiva: #{consecutive_low_variations}"
-        else
-          consecutive_low_variations = 0  # Resetar contador se a variação for maior que 60
+      # Count repetitions
+      if in_series
+        if value > -880 && ready_for_new_rep
+          reps += 1
+          ready_for_new_rep = false  # Block further repetitions until value drops below -1050
+          current_series_has_reps = true  # Mark that this series has at least one repetition
+          log_message += ", Repetição contada"
         end
 
-        # Se o contador atingir 50, concluir a série
-        if consecutive_low_variations >= 50
-          in_series = false
-          log_message += ", Fim da série"
+        if value < -1050
+          ready_for_new_rep = true  # Allow a new repetition to be counted when value rises above -880
+        end
+
+        # End of the series when value remains below -1400 for 50 consecutive readings
+        if value <= -1400
+          consecutive_low_values += 1
+          log_message += ", Contador de baixa consecutiva: #{consecutive_low_values}"
+        else
+          consecutive_low_values = 0
+        end
+
+        if consecutive_low_values >= 50
+          if current_series_has_reps
+            series_count += 1  # Only count the series if it had at least one repetition
+            log_message += ", Série finalizada com repetições"
+          else
+            log_message += ", Série descartada (sem repetições)"
+          end
+          in_series = false  # End the current series
         end
       end
+
+      # Log each step
+      Rails.logger.info(log_message)
     end
 
-    # Imprimir log para cada valor
-    Rails.logger.info(log_message)
+    { series_count: series_count, reps: reps }
   end
-
-  series_count
-end
 
 
 
