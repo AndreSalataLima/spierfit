@@ -1,4 +1,3 @@
-<!-- app/views/exercise_sets/show.html.erb -->
 <div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
   <!-- Top Navigation -->
   <div class="top-navigation w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2" data-controller="navigation" data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
@@ -29,16 +28,15 @@
     </div>
   </div>
 
-
     <!-- Details Section -->
-    <div>
+    <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
       <div class="flex justify-between my-3 text-white text-sm">
         <div class="flex flex-col items-center">
-          <div class="text-base font-semibold"><%= @exercise_set.reps %></div>
+          <div data-reps-series-target="reps" class="text-base font-semibold"><%= @exercise_set.reps %></div>
           <div class="text-[#9c9c9c] text-xs">Repetições</div>
         </div>
         <div class="flex flex-col items-center">
-          <div class="text-base font-semibold"><%= @exercise_set.sets %></div>
+          <div data-reps-series-target="sets" class="text-base font-semibold"><%= @exercise_set.sets %></div>
           <div class="text-[#9c9c9c] text-xs">Séries</div>
         </div>
         <div class="flex flex-col items-center">
