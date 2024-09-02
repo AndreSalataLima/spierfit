@@ -21,26 +21,30 @@ class ExerciseSetsController < ApplicationController
       end
     end
 
-    # Encontrar a última série
-    last_series_number = reps_per_series.keys.map(&:to_i).max
-    last_series = reps_per_series[last_series_number.to_s]
+    # Se reps_per_series estiver vazio, definir valores padrão
+    if reps_per_series.empty?
+      last_series_reps = 0
+      series_count = 0
+    else
+      last_series_reps = reps_per_series.values.last[:reps]
+      series_count = results[:series_count]
+    end
 
     @exercise_set.update(
       reps_per_series: reps_per_series,
-      sets: results[:series_count],
+      sets: series_count,       # Atualiza o número de séries
+      reps: last_series_reps,   # Atualiza o número de repetições
       duration: duration,
       updated_at: Time.now
     )
-
-    @last_series_number = last_series_number
-    @last_reps = last_series ? last_series[:reps] : 0
   end
-
-
 
   def reps_and_sets
-    render json: { reps: @exercise_set.reps, sets: @exercise_set.sets }
+    last_series_reps = @exercise_set.reps_per_series.values.last[:reps] || 0
+    last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 1
+    render json: { reps: last_series_reps, sets: last_series_number }
   end
+
 
   def edit
   end

@@ -12,7 +12,7 @@ export default class extends Controller {
     if (this.seriesCompleted) {
       this.timer = setInterval(() => {
         this.updateRestTime();
-      }, 1000);
+      }, 10000);
 
       // Adiciona o listener para parar o contador quando a página mudar
       document.addEventListener('turbo:before-visit', () => {
