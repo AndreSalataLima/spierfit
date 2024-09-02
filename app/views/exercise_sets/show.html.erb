@@ -32,12 +32,12 @@
     <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
       <div class="flex justify-between my-3 text-white text-sm">
         <div class="flex flex-col items-center">
-          <div data-reps-series-target="reps" class="text-base font-semibold"><%= @exercise_set.reps %></div>
+          <div data-reps-series-target="reps" class="text-base font-semibold"><%= @last_reps %></div>
           <div class="text-[#9c9c9c] text-xs">Repetições</div>
         </div>
         <div class="flex flex-col items-center">
-          <div data-reps-series-target="sets" class="text-base font-semibold"><%= @exercise_set.sets %></div>
-          <div class="text-[#9c9c9c] text-xs">Séries</div>
+          <div data-reps-series-target="sets" class="text-base font-semibold"><%= @last_series_number %></div>
+          <div class="text-[#9c9c9c] text-xs">Série</div>
         </div>
         <div class="flex flex-col items-center">
           <div class="text-base font-semibold" id="fixed-weight"><%= @exercise_set.weight %>kg</div>
