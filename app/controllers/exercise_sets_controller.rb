@@ -9,20 +9,21 @@ class ExerciseSetsController < ApplicationController
 
     reps_per_series = @exercise_set.reps_per_series || {}
 
-    results[:reps_per_series].each do |series_num, data|
-      # Verifique se a série já existe
-      unless reps_per_series[series_num]
-        # Cria uma nova entrada para a série válida com o peso e o rest_time no momento
-        reps_per_series[series_num] = {
+    results[:reps_per_series].each do |series_number, data|
+      unless reps_per_series[series_number]
+        reps_per_series[series_number] = {
           reps: data[:reps],
           weight: @exercise_set.weight,
-          rest_time: calculate_rest_time(@arduino_data, series_num.to_i)
+          rest_time: calculate_rest_time(@arduino_data, series_number.to_i)
         }
       else
-        # Atualiza as repetições caso haja alguma modificação
-        reps_per_series[series_num][:reps] = data[:reps]
+        reps_per_series[series_number][:reps] = data[:reps]
       end
     end
+
+    # Encontrar a última série
+    last_series_number = reps_per_series.keys.map(&:to_i).max
+    last_series = reps_per_series[last_series_number.to_s]
 
     @exercise_set.update(
       reps_per_series: reps_per_series,
@@ -30,6 +31,9 @@ class ExerciseSetsController < ApplicationController
       duration: duration,
       updated_at: Time.now
     )
+
+    @last_series_number = last_series_number
+    @last_reps = last_series ? last_series[:reps] : 0
   end
 
 
