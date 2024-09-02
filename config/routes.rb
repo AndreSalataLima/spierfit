@@ -34,6 +34,8 @@ Rails.application.routes.draw do
       patch 'update_weight', to: 'exercise_sets#update_weight'
       patch 'update_rest_time'
       patch 'complete'
+      get :reps_and_sets
+
     end
   end
 

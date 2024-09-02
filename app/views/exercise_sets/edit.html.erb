@@ -51,54 +51,45 @@
 
   <!-- Série Details -->
   <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-2">
-    <h2 class="text-white text-lg font-semibold mb-4">Série</h2>
+    <h2 class="text-white text-lg font-semibold mb-4">Séries</h2>
     <%= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true) do |form| %>
-      <div class="w-full bg-[#303030] rounded-[20px] p-2 mb-4">
-        <div class="flex justify-between items-center mb-2">
-          <div class="text-white text-sm font-semibold">Série 1</div>
-          <div class="text-white text-sm"><i class="fa fa-chevron-up"></i></div>
-        </div>
-        <div class="flex justify-between items-center text-white text-sm mb-2 space-x-2">
-          <div>
-            <label for="serie_reps" class="block text-xs mb-1">Repetições</label>
-            <%= form.number_field :reps, id: "serie_reps", class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+
+      <!-- Itera sobre as séries armazenadas no reps_per_series -->
+      <!-- Verifica se reps_per_series não é nil -->
+      <% if @exercise_set.reps_per_series.present? %>
+        <% @exercise_set.reps_per_series.each do |series_number, details| %>
+          <div class="w-full bg-[#303030] rounded-[20px] p-2 mb-4">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-white text-sm font-semibold">Série <%= series_number %></div>
+              <div class="text-white text-sm"><i class="fa fa-chevron-up"></i></div>
+            </div>
+            <div class="flex justify-between items-center text-white text-sm mb-2 space-x-2">
+              <div>
+                <label for="serie_<%= series_number %>_reps" class="block text-xs mb-1">Repetições</label>
+                <%= number_field_tag "serie_#{series_number}_reps", details["reps"], class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+              </div>
+              <div>
+                <label for="serie_<%= series_number %>_weight" class="block text-xs mb-1">Carga</label>
+                <%= number_field_tag "serie_#{series_number}_weight", details["weight"], class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+              </div>
+            </div>
+            <div class="flex justify-between items-center text-white text-sm mb-2 space-x-2">
+              <div>
+                <label for="serie_<%= series_number %>_rest_time" class="block text-xs mb-1">Tempo de repouso</label>
+                <%= number_field_tag "serie_#{series_number}_rest_time", details["rest_time"], class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+              </div>
+            </div>
           </div>
-          <div>
-            <label for="serie_weight" class="block text-xs mb-1">Carga</label>
-            <%= form.number_field :weight, id: "serie_weight", class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
-          </div>
-        </div>
-        <div class="flex justify-between items-center text-white text-sm mb-2 space-x-2">
-          <div>
-            <label for="serie_rest_time" class="block text-xs mb-1">Tempo de repouso</label>
-            <%= form.number_field :rest_time, id: "serie_rest_time", class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
-          </div>
-          <div>
-            <label for="serie_energy_consumed" class="block text-xs mb-1">Calorias Totais</label>
-            <%= form.number_field :energy_consumed, id: "serie_energy_consumed", class: "bg-[#202020] rounded-md p-2 text-white text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
-          </div>
-        </div>
-        <div class="flex justify-center">
-          <%= form.submit "Salvar", class: "bg-[#a52502] rounded-full px-3 py-1 text-white text-xs" %>
-        </div>
+        <% end %>
+      <% else %>
+        <p class="text-white">Nenhuma série encontrada.</p>
+      <% end %>
+
+
+      <div class="flex justify-center">
+        <%= form.submit "Salvar", class: "bg-[#a52502] rounded-full px-3 py-1 text-white text-xs" %>
       </div>
     <% end %>
-
-    <!-- Closed Série 2 -->
-    <div class="w-full bg-[#303030] rounded-[20px] p-2 mb-4">
-      <div class="flex justify-between items-center">
-        <div class="text-white text-sm font-semibold">Série 2</div>
-        <div class="text-white text-sm"><i class="fa fa-chevron-down"></i></div>
-      </div>
-    </div>
-
-    <!-- Closed Série 3 -->
-    <div class="w-full bg-[#303030] rounded-[20px] p-2 mb-4">
-      <div class="flex justify-between items-center">
-        <div class="text-white text-sm font-semibold">Série 3</div>
-        <div class="text-white text-sm"><i class="fa fa-chevron-down"></i></div>
-      </div>
-    </div>
   </div>
 
   <!-- Bottom Navigation -->
@@ -111,6 +102,4 @@
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
-
-
 </div>
