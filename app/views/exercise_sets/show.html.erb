@@ -28,38 +28,60 @@
     </div>
   </div>
 
-    <!-- Details Section -->
-    <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
+  <!-- Details Section -->
+  <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
+    <% if @exercise_set.reps_per_series.present? %>
+      <% last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max %>
+      <% last_series_details = @exercise_set.reps_per_series[last_series_number.to_s] %>
+
       <div class="flex justify-between my-3 text-white text-sm">
         <div class="flex flex-col items-center">
-          <div data-reps-series-target="reps" class="text-base font-semibold"><%= @last_reps %></div>
+          <div class="text-base font-semibold"><%= last_series_details["reps"] %></div>
           <div class="text-[#9c9c9c] text-xs">Repetições</div>
         </div>
         <div class="flex flex-col items-center">
-          <div data-reps-series-target="sets" class="text-base font-semibold"><%= @last_series_number %></div>
+          <div class="text-base font-semibold"><%= last_series_number %></div>
           <div class="text-[#9c9c9c] text-xs">Série</div>
         </div>
         <div class="flex flex-col items-center">
-          <div class="text-base font-semibold" id="fixed-weight"><%= @exercise_set.weight %>kg</div>
+          <div class="text-base font-semibold"><%= last_series_details["weight"] %>kg</div>
           <div class="text-[#9c9c9c] text-xs">Carga</div>
         </div>
       </div>
-
+    <% else %>
+      <!-- Valores padrão quando não há dados -->
       <div class="flex justify-between my-3 text-white text-sm">
-        <div data-controller="rest-time"
-            data-exercise-set-id="<%= @exercise_set.id %>"
-            data-series-completed="<%= @exercise_set.sets > 0 %>"
-            class="flex flex-col items-center">
-          <div data-rest-time-target="value" class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
-          <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
+        <div class="flex flex-col items-center">
+          <div class="text-base font-semibold">0</div>
+          <div class="text-[#9c9c9c] text-xs">Repetições</div>
         </div>
         <div class="flex flex-col items-center">
-          <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
-          <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
+          <div class="text-base font-semibold">0</div>
+          <div class="text-[#9c9c9c] text-xs">Série</div>
         </div>
+        <div class="flex flex-col items-center">
+          <div class="text-base font-semibold">0kg</div>
+          <div class="text-[#9c9c9c] text-xs">Carga</div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+    <div class="flex justify-between my-3 text-white text-sm">
+      <div data-controller="rest-time"
+          data-exercise-set-id="<%= @exercise_set.id %>"
+          data-series-completed="<%= @exercise_set.sets > 0 %>"
+          class="flex flex-col items-center">
+        <div data-rest-time-target="value" class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
+        <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
+        <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
       </div>
     </div>
   </div>
+
 
   <!-- Counter Buttons -->
   <div data-controller="weight" data-exercise-set-id="<%= @exercise_set.id %>" class="flex items-center justify-center mb-4">
