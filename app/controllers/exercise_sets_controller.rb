@@ -9,15 +9,18 @@ class ExerciseSetsController < ApplicationController
 
     reps_per_series = @exercise_set.reps_per_series || {}
 
-    results[:reps_per_series].each do |series_num, reps|
-      # Verifique se já existe uma entrada para a série atual
-      unless reps_per_series[series_num.to_s]
-        # Cria uma nova entrada para a série atual com o peso no momento
-        reps_per_series[series_num.to_s] = {
-          reps: reps,
-          weight: @exercise_set.weight, # Registra o peso atual da série
-          rest_time: calculate_rest_time(@arduino_data, series_num)
+    results[:reps_per_series].each do |series_num, data|
+      # Verifique se a série já existe
+      unless reps_per_series[series_num]
+        # Cria uma nova entrada para a série válida com o peso e o rest_time no momento
+        reps_per_series[series_num] = {
+          reps: data[:reps],
+          weight: @exercise_set.weight,
+          rest_time: calculate_rest_time(@arduino_data, series_num.to_i)
         }
+      else
+        # Atualiza as repetições caso haja alguma modificação
+        reps_per_series[series_num][:reps] = data[:reps]
       end
     end
 
@@ -99,12 +102,20 @@ class ExerciseSetsController < ApplicationController
         ready_for_new_rep = true
         consecutive_low_values = 0
         reps_in_current_series = 0 # Resetar o contador de repetições para a nova série
+        series_count += 1 # Incrementa a contagem de séries no início da série
       end
 
       if in_series
         if value > -880 && ready_for_new_rep
           reps_in_current_series += 1
           ready_for_new_rep = false
+
+          # Registra a série assim que a primeira repetição é detectada
+          reps_per_series[series_count.to_s] = {
+            reps: reps_in_current_series,
+            weight: nil, # Peso será registrado no método show
+            rest_time: 0 # Rest time será atualizado no final da série
+          }
         end
 
         if value < -1050
@@ -119,8 +130,11 @@ class ExerciseSetsController < ApplicationController
 
         if consecutive_low_values >= 50
           if reps_in_current_series > 0
-            series_count += 1
-            reps_per_series[series_count] = reps_in_current_series
+            reps_per_series[series_count.to_s][:reps] = reps_in_current_series
+          else
+            # Se não houve repetições, remover a série do hash
+            reps_per_series.delete(series_count.to_s)
+            series_count -= 1
           end
           in_series = false
         end
