@@ -38,7 +38,7 @@ consumer.subscriptions.create("ArduinoDataChannel", {
       const totalDelayToRender = receiveTime - recordedAtTime; // Tempo total desde a criação até a renderização
 
       // Exibe apenas o tempo total de delay desde a criação até a renderização
-      console.log(`Total delay from data creation (Arduino Cloud) to rendering on chart: ${totalDelayToRender} ms`);
+      // console.log(`Total delay from data creation (Arduino Cloud) to rendering on chart: ${totalDelayToRender} ms`);
 
       // Atualiza o gráfico
       updateChart(chartData);

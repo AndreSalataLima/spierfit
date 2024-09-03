@@ -1,16 +1,18 @@
 import consumer from "./consumer"
 
-document.addEventListener("turbo:load", () => {
-  const element = document.getElementById('exercise-set-id')
-  if (element) {
-    const exerciseSetId = element.getAttribute('data-exercise-set-id')
+consumer.subscriptions.create({ channel: "ExerciseSetsChannel", exercise_set_id: window.exerciseSetId }, {
+  received(data) {
+    console.log("Received data:", data);
+    // Atualizar os elementos DOM com os novos dados
+    const repsElement = document.querySelector('[data-reps-series-target="reps"]');
+    const setsElement = document.querySelector('[data-reps-series-target="sets"]');
 
-    consumer.subscriptions.create({ channel: "ExerciseSetsChannel", exercise_set_id: exerciseSetId }, {
-      received(data) {
-        document.getElementById('reps').innerText = data.reps
-        document.getElementById('sets').innerText = data.sets
-        // Atualize outros campos da mesma maneira
-      }
-    })
+    if (repsElement) {
+      repsElement.textContent = data.reps;
+    }
+
+    if (setsElement) {
+      setsElement.textContent = data.sets;
+    }
   }
-})
+});
