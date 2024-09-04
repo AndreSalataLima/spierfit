@@ -5,14 +5,30 @@
   <div class="top-navigation w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2" data-controller="navigation" data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
     <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
     <div class="absolute inset-0 flex items-center justify-between px-4">
-      <%#= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
-        <%# <i class="fa fa-arrow-left text-white text-sm"></i> %>
-      <%# end %>
+    <%= link_to '#', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center", data: { controller: "stop-training", action: "click->stop-training#confirmStop", "stop-training-user-id-value": @current_user } do %>
+      <i class="fas fa-stop text-white text-sm"></i> <!-- Ícone de stop -->
+    <% end %> <!-- Link para encerrar o treino -->
+
       <div class="flex-1 text-center">
         <div class="text-white text-base font-semibold">Série completa</div>
       </div>
     </div>
   </div>
+
+  <!-- Modal Structure -->
+  <div id="confirmationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+    <div class="w-[428px] h-[233px] bg-[#151c1c] rounded-[30px] p-6 flex flex-col items-center justify-center">
+      <div class="text-white text-lg font-semibold mb-4">Deseja encerrar o treino?</div>
+      <div class="flex gap-4">
+        <%= link_to 'Sim', user_workouts_path(current_user.id), class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full", data: { action: "click->stop-training#closeModal" } %>
+        <%= link_to 'Não', request.fullpath, class: "bg-gray-500 text-white font-bold py-2 px-4 rounded-full", data: { turbo: false } %>
+      </div>
+    </div>
+  </div>
+
+
+
+
 
   <!-- Exercise Details -->
   <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-4">
