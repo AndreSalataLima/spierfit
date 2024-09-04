@@ -18,6 +18,10 @@ class ExerciseSetsController < ApplicationController
     broadcast_exercise_set_data
   end
 
+  def edit
+    @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
+  end
+
   # Método para servir dados de repetições e séries via JSON
   def reps_and_sets
     last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 0
