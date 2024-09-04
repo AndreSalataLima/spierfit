@@ -1,76 +1,141 @@
-<p id="notice"><%= notice %></p>
+<%= content_for :title, "Detalhes do Treino - SpierFit" %>
 
-<h1>Workout</h1>
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <!-- Back Button -->
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <!-- Title -->
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Detalhes do Treino</div>
+      </div>
+    </div>
+  </div>
 
-<p>
-  <strong>User:</strong>
-  <%= @workout.user&.name %>
-</p>
+  <!-- Workout Summary -->
+  <div class="w-full max-w-[428px] p-4">
+    <div class="left-[24px] top-[167px] text-[#d9d9d9] text-base font-medium mb-4">
+      Treino 001/24 - March 22, 2024
+    </div>
 
-<p>
-  <strong>Personal:</strong>
-  <%= @workout.personal&.name %>
-</p>
+  <!-- Workout Summary Section with Background -->
+  <div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] p-4 mb-6"> <!-- Container externo com margem e borda arredondada -->
+    <div class="grid grid-cols-2 gap-2"> <!-- Reduzido o espaçamento entre os cards -->
+      <!-- Duração -->
+      <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
+        <div class="text-white text-2xl font-semibold">1:12</div>
+        <div class="text-white text-sm font-semibold">Duração</div>
+      </div>
 
-<p>
-  <strong>Gym:</strong>
-  <%= @workout.gym&.name %>
-</p>
+      <!-- Exercícios -->
+      <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
+        <div class="text-white text-2xl font-semibold">8</div>
+        <div class="text-white text-sm font-semibold">Exercícios</div>
+      </div>
 
-<p>
-  <strong>Workout Type:</strong>
-  <%= @workout.workout_type %>
-</p>
+      <!-- Séries -->
+      <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
+        <div class="text-white text-2xl font-semibold">36</div>
+        <div class="text-white text-sm font-semibold">Séries</div>
+      </div>
 
-<p>
-  <strong>Goal:</strong>
-  <%= @workout.goal %>
-</p>
+      <!-- Força -->
+      <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
+        <div class="text-white text-2xl font-semibold">320</div>
+        <div class="text-white text-sm font-semibold">Força</div>
+      </div>
+    </div>
+  </div>
 
-<p>
-  <strong>Duration:</strong>
-  <%= @workout.duration %>
-</p>
 
-<p>
-  <strong>Calories Burned:</strong>
-  <%= @workout.calories_burned %>
-</p>
 
-<p>
-  <strong>Intensity:</strong>
-  <%= @workout.intensity %>
-</p>
+  <!-- Exercícios -->
+  <div class="w-full max-w-[428px] p-1">
+    <div class="text-[#d9d9d9] text-base font-medium mb-2">Exercícios</div>
 
-<p>
-  <strong>Feedback:</strong>
-  <%= @workout.feedback %>
-</p>
+    <!-- Exercício 1 -->
+    <div class="bg-[#202020] rounded-[30px] p-4 mb-4 w-full flex items-center justify-between cursor-pointer">
+      <div class="flex flex-col">
+        <div class="text-white text-base font-semibold mb-2">Exercise 1</div>
+        <div class="flex space-x-6">
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">254</div>
+            <div class="text-[#9c9c9c] text-sm">Força</div>
+          </div>
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">3</div>
+            <div class="text-[#9c9c9c] text-sm">Série</div>
+          </div>
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">27</div>
+            <div class="text-[#9c9c9c] text-sm">Repetições</div>
+          </div>
+        </div>
+      </div>
+      <!-- Ícone de seta indicando que é clicável -->
+      <i class="fa fa-chevron-right text-white text-lg"></i>
+    </div>
 
-<p>
-  <strong>Modifications:</strong>
-  <%= @workout.modifications %>
-</p>
+    <!-- Exercício 2 -->
+    <div class="bg-[#202020] rounded-[30px] p-4 mb-4 w-full flex items-center justify-between cursor-pointer">
+      <div class="flex flex-col">
+        <div class="text-white text-base font-semibold mb-2">Exercise 2</div>
+        <div class="flex space-x-6">
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">254</div>
+            <div class="text-[#9c9c9c] text-sm">Força</div>
+          </div>
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">3</div>
+            <div class="text-[#9c9c9c] text-sm">Série</div>
+          </div>
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">27</div>
+            <div class="text-[#9c9c9c] text-sm">Repetições</div>
+          </div>
+        </div>
+      </div>
+      <!-- Ícone de seta indicando que é clicável -->
+      <i class="fa fa-chevron-right text-white text-lg"></i>
+    </div>
 
-<p>
-  <strong>Intensity General:</strong>
-  <%= @workout.intensity_general %>
-</p>
+    <!-- Exercício 3 -->
+    <div class="bg-[#202020] rounded-[30px] p-4 mb-4 w-full flex items-center justify-between cursor-pointer">
+      <div class="flex flex-col">
+        <div class="text-white text-base font-semibold mb-2">Exercise 3</div>
+        <div class="flex space-x-6">
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">254</div>
+            <div class="text-[#9c9c9c] text-sm">Força</div>
+          </div>
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">3</div>
+            <div class="text-[#9c9c9c] text-sm">Série</div>
+          </div>
+          <div class="text-center">
+            <div class="text-white text-lg font-semibold">27</div>
+            <div class="text-[#9c9c9c] text-sm">Repetições</div>
+          </div>
+        </div>
+      </div>
+      <!-- Ícone de seta indicando que é clicável -->
+      <i class="fa fa-chevron-right text-white text-lg"></i>
+    </div>
+  </div>
 
-<p>
-  <strong>Difficulty Perceived:</strong>
-  <%= @workout.difficulty_perceived %>
-</p>
 
-<p>
-  <strong>Performance Score:</strong>
-  <%= @workout.performance_score %>
-</p>
-
-<p>
-  <strong>Auto Adjustments:</strong>
-  <%= @workout.auto_adjustments %>
-</p>
-
-<%= link_to 'Edit', edit_workout_path(@workout) %> |
-<%= link_to 'Back', workouts_path %>
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+    <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+    <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
+    <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
+      <i class="fa-solid fa-stop text-white text-lg"></i>
+    </a>
+    <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+    <div class="text-white text-sm"><i class="fa fa-user"></i></div>
+  </div>
+</div>
