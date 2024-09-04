@@ -6,6 +6,6 @@ export default class extends Controller {
   }
 
   goToHistory() {
-    window.location.href = "/users/7/workouts"; // Altere para usar o caminho dinâmico do usuário
+    window.location.href = `/users/${userId}/workouts`; // Altere para usar o caminho dinâmico do usuário
   }
 }
