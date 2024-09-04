@@ -6,6 +6,8 @@ class WorkoutsController < ApplicationController
   end
 
   def show
+    @user = @workout.user
+    @workout_duration = calculate_workout_duration
   end
 
   def new
@@ -52,6 +54,16 @@ class WorkoutsController < ApplicationController
   end
 
   private
+
+  def calculate_workout_duration
+    if @workout.exercise_sets.any?
+      start_time = @workout.exercise_sets.first.created_at
+      end_time = @workout.exercise_sets.last.updated_at
+      Time.at(end_time - start_time).utc.strftime("%Hh%M")
+    else
+      "00:00:00" # Caso não haja exercícios
+    end
+  end
 
   def set_workout
     @workout = Workout.find(params[:id])

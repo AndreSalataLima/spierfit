@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     member do
       post 'complete', to: 'workouts#complete'
     end
+    resources :exercise_sets, only: [:show]
   end
 
   resources :exercise_sets do
