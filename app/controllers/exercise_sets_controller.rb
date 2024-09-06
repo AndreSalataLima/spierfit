@@ -99,6 +99,15 @@ class ExerciseSetsController < ApplicationController
     new_reps = results[:reps_per_series].values.last&.dig(:reps) || 0
     new_sets = results[:series_count]
 
+
+    # Aqui garantimos que o peso seja salvo para cada série
+    results[:reps_per_series].each do |series_number, series_data|
+      # Se ainda não há um peso salvo para essa série, atribuímos o peso atual
+      unless series_data[:weight]
+        series_data[:weight] = @exercise_set.weight
+      end
+    end
+
     if new_reps != @exercise_set.reps || new_sets != @exercise_set.sets
       @exercise_set.update(
         reps_per_series: results[:reps_per_series],
@@ -110,9 +119,6 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
-
-
-
   # Método para detectar séries e repetições nos dados do Arduino
   def detect_series_and_reps(data)
     series_count = 0
@@ -120,7 +126,7 @@ class ExerciseSetsController < ApplicationController
     in_series = false
     ready_for_new_rep = true
     consecutive_low_values = 0
-    reps_per_series = {}
+    reps_per_series = @exercise_set.reps_per_series.deep_dup # Pega o valor atual do reps_per_series para garantir que não sobrescrevemos as séries anteriores
 
     data.each_with_index do |value, index|
       if !in_series && value > -1400
@@ -129,6 +135,15 @@ class ExerciseSetsController < ApplicationController
         consecutive_low_values = 0
         reps_in_current_series = 0 # Resetar o contador de repetições para a nova série
         series_count += 1 # Incrementa a contagem de séries no início da série
+
+        # Aqui registramos a nova série apenas se for uma nova série
+        unless reps_per_series[series_count.to_s]
+          reps_per_series[series_count.to_s] = {
+            reps: 0, # Inicializa com 0 repetições
+            weight: @exercise_set.weight, # Salva o peso atual no início da nova série
+            rest_time: 0 # Rest time será atualizado no final da série
+          }
+        end
       end
 
       if in_series
@@ -136,12 +151,8 @@ class ExerciseSetsController < ApplicationController
           reps_in_current_series += 1
           ready_for_new_rep = false
 
-          # Registra a série assim que a primeira repetição é detectada
-          reps_per_series[series_count.to_s] = {
-            reps: reps_in_current_series,
-            weight: @exercise_set.weight, # Assumindo que o peso pode ser acessado aqui
-            rest_time: 0 # Rest time será atualizado no final da série
-          }
+          # Atualiza o número de repetições para a série atual
+          reps_per_series[series_count.to_s][:reps] = reps_in_current_series
 
           # Atualizar o banco de dados e transmitir a atualização imediatamente após cada repetição
           @exercise_set.update(
@@ -178,6 +189,7 @@ class ExerciseSetsController < ApplicationController
 
     { series_count: series_count, reps_per_series: reps_per_series }
   end
+
 
   # Método para calcular a duração do exercício
   def calculate_duration(data)
