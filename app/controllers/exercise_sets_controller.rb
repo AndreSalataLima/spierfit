@@ -21,7 +21,6 @@ class ExerciseSetsController < ApplicationController
   def edit
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
   end
-
   # Método para servir dados de repetições e séries via JSON
   def reps_and_sets
     last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 0
@@ -83,6 +82,7 @@ class ExerciseSetsController < ApplicationController
       @last_broadcasted = current_broadcast
     end
   end
+
 
   private
 
@@ -179,10 +179,6 @@ class ExerciseSetsController < ApplicationController
     { series_count: series_count, reps_per_series: reps_per_series }
   end
 
-
-
-end
-
   # Método para calcular a duração do exercício
   def calculate_duration(data)
     if data.last
@@ -191,3 +187,5 @@ end
       0
     end
   end
+
+end

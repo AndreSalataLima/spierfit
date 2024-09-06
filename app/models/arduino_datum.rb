@@ -1,7 +1,7 @@
 class ArduinoDatum < ApplicationRecord
   belongs_to :exercise_set
 
-  after_create_commit :broadcast_datum, :trigger_reps_and_series_update
+  after_create_commit :broadcast_datum
 
   private
 
@@ -13,9 +13,5 @@ class ArduinoDatum < ApplicationRecord
     Rails.logger.info "Broadcasted data: #{data_to_broadcast}"
   rescue StandardError => e
     Rails.logger.error "Error broadcasting data: #{e.message}"
-  end
-
-  def trigger_reps_and_series_update
-    ExerciseSet.update_reps_and_series(self.exercise_set)
   end
 end
