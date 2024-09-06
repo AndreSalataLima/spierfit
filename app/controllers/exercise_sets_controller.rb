@@ -126,7 +126,8 @@ class ExerciseSetsController < ApplicationController
     in_series = false
     ready_for_new_rep = true
     consecutive_low_values = 0
-    reps_per_series = @exercise_set.reps_per_series.deep_dup # Pega o valor atual do reps_per_series para garantir que não sobrescrevemos as séries anteriores
+    reps_per_series = @exercise_set.reps_per_series.deep_dup # Clonar o reps_per_series para não sobrescrever dados antigos
+    previous_series_end_time = nil
 
     data.each_with_index do |value, index|
       if !in_series && value > -1400
@@ -134,14 +135,23 @@ class ExerciseSetsController < ApplicationController
         ready_for_new_rep = true
         consecutive_low_values = 0
         reps_in_current_series = 0 # Resetar o contador de repetições para a nova série
-        series_count += 1 # Incrementa a contagem de séries no início da série
+        series_count += 1 # Incrementa a contagem de séries no início da nova série
 
-        # Aqui registramos a nova série apenas se for uma nova série
+        # Atualiza o `rest_time` da série anterior se ele ainda não tiver sido atualizado
+        if series_count > 1 && reps_per_series[(series_count - 1).to_s]["rest_time"] == 0
+          rest_time = @exercise_set.rest_time # Usa o valor correto de @exercise_set.rest_time
+          reps_per_series[(series_count - 1).to_s]["rest_time"] = rest_time
+
+          # Log para verificação
+          puts "Assigned rest_time: #{rest_time} to series #{series_count - 1}"
+        end
+
+        # Inicializa a nova série no reps_per_series se ainda não existir
         unless reps_per_series[series_count.to_s]
           reps_per_series[series_count.to_s] = {
             reps: 0, # Inicializa com 0 repetições
-            weight: @exercise_set.weight, # Salva o peso atual no início da nova série
-            rest_time: 0 # Rest time será atualizado no final da série
+            weight: @exercise_set.weight, # Mantém o peso da série atual
+            rest_time: 0 # O `rest_time` da série atual será atualizado na próxima série
           }
         end
       end
@@ -183,12 +193,14 @@ class ExerciseSetsController < ApplicationController
             series_count -= 1
           end
           in_series = false
+          previous_series_end_time = Time.now # Armazena o tempo de término da série atual para cálculo de `rest_time` na próxima série
         end
       end
     end
 
     { series_count: series_count, reps_per_series: reps_per_series }
   end
+
 
 
   # Método para calcular a duração do exercício
