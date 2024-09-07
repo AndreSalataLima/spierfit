@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_27_183148) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_07_141259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_27_183148) do
     t.bigint "machine_id"
     t.integer "current_series", default: 1
     t.jsonb "reps_per_series", default: {}
+    t.boolean "series_completed", default: false
     t.index ["exercise_id"], name: "index_exercise_sets_on_exercise_id"
     t.index ["machine_id"], name: "index_exercise_sets_on_machine_id"
     t.index ["workout_id"], name: "index_exercise_sets_on_workout_id"
