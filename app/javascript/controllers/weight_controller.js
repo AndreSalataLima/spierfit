@@ -4,6 +4,8 @@ export default class extends Controller {
   static targets = ["value"]
 
   connect() {
+    console.log("Weight controller connected");
+
     // Escutar o evento `turbo:load` para garantir que o DOM esteja completamente carregado
     document.addEventListener('turbo:load', this.initialize.bind(this));
   }

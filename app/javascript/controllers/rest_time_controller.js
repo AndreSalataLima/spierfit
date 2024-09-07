@@ -1,24 +1,29 @@
-// app/javascript/controllers/rest_time_controller.js
-
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["value"];
 
   connect() {
+    console.log("Rest_time controller connected");
+
     this.restTime = parseInt(this.valueTarget.textContent) || 0;
     this.seriesCompleted = this.element.dataset.seriesCompleted === "true";
 
+    // Inicia o timer se a série foi completada
     if (this.seriesCompleted) {
-      this.timer = setInterval(() => {
-        this.updateRestTime();
-      }, 1000);
-
-      // Adiciona o listener para parar o contador quando a página mudar
-      document.addEventListener('turbo:before-visit', () => {
-        this.clearTimer();
-      });
+      this.startRestTimer();
     }
+
+    // Listener para parar o contador quando a página mudar
+    document.addEventListener('turbo:before-visit', () => {
+      this.clearTimer();
+    });
+  }
+
+  startRestTimer() {
+    this.timer = setInterval(() => {
+      this.updateRestTime();
+    }, 1000);
   }
 
   updateRestTime() {
@@ -34,6 +39,16 @@ export default class extends Controller {
       },
       body: JSON.stringify({ rest_time: this.restTime }),
     });
+  }
+
+  resetRestTime() {
+    console.log("Rest timer reset to 0");
+    this.clearTimer(); // Para o temporizador atual
+    this.restTime = 0; // Reseta o valor de rest_time
+    this.valueTarget.textContent = `${this.restTime}s`; // Atualiza o display
+
+    // Opcional: Reiniciar o temporizador se necessário
+    this.startRestTimer();
   }
 
   disconnect() {
