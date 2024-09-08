@@ -96,100 +96,14 @@
   <div class="bottom-navigation w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center" data-controller="navigation" data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
     <div class="text-white text-sm"><i class="fa fa-home"></i></div>
     <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
-    <%= link_to edit_exercise_set_path(@exercise_set.id), class: "bg-[#a52502] rounded-full p-3" do %>
+    <%= link_to edit_exercise_set_path(@exercise_set.id), class: "bg-[#a52502] rounded-full p-3", data: { turbo: false } do %>
       <i class="fa-solid fa-stop text-white text-lg"></i>
     <% end %>
+
+
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
 
-  <div class="w-full max-w-2xl mx-auto my-5">
-  <table class="w-full table-auto border-collapse">
-    <thead>
-      <tr>
-        <th class="border border-white px-4 py-2 text-white bg-black">Variável</th>
-        <th class="border border-white px-4 py-2 text-white bg-black">Valor</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Workout ID</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.workout_id %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Exercise ID</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.exercise_id %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Reps</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.reps %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Sets</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.sets %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Weight</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.weight %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Duration</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.duration %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Rest Time</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.rest_time %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Intensity</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.intensity %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Feedback</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.feedback %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Max Reps</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.max_reps %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Performance Score</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.performance_score %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Effort Level</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.effort_level %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Energy Consumed</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.energy_consumed %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Completed</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.completed %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Machine ID</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.machine_id %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Current Series</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.current_series %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Reps Per Series</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.reps_per_series.to_json %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Created At</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.created_at %></td>
-      </tr>
-      <tr>
-        <td class="border border-white px-4 py-2 text-white bg-black">Updated At</td>
-        <td class="border border-white px-4 py-2 text-white bg-black"><%= @exercise_set.updated_at %></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
 
 </div>
