@@ -33,11 +33,18 @@ class ExerciseSetsController < ApplicationController
     if @exercise_set.update(exercise_set_params)
       recalculate_and_update_exercise_set(@exercise_set.arduino_data.order(:recorded_at))
       broadcast_exercise_set_data
-      redirect_to select_equipment_machines_path, notice: 'Exercise set was successfully updated.'
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to select_equipment_machines_path, notice: 'Exercise set was successfully updated.' }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("exercise_set_form", partial: "exercise_sets/form", locals: { exercise_set: @exercise_set }) }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
+
 
   def update_weight
     if @exercise_set.update(weight: params[:exercise_set][:weight])
