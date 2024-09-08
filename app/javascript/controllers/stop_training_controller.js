@@ -8,7 +8,7 @@ export default class extends Controller {
 
   connect() {
     this.modal = document.getElementById('confirmationModal');
-    console.log('Modal connected', this.modal); // Verifique se o modal está sendo referenciado corretamente
+    console.log('Modal connected'); // Verifique se o modal está sendo referenciado corretamente
   }
 
   confirmStop(event) {

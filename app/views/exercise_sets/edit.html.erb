@@ -43,7 +43,7 @@
   </div>
 
   <!-- Details Section -->
-  <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
+  <div  data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
     <% if @exercise_set.reps_per_series.present? %>
       <% last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max %>
       <% last_series_details = @exercise_set.reps_per_series[last_series_number.to_s] %>
@@ -104,7 +104,9 @@
   <!-- Série Details -->
   <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-2" data-controller="dropdown">
     <h2 class="text-white text-lg font-semibold mb-4">Séries</h2>
-    <%= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true) do |form| %>
+    <%#= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true) do |form| %>
+    <%#= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true, id: "exercise_set_form", data: { controller: "dropdown", action: "turbo:submit-end->dropdown#closeAll" }) do |form| %>
+    <%= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: false, id: "exercise_set_form", data: { turbo_frame: "_top" }) do |form| %>
 
       <% if @exercise_set.reps_per_series.present? %>
         <% @exercise_set.reps_per_series.each_with_index do |(series_number, details), index| %>
@@ -117,15 +119,15 @@
               <div class="flex justify-between items-center text-white text-sm mb-2 space-x-2">
                 <div>
                   <label for="serie_<%= series_number %>_reps" class="block text-xs mb-1">Repetições</label>
-                  <%= number_field_tag "serie_#{series_number}_reps", details["reps"], class: "bg-[#202020] rounded-md p-2 text-gray-400 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+                  <%= number_field_tag "exercise_set[reps_per_series][#{series_number}][reps]", details["reps"], class: "bg-[#202020] rounded-md p-2 text-gray-400 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
                 </div>
                 <div>
                   <label for="serie_<%= series_number %>_weight" class="block text-xs mb-1">Carga</label>
-                  <%= number_field_tag "serie_#{series_number}_weight", details["weight"], class: "bg-[#202020] rounded-md p-2 text-gray-400 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+                  <%= number_field_tag "exercise_set[reps_per_series][#{series_number}][weight]", details["weight"], class: "bg-[#202020] rounded-md p-2 text-gray-400 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
                 </div>
                 <div>
                   <label for="serie_<%= series_number %>_rest_time" class="block text-xs mb-1">Tempo de repouso</label>
-                  <%= number_field_tag "serie_#{series_number}_rest_time", details["rest_time"], class: "bg-[#202020] rounded-md p-2 text-gray-400 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
+                  <%= number_field_tag "exercise_set[reps_per_series][#{series_number}][rest_time]", details["rest_time"], class: "bg-[#202020] rounded-md p-2 text-gray-400 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-[#ff8137]" %>
                 </div>
               </div>
             </div>
