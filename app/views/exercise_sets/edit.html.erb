@@ -20,7 +20,7 @@
     <div class="w-[428px] h-[233px] bg-[#151c1c] rounded-[30px] p-6 flex flex-col items-center justify-center">
       <div class="text-white text-lg font-semibold mb-4">Deseja encerrar o treino?</div>
       <div class="flex gap-4">
-        <%= link_to 'Sim', user_workouts_path(current_user.id), class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full", data: { action: "click->stop-training#closeModal" } %>
+        <%= link_to 'Sim', workout_path(@exercise_set.workout_id), class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full", data: { action: "click->stop-training#closeModal" } %>
         <%= link_to 'Não', request.fullpath, class: "bg-gray-500 text-white font-bold py-2 px-4 rounded-full", data: { turbo: false } %>
       </div>
     </div>
