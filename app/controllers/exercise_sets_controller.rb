@@ -16,10 +16,13 @@ class ExerciseSetsController < ApplicationController
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
     recalculate_and_update_exercise_set(@arduino_data)
     broadcast_exercise_set_data
+    calculate_force_and_power_from_arduino_data(@arduino_data)
   end
 
   def edit
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
+    calculate_force_and_power_from_arduino_data(@arduino_data)
+
   end
   # Método para servir dados de repetições e séries via JSON
   def reps_and_sets
@@ -206,15 +209,97 @@ class ExerciseSetsController < ApplicationController
     { series_count: series_count, reps_per_series: reps_per_series }
   end
 
+  # Função para calcular a força e potência e atualizar os campos no banco de dados
+  def calculate_force_and_power_from_arduino_data(arduino_data)
+    total_eccentric_time = 0
+    total_concentric_time = 0
+    total_distance = 0
 
+    # Processar dados do Arduino para calcular tempo excêntrico, concêntrico e distância
+    arduino_data.each_cons(2) do |prev, curr|
+      # Verificar se ambos os valores estão acima de -1400
+      next if prev.value.abs < 1400 || curr.value.abs < 1400
 
-  # Método para calcular a duração do exercício
-  def calculate_duration(data)
-    if data.last
-      (data.last.recorded_at - data.first.recorded_at).to_i
-    else
-      0
+      delta_value = curr.value - prev.value
+      total_distance += delta_value.abs # Somar a distância absoluta entre valores consecutivos
+
+      # Calcular o tempo de movimento para cada fase (concêntrica/excêntrica)
+      if delta_value > 0
+        total_concentric_time += 1 / 5.0 # Concêntrico: peso subindo
+      elsif delta_value < 0
+        total_eccentric_time += 1 / 5.0 # Excêntrico: peso descendo
+      end
     end
+
+    # Converter a distância total de milímetros para metros
+    total_distance_in_meters = total_distance / 1000.0
+
+    # Tempo total
+    total_time = total_concentric_time + total_eccentric_time
+
+    # Calcular a força com base no peso e no tempo
+    time_per_series = calculate_time_proportion_per_series
+
+    total_eccentric_force = 0
+    total_concentric_force = 0
+
+    time_per_series.each do |series_number, series_data|
+      weight = series_data[:weight].to_f
+      proportion_eccentric = series_data[:eccentric_time_proportion].to_f
+      proportion_concentric = series_data[:concentric_time_proportion].to_f
+
+      eccentric_force = weight * 9.81 * proportion_eccentric
+      total_eccentric_force += eccentric_force
+
+      concentric_force = weight * 9.81 * proportion_concentric
+      total_concentric_force += concentric_force
+    end
+
+    # Força média total
+    total_average_force = (total_eccentric_force + total_concentric_force) / 2.0
+
+    # Calcular a potência em watts e formatar com 1 casa decimal
+    power_in_watts = total_time > 0 ? (total_average_force * total_distance_in_meters) / total_time : 0
+    power_in_watts = power_in_watts.round(1) # Formatar para 1 casa decimal
+
+    # Atualizar os campos average_force e power_in_watts no banco de dados
+    @exercise_set.update(average_force: total_average_force, power_in_watts: power_in_watts)
+
+    # Exibir os valores para conferência
+    puts "Total Time: #{total_time}"
+    puts "Total Eccentric Time: #{total_eccentric_time}"
+    puts "Total Concentric Time: #{total_concentric_time}"
+    puts "Total Distance: #{total_distance}"
+    puts "Total Distance in Meters: #{total_distance_in_meters}"
+    puts "Total Eccentric Force: #{total_eccentric_force}"
+    puts "Total Concentric Force: #{total_concentric_force}"
+    puts "Total Average Force: #{total_average_force}"
+    puts "Power in Watts: #{power_in_watts}" # Exibir formatado
+  end
+
+
+
+  # Função auxiliar para calcular a proporção de tempo para cada série
+  def calculate_time_proportion_per_series
+    total_reps = @exercise_set.reps_per_series.values.sum { |data| data["reps"] }
+    time_per_series = {}
+
+    @exercise_set.reps_per_series.each do |series_number, series_data|
+      reps_in_series = series_data["reps"].to_f
+      weight_in_series = series_data["weight"]
+
+      eccentric_time_proportion = reps_in_series / total_reps
+      concentric_time_proportion = reps_in_series / total_reps
+
+      time_per_series[series_number] = {
+        reps: reps_in_series,
+        weight: weight_in_series,
+        eccentric_time_proportion: eccentric_time_proportion,
+        concentric_time_proportion: concentric_time_proportion
+      }
+    end
+
+    time_per_series
   end
 
 end

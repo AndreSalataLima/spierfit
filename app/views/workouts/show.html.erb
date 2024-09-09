@@ -11,7 +11,7 @@
       <% end %>
       <!-- Title -->
       <div class="flex-1 text-center">
-        <div class="text-white text-base font-semibold">Detalhes do Treino</div>
+        <div class="text-white text-base font-semibold">Resumo do Treino</div>
       </div>
     </div>
   </div>
@@ -43,10 +43,10 @@
           <div class="text-white text-sm font-semibold">Séries</div>
         </div>
 
-        <!-- Força -->
+        <!-- Força Total -->
         <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
-          <div class="text-white text-2xl font-semibold"><%= @workout.performance_score %></div>
-          <div class="text-white text-sm font-semibold">Força</div>
+          <div class="text-white text-2xl font-semibold"><%= @workout.exercise_sets.sum(:average_force) %></div>
+          <div class="text-white text-sm font-semibold">Força Total (N)</div>
         </div>
       </div>
     </div>
@@ -56,13 +56,15 @@
       <div class="text-[#d9d9d9] text-base font-medium mb-2">Exercícios</div>
 
       <% @workout.exercise_sets.each_with_index do |exercise_set| %>
+        <% total_reps = exercise_set.reps_per_series.values.sum { |series| series["reps"].to_i } %>
+
         <!-- Envolvemos o card com link_to -->
         <%= link_to exercise_set_path(exercise_set), class: "bg-[#202020] rounded-[30px] p-4 mb-4 w-full flex items-center justify-between cursor-pointer" do %>
           <div class="flex flex-col">
             <div class="text-white text-base font-semibold mb-2"><%= exercise_set.exercise.name %></div>
             <div class="flex space-x-6">
               <div class="text-center">
-                <div class="text-white text-lg font-semibold"><%= exercise_set.performance_score %></div>
+                <div class="text-white text-lg font-semibold"><%= exercise_set.average_force %></div>
                 <div class="text-[#9c9c9c] text-sm">Força</div>
               </div>
               <div class="text-center">
@@ -70,7 +72,7 @@
                 <div class="text-[#9c9c9c] text-sm">Séries</div>
               </div>
               <div class="text-center">
-                <div class="text-white text-lg font-semibold"><%= exercise_set.reps %></div>
+                <div class="text-white text-lg font-semibold"><%= total_reps %></div>
                 <div class="text-[#9c9c9c] text-sm">Repetições</div>
               </div>
             </div>
@@ -87,7 +89,7 @@
       <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
         <i class="fa-solid fa-stop text-white text-lg"></i>
       </a>
-      <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+      <div class="text-white text-sm"><i class="fa fa-endar-alt"></i></div>
       <div class="text-white text-sm"><i class="fa fa-user"></i></div>
     </div>
   </div>
