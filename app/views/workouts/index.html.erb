@@ -24,7 +24,7 @@
         <thead>
           <tr class="bg-[#303030]">
             <th class="py-3 px-4 text-left">Data</th>
-            <th class="py-3 px-4 text-left">Calorias</th>
+            <th class="py-3 px-4 text-left">Força</th>
             <th class="py-3 px-4 text-center">Desempenho</th>
           </tr>
         </thead>
@@ -42,18 +42,16 @@
       </table>
     </div>
 
-    <%= link_to new_workout_path, class: 'w-full max-w-[353px] h-[44.68px] bg-[#303030] rounded-[100px] flex items-center justify-center mt-4' do %>
-      <div class="text-white text-sm">Novo Workout</div>
-    <% end %>
+
   </div>
 
   <!-- Bottom Navigation -->
   <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
     <div class="text-white text-sm"><i class="fa fa-home"></i></div>
     <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
-    <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
-      <i class="fa-solid fa-stop text-white text-lg"></i>
-    </a>
+    <%= link_to select_equipment_machines_path, class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center" do %>
+      <i class="fa fa-dumbbell text-white"></i>
+    <% end %>
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
