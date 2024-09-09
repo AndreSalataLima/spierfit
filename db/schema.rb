@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_07_141259) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_09_173939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_141259) do
     t.string "intensity"
     t.text "feedback"
     t.integer "max_reps"
-    t.integer "performance_score"
+    t.integer "average_force"
     t.string "effort_level"
     t.integer "energy_consumed"
     t.datetime "created_at", null: false
@@ -44,6 +44,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_141259) do
     t.integer "current_series", default: 1
     t.jsonb "reps_per_series", default: {}
     t.boolean "series_completed", default: false
+    t.float "power_in_watts"
     t.index ["exercise_id"], name: "index_exercise_sets_on_exercise_id"
     t.index ["machine_id"], name: "index_exercise_sets_on_machine_id"
     t.index ["workout_id"], name: "index_exercise_sets_on_workout_id"

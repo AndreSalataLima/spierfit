@@ -77,12 +77,11 @@
         <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
       </div>
       <div class="flex flex-col items-center">
-        <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
-        <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
+        <div class="text-xl font-semibold text-white"><%= @exercise_set.average_force %> N</div>
+        <div class="text-[#d9d9d9] text-xs">Força Total</div>
       </div>
     </div>
   </div>
-
 
   <!-- Counter Buttons -->
   <div data-controller="weight" data-exercise-set-id="<%= @exercise_set.id %>" class="flex items-center justify-center mb-4">

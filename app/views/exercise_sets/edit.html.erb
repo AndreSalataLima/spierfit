@@ -93,13 +93,11 @@
         <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
       </div>
       <div class="flex flex-col items-center">
-        <div class="text-xl font-semibold text-white"><%= @exercise_set.energy_consumed %> CAL</div>
-        <div class="text-[#d9d9d9] text-xs">Calorias Totais</div>
+        <div class="text-xl font-semibold text-white"><%= @exercise_set.average_force %> N</div>
+        <div class="text-[#d9d9d9] text-xs">Força Total</div>
       </div>
     </div>
   </div>
-
-
 
   <!-- Série Details -->
   <div class="w-full max-w-[428px] bg-[#151c1c] rounded-[30px] p-4 mb-2" data-controller="dropdown">
@@ -149,9 +147,9 @@
   <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
     <div class="text-white text-sm"><i class="fa fa-home"></i></div>
     <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
-    <%= link_to '/machines/select_equipment', class: 'bg-[#a52502] rounded-full p-3' do %>
-      <i class="fa-solid fa-stop text-white text-lg"></i>
-    <% end %>
+    <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
+      <i class="fa-solid fa-forward text-white text-lg"></i>
+    </a>
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
