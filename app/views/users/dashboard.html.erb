@@ -16,7 +16,6 @@
       </div>
     </div>
 
-
     <!-- Progress Card -->
     <div class="w-full bg-[#202020] rounded-[30px] px-4 py-6">
       <div class="text-white text-base font-semibold mb-3">Meu Progresso</div>
@@ -25,13 +24,13 @@
         <span>500</span>
       </div>
       <div class="flex justify-between text-white text-sm mb-3">
-        <span>Sun</span>
-        <span>Mon</span>
-        <span>Tue</span>
-        <span>Wed</span>
-        <span>Thu</span>
-        <span>Fri</span>
-        <span>Sat</span>
+        <span>Dom</span>
+        <span>Seg</span>
+        <span>Ter</span>
+        <span>Qua</span>
+        <span>Qui</span>
+        <span>Sex</span>
+        <span>Sáb</span>
       </div>
       <div class="flex justify-between items-end h-20">
         <% %w[Sun Mon Tue Wed Thu Fri Sat].each do |day| %>
@@ -39,7 +38,6 @@
         <% end %>
       </div>
     </div>
-
 
     <!-- Training Card -->
     <div data-controller="training-card"
@@ -52,22 +50,22 @@
           <div class="text-white text-xs font-medium">Avançado</div>
         </div>
         <div class="text-white text-lg font-semibold">Iniciar Treino</div>
-        <div class="text-white text-xs">Full body workout</div>
+        <div class="text-white text-xs">Treino focado em alta intensidade</div> <!-- Modificação -->
       </div>
     </div>
-
 
     <!-- History Card -->
     <div data-controller="history-card"
         data-action="click->history-card#goToHistory"
+        data-history-card-url-value="<%= user_workouts_path(current_user.id) %>"
         class="w-full bg-gradient-to-b from-[#1c8394] to-[#154b52] rounded-[30px] px-4 py-6 relative cursor-pointer">
       <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-[30px]"></div>
       <div class="relative">
         <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
-          <div class="text-white text-xs font-medium">Beginner</div>
+          <div class="text-white text-xs font-medium">Iniciante</div>
         </div>
         <div class="text-white text-lg font-semibold">Histórico de Treino</div>
-        <div class="text-white text-xs">Full body workout</div>
+        <div class="text-white text-xs">Acompanhe sua progressão</div> <!-- Modificação -->
       </div>
     </div>
 

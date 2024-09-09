@@ -13,6 +13,8 @@ import "Chart.bundle";         // Importa Chart.js
 // Adiciona a linha abaixo para importar todos os controladores automaticamente
 import "controllers";
 
+import { application } from "./controllers/application";
+
 // import ChartController from "./controllers/chart_controller";
 // import WeightController from "./controllers/weight_controller";
 

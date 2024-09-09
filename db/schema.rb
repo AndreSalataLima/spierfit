@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_19_141104) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_09_173939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,13 +34,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_141104) do
     t.string "intensity"
     t.text "feedback"
     t.integer "max_reps"
-    t.integer "performance_score"
+    t.integer "average_force"
     t.string "effort_level"
     t.integer "energy_consumed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "completed", default: false
     t.bigint "machine_id"
+    t.integer "current_series", default: 1
+    t.jsonb "reps_per_series", default: {}
+    t.boolean "series_completed", default: false
+    t.float "power_in_watts"
     t.index ["exercise_id"], name: "index_exercise_sets_on_exercise_id"
     t.index ["machine_id"], name: "index_exercise_sets_on_machine_id"
     t.index ["workout_id"], name: "index_exercise_sets_on_workout_id"
@@ -105,7 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_141104) do
     t.string "name", null: false
     t.text "description"
     t.text "compatible_exercises", default: [], array: true
-    t.string "status", default: "active"
+    t.string "status", default: "ativo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "gym_id"
@@ -183,6 +187,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_141104) do
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
+  add_foreign_key "arduino_data", "exercise_sets"
   add_foreign_key "exercise_sets", "exercises"
   add_foreign_key "exercise_sets", "machines"
   add_foreign_key "exercise_sets", "workouts"
