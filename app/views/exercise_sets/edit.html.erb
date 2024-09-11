@@ -104,7 +104,8 @@
     <h2 class="text-white text-lg font-semibold mb-4">Séries</h2>
     <%#= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true) do |form| %>
     <%#= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true, id: "exercise_set_form", data: { controller: "dropdown", action: "turbo:submit-end->dropdown#closeAll" }) do |form| %>
-    <%= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: false, id: "exercise_set_form", data: { turbo_frame: "_top" }) do |form| %>
+    <%#= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: false, id: "exercise_set_form", data: { turbo_frame: "_top" }) do |form| %>
+    <%= form_with(model: @exercise_set, url: exercise_set_path(@exercise_set), method: :patch, local: true, id: "exercise_set_form") do |form| %>
 
       <% if @exercise_set.reps_per_series.present? %>
         <% @exercise_set.reps_per_series.each_with_index do |(series_number, details), index| %>
@@ -136,7 +137,8 @@
       <% end %>
 
       <div class="flex justify-center">
-        <%= form.submit "Salvar", class: "bg-[#a52502] rounded-full px-3 py-1 text-white text-xs" %>
+        <%= form.submit "Salvar", class: "bg-[#a52502] rounded-full px-3 py-1 text-white text-xs", data: { turbo: false } %>
+
       </div>
     <% end %>
   </div>
