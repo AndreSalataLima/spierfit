@@ -86,9 +86,10 @@ class MachinesController < ApplicationController
         intensity: '',
         feedback: '',
         max_reps: 0,
-        performance_score: 0,
+        average_force: 0,
         effort_level: '',
-        energy_consumed: 0
+        energy_consumed: 0,
+        power_in_watts: 0
       )
 
       redirect_to exercise_set_path(exercise_set)

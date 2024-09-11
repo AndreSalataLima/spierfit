@@ -34,20 +34,12 @@ class ExerciseSetsController < ApplicationController
   # Método para atualizar o conjunto de exercícios
   def update
     if @exercise_set.update(exercise_set_params)
-      recalculate_and_update_exercise_set(@exercise_set.arduino_data.order(:recorded_at))
       broadcast_exercise_set_data
-      respond_to do |format|
-        format.turbo_stream
-        format.html { redirect_to select_equipment_machines_path, notice: 'Exercise set was successfully updated.' }
-      end
+      redirect_to edit_exercise_set_path(@exercise_set), notice: 'Exercise set was successfully updated.'
     else
-      respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("exercise_set_form", partial: "exercise_sets/form", locals: { exercise_set: @exercise_set }) }
-        format.html { render :edit, status: :unprocessable_entity }
-      end
+      render :edit, status: :unprocessable_entity
     end
   end
-
 
   def update_weight
     if @exercise_set.update(weight: params[:exercise_set][:weight])
@@ -281,7 +273,7 @@ class ExerciseSetsController < ApplicationController
 
   # Função auxiliar para calcular a proporção de tempo para cada série
   def calculate_time_proportion_per_series
-    total_reps = @exercise_set.reps_per_series.values.sum { |data| data["reps"] }
+    total_reps = @exercise_set.reps_per_series.values.sum { |data| data["reps"].to_i }
     time_per_series = {}
 
     @exercise_set.reps_per_series.each do |series_number, series_data|
