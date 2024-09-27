@@ -1,4 +1,4 @@
-<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden" data-controller="data-processor" data-data-processor-exercise-set-id-value="<%= @exercise_set.id %>">
   <!-- Top Navigation -->
   <div class="top-navigation w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2" data-controller="navigation" data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
     <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
@@ -22,13 +22,11 @@
         data-controller="chart"
         data-chart-data-value="<%= @arduino_data.map { |datum| datum.value } %>"
         data-chart-labels-value="<%= @arduino_data.map { |datum| datum.recorded_at.strftime('%b %d') } %>">
-      <%= turbo_frame_tag 'arduino_chart' do %>
-        <canvas id="chart-1" class="w-full h-full"></canvas>
-      <% end %>
+      <canvas id="chart-1" class="w-full h-full"></canvas>
     </div>
   </div>
 
-  <!-- Details Section -->
+  <!-- Details Section (Polling for Series/Reps Updates) -->
   <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
     <% if @exercise_set.reps_per_series.present? %>
       <% last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max %>
@@ -67,28 +65,50 @@
     <% end %>
   </div>
 
-
-    <div class="flex justify-between my-3 text-white text-sm">
-      <div data-controller="rest-time"
-          data-exercise-set-id="<%= @exercise_set.id %>"
-          data-series-completed="<%= @exercise_set.sets > 0 %>"
-          class="flex flex-col items-center">
-        <div data-rest-time-target="value" class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
-        <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="text-xl font-semibold text-white"><%= @exercise_set.average_force %> N</div>
-        <div class="text-[#d9d9d9] text-xs">Força Total</div>
-      </div>
+  <!-- Rest Time and Force Section -->
+  <div class="flex justify-between my-3 text-white text-sm">
+    <div data-controller="rest-time"
+        data-rest-time-exercise-set-id-value="<%= @exercise_set.id %>"
+        class="flex flex-col items-center">
+      <div data-rest-time-target="value" class="text-xl font-semibold text-[#ff8900]"><%= @exercise_set.rest_time %>s</div>
+      <div class="text-[#d9d9d9] text-xs">Tempo de repouso</div>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="text-xl font-semibold text-white"><%= @exercise_set.average_force %> N</div>
+      <div class="text-[#d9d9d9] text-xs">Força Total</div>
     </div>
   </div>
 
-  <!-- Counter Buttons -->
+  <!-- Counter Buttons for Weight -->
   <div data-controller="weight" data-exercise-set-id="<%= @exercise_set.id %>" class="flex items-center justify-center mb-4">
     <button data-action="click->weight#decrease" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">-</button>
     <div data-weight-target="value" class="text-center text-white text-[50px] mx-2"><%= @exercise_set.weight %>kg</div>
     <button data-action="click->weight#increase" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">+</button>
   </div>
+
+<!-- Table with Series, Repetitions, Weight, and Rest Time -->
+<div class="flex justify-between my-3 text-white text-sm">
+  <table class="table-auto text-white text-sm w-full">
+    <thead>
+      <tr class="bg-[#151c1c]">
+        <th class="px-4 py-2">Série</th>
+        <th class="px-4 py-2">Repetições</th>
+        <th class="px-4 py-2">Carga</th>
+        <th class="px-4 py-2">Tempo de Descanso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @exercise_set.reps_per_series.sort_by { |k, _| k.to_i }.each do |series, data| %>
+        <tr class="text-center">
+          <td class="border px-4 py-2"><%= series %></td>
+          <td class="border px-4 py-2"><%= data["reps"] || 0 %></td>
+          <td class="border px-4 py-2"><%= data["weight"] || 0 %>kg</td>
+          <td class="border px-4 py-2"><%= data["rest_time"] || 0 %>s</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 
   <!-- Bottom Navigation -->
@@ -98,11 +118,7 @@
     <%= link_to edit_exercise_set_path(@exercise_set.id), class: "bg-[#a52502] rounded-full p-3", data: { turbo: false } do %>
       <i class="fa-solid fa-stop text-white text-lg"></i>
     <% end %>
-
-
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>
-
-
 </div>
