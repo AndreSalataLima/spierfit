@@ -1,37 +1,53 @@
+// app/javascript/controllers/rest_time_controller.js
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["value"];
+  static values = { exerciseSetId: Number }
 
   connect() {
-    console.log("Rest_time controller connected");
+    this.restTime = 0;
+    this.isSeriesActive = false;
 
-    this.restTime = parseInt(this.valueTarget.textContent) || 0;
-    this.seriesCompleted = this.element.dataset.seriesCompleted === "true";
+    document.addEventListener('series:started', this.onSeriesStarted.bind(this));
+    document.addEventListener('series:ended', this.onSeriesEnded.bind(this));
+  }
 
-    // Inicia o timer se a série foi completada
-    if (this.seriesCompleted) {
-      this.startRestTimer();
-    }
+  disconnect() {
+    this.clearTimer();
+    document.removeEventListener('series:started', this.onSeriesStarted.bind(this));
+    document.removeEventListener('series:ended', this.onSeriesEnded.bind(this));
+  }
 
-    // Listener para parar o contador quando a página mudar
-    document.addEventListener('turbo:before-visit', () => {
-      this.clearTimer();
-    });
+  onSeriesStarted() {
+    this.isSeriesActive = true;
+    this.resetRestTime();
+  }
+
+  onSeriesEnded() {
+    this.isSeriesActive = false;
+    this.restTime = 0; // Iniciar em 0 segundos
+    this.valueTarget.textContent = `${this.restTime}s`;
+    this.startRestTimer();
   }
 
   startRestTimer() {
+    if (this.timer) return; // Prevent multiple timers
     this.timer = setInterval(() => {
-      this.updateRestTime();
+      this.restTime += 1;
+      this.valueTarget.textContent = `${this.restTime}s`;
+      this.updateRestTimeOnServer();
     }, 1000);
   }
 
-  updateRestTime() {
-    this.restTime += 1;
+  resetRestTime() {
+    this.clearTimer();
+    this.restTime = 0;
     this.valueTarget.textContent = `${this.restTime}s`;
+  }
 
-    const exerciseSetId = this.element.dataset.exerciseSetId;
-    fetch(`/exercise_sets/${exerciseSetId}/update_rest_time`, {
+  updateRestTimeOnServer() {
+    fetch(`/exercise_sets/${this.exerciseSetIdValue}/update_rest_time`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -41,23 +57,10 @@ export default class extends Controller {
     });
   }
 
-  resetRestTime() {
-    console.log("Rest timer reset to 0");
-    this.clearTimer(); // Para o temporizador atual
-    this.restTime = 0; // Reseta o valor de rest_time
-    this.valueTarget.textContent = `${this.restTime}s`; // Atualiza o display
-
-    // Opcional: Reiniciar o temporizador se necessário
-    this.startRestTimer();
-  }
-
-  disconnect() {
-    this.clearTimer();
-  }
-
   clearTimer() {
     if (this.timer) {
       clearInterval(this.timer);
+      this.timer = null;
     }
   }
 }

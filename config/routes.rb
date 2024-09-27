@@ -36,7 +36,7 @@ Rails.application.routes.draw do
       patch 'update_rest_time'
       patch 'complete'
       get :reps_and_sets
-
+      get :process_new_data
     end
   end
 
