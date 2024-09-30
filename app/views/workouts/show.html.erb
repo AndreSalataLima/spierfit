@@ -26,30 +26,31 @@
     <div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] p-4 mb-6">
       <div class="grid grid-cols-2 gap-2">
         <!-- Duração -->
-        <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
-          <div class="text-white text-2xl font-semibold"><%= @workout_duration %></div>
-          <div class="text-white text-sm font-semibold">Duração</div>
+        <div class="bg-[#393939] rounded-lg p-2 flex justify-between items-center">
+          <div class="text-white text-xl font-semibold"><%= @workout_duration %></div>
+          <div class="text-white text-xs font-semibold">Duração</div>
         </div>
 
         <!-- Exercícios -->
-        <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
-          <div class="text-white text-2xl font-semibold"><%= @workout.exercise_sets.count %></div>
-          <div class="text-white text-sm font-semibold">Exercícios</div>
+        <div class="bg-[#393939] rounded-lg p-2 flex justify-between items-center">
+          <div class="text-white text-xl font-semibold"><%= @workout.exercise_sets.count %></div>
+          <div class="text-white text-xs font-semibold">Exercícios</div>
         </div>
 
         <!-- Séries -->
-        <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
-          <div class="text-white text-2xl font-semibold"><%= @workout.exercise_sets.sum(:sets) %></div>
-          <div class="text-white text-sm font-semibold">Séries</div>
+        <div class="bg-[#393939] rounded-lg p-2 flex justify-between items-center">
+          <div class="text-white text-xl font-semibold"><%= @workout.exercise_sets.sum(:sets) %></div>
+          <div class="text-white text-xs font-semibold">Séries</div>
         </div>
 
         <!-- Força Total -->
-        <div class="bg-[#393939] rounded-lg p-3 flex justify-between items-center">
-          <div class="text-white text-2xl font-semibold"><%= @workout.exercise_sets.sum(:average_force) %></div>
-          <div class="text-white text-sm font-semibold">Força Total (N)</div>
+        <div class="bg-[#393939] rounded-lg p-2 flex justify-between items-center">
+          <div class="text-white text-xl font-semibold"><%= @workout.exercise_sets.sum(:average_force) %></div>
+          <div class="text-white text-xs font-semibold">Força Total<br> (N)</div>
         </div>
       </div>
     </div>
+
 
     <!-- Exercícios -->
     <div class="w-full max-w-[428px] p-1">
@@ -84,12 +85,14 @@
 
     <!-- Bottom Navigation -->
     <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
-      <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+      <a href="<%= dashboard_user_path(current_user) %>" class="text-white text-sm">
+        <i class="fa fa-home"></i>
+      </a>
       <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
       <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
-        <i class="fa-solid fa-stop text-white text-lg"></i>
+        <i class="fa-solid fa-forward text-white text-lg"></i>
       </a>
-      <div class="text-white text-sm"><i class="fa fa-endar-alt"></i></div>
+      <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
       <div class="text-white text-sm"><i class="fa fa-user"></i></div>
     </div>
   </div>

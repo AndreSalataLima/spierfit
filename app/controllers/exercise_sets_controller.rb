@@ -8,7 +8,8 @@ class ExerciseSetsController < ApplicationController
     :complete,
     :update_weight,
     :update_rest_time,
-    :reps_and_sets
+    :reps_and_sets,
+    :process_new_data
   ]
 
   # Método responsável por exibir a página de execução
@@ -28,30 +29,27 @@ class ExerciseSetsController < ApplicationController
   def reps_and_sets
     last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 0
     last_series_details = @exercise_set.reps_per_series[last_series_number.to_s] || { "reps" => 0 }
-    render json: { reps: last_series_details["reps"], sets: last_series_number }
+    render json: { reps: last_series_details["reps"], sets: last_series_number, in_series: @exercise_set.in_series }
   end
+
 
   # Método para atualizar o conjunto de exercícios
   def update
     if @exercise_set.update(exercise_set_params)
-      recalculate_and_update_exercise_set(@exercise_set.arduino_data.order(:recorded_at))
       broadcast_exercise_set_data
-      respond_to do |format|
-        format.turbo_stream
-        format.html { redirect_to select_equipment_machines_path, notice: 'Exercise set was successfully updated.' }
-      end
+      redirect_to edit_exercise_set_path(@exercise_set), notice: 'Exercise set was successfully updated.'
     else
-      respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("exercise_set_form", partial: "exercise_sets/form", locals: { exercise_set: @exercise_set }) }
-        format.html { render :edit, status: :unprocessable_entity }
-      end
+      render :edit, status: :unprocessable_entity
     end
   end
 
-
   def update_weight
-    if @exercise_set.update(weight: params[:exercise_set][:weight])
-      recalculate_and_update_exercise_set(@exercise_set.arduino_data.order(:recorded_at))
+    new_weight = params[:exercise_set][:weight].to_f
+
+    if @exercise_set.update(weight: new_weight)
+      # **No need to call recalculate_and_update_exercise_set here**
+      # The weight will be captured when the next series starts
+
       broadcast_exercise_set_data
       render json: { status: "success", weight: @exercise_set.weight }
     else
@@ -59,9 +57,11 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
+
+
   def update_rest_time
     if @exercise_set.update(rest_time: params[:rest_time])
-      recalculate_and_update_exercise_set(@exercise_set.arduino_data.order(:recorded_at))
+      # No need to call `recalculate_and_update_exercise_set` here
       broadcast_exercise_set_data
       render json: { status: "success", rest_time: @exercise_set.rest_time }
     else
@@ -69,22 +69,26 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
+
   def complete
     @exercise_set.update(completed: true)
     broadcast_exercise_set_data
     redirect_to user_index_machines_path, notice: 'Exercise set was successfully completed.'
   end
+
   def broadcast_exercise_set_data
     current_broadcast = {
       reps: @exercise_set.reps,
       sets: @exercise_set.sets,
-      duration: @exercise_set.duration,
       weight: @exercise_set.weight,
       energy_consumed: @exercise_set.energy_consumed
     }
 
-    # Verifica se há mudanças antes de transmitir
-    if current_broadcast != @last_broadcasted
+    # Use uma variável de cache para armazenar o último dado transmitido
+    @last_broadcasted ||= {}
+
+    # Só transmita se houver alterações
+    unless current_broadcast == @last_broadcasted
       ActionCable.server.broadcast(
         "exercise_sets_#{@exercise_set.id}_channel",
         current_broadcast
@@ -93,6 +97,14 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
+
+  def process_new_data
+    Rails.logger.info "Processing new data for ExerciseSet ID: #{@exercise_set.id}"
+    @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
+    Rails.logger.info "Arduino data count: #{@arduino_data.count}"
+    recalculate_and_update_exercise_set(@arduino_data)
+    render json: { status: 'processed' }
+  end
 
   private
 
@@ -105,81 +117,92 @@ class ExerciseSetsController < ApplicationController
   end
 
   def recalculate_and_update_exercise_set(arduino_data)
-    results = detect_series_and_reps(arduino_data.map(&:value))
-    new_reps = results[:reps_per_series].values.last&.dig(:reps) || 0
+    Rails.logger.info "Recalculating ExerciseSet ID: #{@exercise_set.id}"
+
+    # Use all data for calculations
+    results = detect_series_and_reps(arduino_data)
+
+    new_reps = results[:reps_per_series].values.last&.dig('reps') || 0
     new_sets = results[:series_count]
+    in_series = results[:in_series]
 
-
-    # Aqui garantimos que o peso seja salvo para cada série
+    # Update reps_per_series and other attributes as needed
     results[:reps_per_series].each do |series_number, series_data|
-      # Se ainda não há um peso salvo para essa série, atribuímos o peso atual
-      unless series_data[:weight]
-        series_data[:weight] = @exercise_set.weight
-      end
+      series_data['weight'] ||= @exercise_set.weight
     end
 
-    if new_reps != @exercise_set.reps || new_sets != @exercise_set.sets
+    # Update only if there are changes
+    if new_reps != @exercise_set.reps || new_sets != @exercise_set.sets || in_series != @exercise_set.in_series
       @exercise_set.update(
         reps_per_series: results[:reps_per_series],
         sets: new_sets,
         reps: new_reps,
+        in_series: in_series,
         updated_at: Time.now
       )
       broadcast_exercise_set_data
     end
   end
 
+
+
   # Método para detectar séries e repetições nos dados do Arduino
-  def detect_series_and_reps(data)
+  def detect_series_and_reps(arduino_data)
+    puts "Raw data: #{arduino_data.map { |d| "#{d.id}: #{d.recorded_at.strftime('%Y-%m-%d %H:%M:%S.%L')} - #{d.value}" }}"
+
     series_count = 0
     reps_in_current_series = 0
     in_series = false
     ready_for_new_rep = true
     consecutive_low_values = 0
-    reps_per_series = @exercise_set.reps_per_series.deep_dup # Clonar o reps_per_series para não sobrescrever dados antigos
+    reps_per_series = @exercise_set.reps_per_series.deep_dup || {}
     previous_series_end_time = nil
+    series_start_time = nil
 
-    data.each_with_index do |value, index|
+    arduino_data.each_with_index do |data_point, index|
+      value = data_point.value
+      time = data_point.recorded_at
+
       if !in_series && value > -1400
+        # Start of a new series
         in_series = true
         ready_for_new_rep = true
         consecutive_low_values = 0
-        reps_in_current_series = 0 # Resetar o contador de repetições para a nova série
-        series_count += 1 # Incrementa a contagem de séries no início da nova série
+        reps_in_current_series = 0
+        series_count += 1
 
-        # Atualiza o rest_time da série anterior se ele ainda não tiver sido atualizado
-        if series_count > 1 && reps_per_series[(series_count - 1).to_s]["rest_time"] == 0
-          rest_time = @exercise_set.rest_time # Usa o valor correto de @exercise_set.rest_time
-          reps_per_series[(series_count - 1).to_s]["rest_time"] = rest_time
+        series_start_time = time
 
+        # **Calculate rest time for the previous series**
+        if previous_series_end_time
+          rest_time = (series_start_time - previous_series_end_time).to_i # in seconds
+          rest_time = [rest_time, 0].max # Ensure rest_time is not negative
+
+          # **Update rest time for the previous series**
+          reps_per_series[(series_count - 1).to_s]['rest_time'] = rest_time
         end
 
-        # Inicializa a nova série no reps_per_series se ainda não existir
-        unless reps_per_series[series_count.to_s]
-          reps_per_series[series_count.to_s] = {
-            reps: 0, # Inicializa com 0 repetições
-            weight: @exercise_set.weight, # Mantém o peso da série atual
-            rest_time: 0 # O rest_time da série atual será atualizado na próxima série
-          }
-        end
-      end
+        # Determine the weight at this time
+        current_weight = @exercise_set.weight
 
-      if in_series
+        # Initialize series in reps_per_series
+        reps_per_series[series_count.to_s] ||= {
+          'reps' => 0,
+          'weight' => current_weight,
+          'rest_time' => 0
+        }
+
+        Rails.logger.info "Started series #{series_count} at index #{index}, recorded_at: #{time}"
+      elsif in_series
+        # Process repetitions (existing logic)
         if value > -880 && ready_for_new_rep
           reps_in_current_series += 1
           ready_for_new_rep = false
 
-          # Atualiza o número de repetições para a série atual
-          reps_per_series[series_count.to_s][:reps] = reps_in_current_series
+          # Update reps in reps_per_series
+          reps_per_series[series_count.to_s]['reps'] = reps_in_current_series
 
-          # Atualizar o banco de dados e transmitir a atualização imediatamente após cada repetição
-          @exercise_set.update(
-            reps_per_series: reps_per_series,
-            sets: series_count,
-            reps: reps_in_current_series,
-            updated_at: Time.now
-          )
-          broadcast_exercise_set_data
+          Rails.logger.info "Detected rep #{reps_in_current_series} in series #{series_count} at index #{index}, recorded_at: #{time}"
         end
 
         if value < -1050
@@ -192,21 +215,37 @@ class ExerciseSetsController < ApplicationController
           consecutive_low_values = 0
         end
 
+        # End of the series (when we reach 50 consecutive low values)
         if consecutive_low_values >= 50
-          if reps_in_current_series > 0
-            reps_per_series[series_count.to_s][:reps] = reps_in_current_series
-          else
-            # Se não houve repetições, remover a série do hash
-            reps_per_series.delete(series_count.to_s)
-            series_count -= 1
-          end
           in_series = false
-          previous_series_end_time = Time.now # Armazena o tempo de término da série atual para cálculo de rest_time na próxima série
+
+          # **Adjust previous_series_end_time to the actual end time of the series**
+          previous_series_end_time = time - 5.seconds
+
+          Rails.logger.info "Ended series #{series_count} at index #{index}, recorded_at: #{time}"
         end
       end
     end
 
-    { series_count: series_count, reps_per_series: reps_per_series }
+    { series_count: series_count, reps_per_series: reps_per_series, in_series: in_series }
+  end
+
+
+
+  def weight_at_time(time, weight_changes)
+    # Default weight
+    weight_at_time = @exercise_set.weight
+
+    weight_changes.each do |change|
+      change_time = Time.parse(change["changed_at"])
+      if change_time <= time
+        weight_at_time = change["weight"]
+      else
+        break
+      end
+    end
+
+    weight_at_time
   end
 
   # Função para calcular a força e potência e atualizar os campos no banco de dados
@@ -281,7 +320,7 @@ class ExerciseSetsController < ApplicationController
 
   # Função auxiliar para calcular a proporção de tempo para cada série
   def calculate_time_proportion_per_series
-    total_reps = @exercise_set.reps_per_series.values.sum { |data| data["reps"] }
+    total_reps = @exercise_set.reps_per_series.values.sum { |data| data["reps"].to_i }
     time_per_series = {}
 
     @exercise_set.reps_per_series.each do |series_number, series_data|
@@ -301,5 +340,7 @@ class ExerciseSetsController < ApplicationController
 
     time_per_series
   end
+
+
 
 end
