@@ -99,9 +99,7 @@ class ExerciseSetsController < ApplicationController
 
 
   def process_new_data
-    Rails.logger.info "Processing new data for ExerciseSet ID: #{@exercise_set.id}"
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-    Rails.logger.info "Arduino data count: #{@arduino_data.count}"
     recalculate_and_update_exercise_set(@arduino_data)
     render json: { status: 'processed' }
   end
@@ -117,9 +115,6 @@ class ExerciseSetsController < ApplicationController
   end
 
   def recalculate_and_update_exercise_set(arduino_data)
-    Rails.logger.info "Recalculating ExerciseSet ID: #{@exercise_set.id}"
-
-    # Use all data for calculations
     results = detect_series_and_reps(arduino_data)
 
     new_reps = results[:reps_per_series].values.last&.dig('reps') || 0
@@ -148,7 +143,6 @@ class ExerciseSetsController < ApplicationController
 
   # Método para detectar séries e repetições nos dados do Arduino
   def detect_series_and_reps(arduino_data)
-    puts "Raw data: #{arduino_data.map { |d| "#{d.id}: #{d.recorded_at.strftime('%Y-%m-%d %H:%M:%S.%L')} - #{d.value}" }}"
 
     series_count = 0
     reps_in_current_series = 0
@@ -192,7 +186,6 @@ class ExerciseSetsController < ApplicationController
           'rest_time' => 0
         }
 
-        Rails.logger.info "Started series #{series_count} at index #{index}, recorded_at: #{time}"
       elsif in_series
         # Process repetitions (existing logic)
         if value > -880 && ready_for_new_rep
@@ -202,7 +195,6 @@ class ExerciseSetsController < ApplicationController
           # Update reps in reps_per_series
           reps_per_series[series_count.to_s]['reps'] = reps_in_current_series
 
-          Rails.logger.info "Detected rep #{reps_in_current_series} in series #{series_count} at index #{index}, recorded_at: #{time}"
         end
 
         if value < -1050
@@ -222,7 +214,6 @@ class ExerciseSetsController < ApplicationController
           # **Adjust previous_series_end_time to the actual end time of the series**
           previous_series_end_time = time - 5.seconds
 
-          Rails.logger.info "Ended series #{series_count} at index #{index}, recorded_at: #{time}"
         end
       end
     end
@@ -304,16 +295,6 @@ class ExerciseSetsController < ApplicationController
     # Atualizar os campos average_force e power_in_watts no banco de dados
     @exercise_set.update(average_force: total_average_force, power_in_watts: power_in_watts)
 
-    # Exibir os valores para conferência
-    puts "Total Time: #{total_time}"
-    puts "Total Eccentric Time: #{total_eccentric_time}"
-    puts "Total Concentric Time: #{total_concentric_time}"
-    puts "Total Distance: #{total_distance}"
-    puts "Total Distance in Meters: #{total_distance_in_meters}"
-    puts "Total Eccentric Force: #{total_eccentric_force}"
-    puts "Total Concentric Force: #{total_concentric_force}"
-    puts "Total Average Force: #{total_average_force}"
-    puts "Power in Watts: #{power_in_watts}" # Exibir formatado
   end
 
 
