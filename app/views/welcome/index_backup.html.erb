@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Bootstrap, Landing page, Template, Business, Service">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Grayrids">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+    <title>SpierFit</title>
+    <!--====== Favicon Icon ======-->
+    <script src="https://kit.fontawesome.com/537b5909fe.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="<%= asset_path '2.png' %>" type="image/png">
+    <%= stylesheet_link_tag 'bootstrap.min', 'animate', 'owl.carousel', 'owl.theme', 'magnific-popup', 'nivo-lightbox', 'main', 'responsive', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<body>
+
+    <!-- Header Section Start -->
+    <header id="home" class="hero-area">
+      <div class="overlay">
+        <span></span>
+        <span></span>
+      </div>
+      <nav class="navbar navbar-expand-md bg-inverse fixed-top scrolling-navbar">
+        <div class="container">
+          <a href="#" class="navbar-brand"><%= image_tag 'spierfit_v1_165x85.png', alt: 'Logo' %></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="lni-menu"></i>
+          </button>
+        <div class="container">
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto w-100 justify-content-end">
+              <%#= link_to 'Login', new_user_session_path, class: 'btn btn-login ml-2' %>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#services">Sobre</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#business-plan">Adesão</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#features">Funcionalidades</a>
+              </li>
+              <%# <li class="nav-item"> %>
+                <%# <a class="nav-link page-scroll" href="#team">Equipe</a> %>
+              <%# </li> %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container">
+        <div class="row space-100">
+          <div class="col-lg-6 col-md-12 col-xs-12">
+            <div class="contents">
+              <h2 class="head-title">No data, no gain</h2>
+              <p>Nossa tecnologia de sensores de ponta transforma cada treino em uma experiência rica em dados. Aproveite o poder da análise em tempo real para impulsionar sua jornada de fitness.</p>
+              <div class="header-button">
+                <a href="https://wa.me/+554499707380" class="btn btn-border-filled">Saiba mais</a>
+              </div>
+            </div>
+          </div>
+          <%# <div class="col-lg-6 col-md-12 col-xs-12 p-0"> %>
+            <%# <div class="intro-img"> %>
+              <%# <%= image_tag 'gym_banner2.png', alt: 'Intro Image' %>
+            <%# </div> %>
+          <%# </div> %>
+        </div>
+      </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Services Section Start -->
+      <section id="about" class="section">
+         <div class="container">
+           <div class="row">
+             <div class="col-lg-12">
+               <div class="section-header text-center">
+                 <h2 class="section-title">Revolucionando o Mercado Fitness com Tecnologia Orientada por Dados</h2>
+                 <p class="section-subtitle">Nossa tecnologia de sensores de ponta transforma cada treino em uma experiência rica em dados. Aproveite o poder da análise em tempo real para impulsionar sua jornada de fitness.</p>
+               </div>
+             </div>
+           </div>
+    <section id="services" class="section">
+      <div class="container">
+        <div class="row">
+          <!-- Start Col -->
+          <div class="col-lg-3 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <h4>Instalação Rápida</h4>
+              <p>Nossos sensores são projetados para instalação rápida e fácil em qualquer equipamento de ginástica.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-3 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="fa-solid fa-stopwatch"></i>
+              </div>
+              <h4>Monitoramento de Desempenho em Tempo Real</h4>
+              <p>Monitore seu progresso em tempo real com métricas precisas como velocidade, força e resistência.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-3 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <h4>Análise Avançada de Dados</h4>
+              <p>Análises detalhadas, fornecendo insights sobre a eficiência do treino e áreas de melhoria.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-3 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </div>
+              <h4>Planos de Treino Personalizáveis</h4>
+              <p>Personalize seu treinamento com planos de treino orientados por dados, adaptados aos seus objetivos de fitness.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+        </div>
+      </div>
+    </section>
+    <!-- Services Section End -->
+
+    <!-- Business Plan Section Start -->
+    <section id="business-plan">
+      <div class="container">
+        <div class="row">
+          <!-- Start Col -->
+          <div class="col-lg-6 col-md-12 pl-0 pt-70 pr-5">
+            <div class="business-item-img">
+              <%= image_tag 'installation-datacollection-data-utilization_v3.png', class: 'img-fluid', alt: 'Instalação, Coleta de Dados, Utilização de Dados' %>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-6 col-md-12 pl-4">
+            <div class="business-item-info">
+              <h3>Junte-se à Nossa Crescente Rede de Parceiros</h3>
+              <p>Nosso processo começa equipando sua academia com sensores de última geração para integração perfeita com os equipamentos existentes. Uma vez instalados, esses sensores coletam dados valiosos de treino, transformando cada sessão em uma rica fonte de insights. Esses dados são então utilizados para melhorar as experiências dos usuários, a manutenção dos equipamentos e informar decisões estratégicas de negócios.</p>
+              <a class="btn btn-common" href="https://wa.me/+554499707380">Saiba Mais</a>
+            </div>
+          </div>
+          <!-- End Col -->
+        </div>
+      </div>
+    </section>
+    <!-- Business Plan Section End -->
+
+    <!-- Cool Features Section Start -->
+    <section id="features" class="section">
+      <div class="container">
+        <!-- Start Row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="features-text section-header text-center">
+              <div>
+              <h2 class="section-title">Explore Nossas Funcionalidades Técnicas Avançadas</h2>
+                <div class="desc-text">
+                  <p class="section-subtitle">Nossas inovações técnicas são projetadas para mantê-lo conectado, seguro e à frente na jornada de fitness</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Row -->
+        <!-- Start Row -->
+        <div class="row featured-bg">
+         <!-- Start Col -->
+          <div class="col-lg-6 col-md-6 col-xs-12 p-0">
+             <!-- Start Features -->
+            <div class="feature-item featured-border1">
+               <div class="feature-icon float-left">
+                 <i class="fa-solid fa-droplet"></i>
+               </div>
+               <div class="feature-info float-left">
+                <h4>Classificação IP69</h4>
+                <p>Durável e confiável em todas as condições.</p>
+               </div>
+            </div>
+            <!-- End Features -->
+          </div>
+           <!-- End Col -->
+         <!-- Start Col -->
+          <div class="col-lg-6 col-md-6 col-xs-12 p-0">
+             <!-- Start Features -->
+            <div class="feature-item featured-border2">
+               <div class="feature-icon float-left">
+                 <i class="fa-solid fa-signal"></i>
+               </div>
+               <div class="feature-info float-left">
+              <h4>Conectividade 4G/5G</h4>
+              <p>Para transmissão de dados ininterrupta.</p>
+               </div>
+            </div>
+            <!-- End Features -->
+          </div>
+           <!-- End Col -->
+         <!-- Start Col -->
+          <div class="col-lg-6 col-md-6 col-xs-12 p-0">
+             <!-- Start Features -->
+            <div class="feature-item featured-border1">
+               <div class="feature-icon float-left">
+                 <i class="fa-solid fa-battery-full"></i>
+               </div>
+               <div class="feature-info float-left">
+              <h4>Longa Vida Útil da Bateria</h4>
+              <p>Garantindo operação contínua.</p>
+               </div>
+            </div>
+            <!-- End Features -->
+          </div>
+           <!-- End Col -->
+         <!-- Start Col -->
+          <div class="col-lg-6 col-md-6 col-xs-12 p-0">
+             <!-- Start Features -->
+            <div class="feature-item featured-border2">
+               <div class="feature-icon float-left">
+                <i class="fa-solid fa-mobile"></i>
+               </div>
+               <div class="feature-info float-left">
+              <h4>Interface Amigável</h4>
+              <p>Fácil de navegar para todas as idades.</p>
+               </div>
+            </div>
+            <!-- End Features -->
+          </div>
+           <!-- End Col -->
+         <!-- Start Col -->
+          <div class="col-lg-6 col-md-6 col-xs-12 p-0">
+             <!-- Start Features -->
+            <div class="feature-item featured-border3">
+               <div class="feature-icon float-left">
+                 <i class="fa-solid fa-shield-halved"></i>
+               </div>
+               <div class="feature-info float-left">
+              <h4>Segurança Robusta de Dados</h4>
+              <p>Mantendo os dados do usuário seguros.</p>
+               </div>
+            </div>
+            <!-- End Features -->
+          </div>
+           <!-- End Col -->
+         <!-- Start Col -->
+          <div class="col-lg-6 col-md-6 col-xs-12 p-0">
+             <!-- Start Features -->
+            <div class="feature-item">
+               <div class="feature-icon float-left">
+                 <i class="fa-solid fa-cloud-arrow-up"></i>
+               </div>
+               <div class="feature-info float-left">
+              <h4>Compatibilidade Multi-Dispositivo</h4>
+              <p>Sincroniza facilmente com vários dispositivos.</p>
+               </div>
+            </div>
+            <!-- End Features -->
+          </div>
+           <!-- End Col -->
+        </div>
+        <!-- End Row -->
+      </div>
+    </section>
+    <!-- Cool Features Section End -->
+
+    <!-- Team section Start -->
+    <%# <section id="team" class="section"> %>
+      <%# <div class="container"> %>
+        <%# <!-- Start Row --> %>
+        <%# <div class="row"> %>
+          <%# <div class="col-lg-12"> %>
+            <%# <div class="team-text section-header text-center"> %>
+              <%# <div> %>
+              <%# <h2 class="section-title">Membros da Equipe</h2> %>
+                <%# <div class="desc-text"> %>
+                  <%# <p class="section-subtitle">Conheça a equipe por trás do nosso sucesso.</p> %>
+                <%# </div> %>
+              <%# </div> %>
+            <%# </div> %>
+          <%# </div> %>
+        <%# </div> %>
+        <!-- End Row -->
+        <!-- Start Row -->
+        <%# <div class="row"> %>
+          <!-- Start Col -->
+          <%# <div class="col-lg-4 col-md-6 col-xs-12"> %>
+            <%# <div class="single-team"> %>
+              <%# <div class="team-thumb"> %>
+                <%# <%= image_tag 'pedro_augusto.png', class: 'img-fluid', alt: 'Team Member 1' %>
+              <%# </div> %>
+              <%# <div class="team-details"> %>
+              <%# <div class="team-social-icons"> %>
+                  <%# <ul class="social-list"> %>
+                    <%# <li><a href="https://www.linkedin.com/in/williamhgates/" target="_blank"><i class="fa-brands fa-linkedin" style="color: #0a66c2;"></i></i></a></li>                  </ul> %>
+                <%# </div> %>
+                <%# <div class="team-inner text-center"> %>
+                <%# <h5 class="team-title">Pedro Olimpio</h5> %>
+                <%# <p>CEO</p> %>
+                <%# </div> %>
+              <%# </div> %>
+            <%# </div> %>
+          <%# </div> %>
+          <!-- Start Col -->
+          <!-- Start Col -->
+          <%# <div class="col-lg-4 col-md-6 col-xs-12"> %>
+            <%# <div class="single-team"> %>
+              <%# <div class="team-thumb"> %>
+                <%# <%= image_tag 'andre_salata.jpeg', class: 'img-fluid', alt: 'Team Member 2' %>
+              <%# </div> %>
+              <%# <div class="team-details"> %>
+              <%# <div class="team-social-icons"> %>
+                  <%# <ul class="social-list"> %>
+                    <%# <li><a href="https://www.linkedin.com/in/andresalatalima/" target="_blank"><i class="fa-brands fa-linkedin" style="color: #0a66c2;"></i></i></a></li>                  </ul> %>
+                <%# </div> %>
+                <%# <div class="team-inner text-center"> %>
+                <%# <h5 class="team-title">André Salata</h5> %>
+                <%# <p>Head Tecnologia</p> %>
+                <%# </div> %>
+              <%# </div> %>
+            <%# </div> %>
+          <%# </div> %>
+          <!-- Start Col -->
+          <!-- Start Col -->
+          <%# <div class="col-lg-4 col-md-6 col-xs-12"> %>
+            <%# <div class="single-team"> %>
+              <%# <div class="team-thumb"> %>
+                <%# <%= image_tag 'mateus_saad.jpg', class: 'img-fluid', alt: 'Team Member 3' %>
+              <%# </div> %>
+              <%# <div class="team-details"> %>
+              <%# <div class="team-social-icons"> %>
+                  <%# <ul class="social-list"> %>
+                    <%# <li><a href="https://www.linkedin.com/in/mateus-s-saad-b9b6b831/" target="_blank"><i class="fa-brands fa-linkedin" style="color: #0a66c2;"></i></i></a></li>                  </ul> %>
+                <%# </div> %>
+                <%# <div class="team-inner text-center"> %>
+                <%# <h5 class="team-title">Mateus Saad</h5> %>
+                <%# <p>Head Comercial</p> %>
+                <%# </div> %>
+              <%# </div> %>
+            <%# </div> %>
+          <%# </div> %>
+          <!-- Start Col -->
+        <%# </div> %>
+        <!-- End Row -->
+      <%# </div> %>
+    <%# </section> %>
+    <!-- Team section End -->
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="section">
+      <!-- Container Starts -->
+      <div class="container">
+        <!-- Start Row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="contact-text section-header text-center">
+              <div>
+                <h2 class="section-title">CONTATO</h2>
+                <div class="desc-text">
+                  <p>Vamos entrar em contato. Envie-nos uma mensagem:</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Row -->
+        <!-- Start Row -->
+          <div class="row justify-content-center">
+            <!-- Start Col -->
+            <div class="col-lg-6 col-md-8">
+              <form id="contactForm">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Nome" required data-error="Favor incluir nome">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="E-mail" required data-error="Favor incluir e-mail">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="submit-button text-center">
+                        <button class="btn btn-common" id="submit" type="submit">Enviar</button>
+                        <div id="msgSubmit" class="h3 hidden"></div>
+                        <div class="clearfix"></div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+            </div>
+            <!-- End Col -->
+          </div>
+          </div>
+          </div>
+          <!-- End Row -->
+    </section>
+    <!-- Contact Us Section End -->
+<!-- Footer Section Start -->
+  <footer id="footer">
+    <!-- Footer Area Start -->
+    <section id="footer-Content">
+      <div class="container">
+        <!-- Start Row -->
+        <div class="row justify-content-center text-center">
+          <!-- Start Col -->
+          <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+            <div class="widget">
+              <!-- Add text if needed -->
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+            <div class="widget block-content">
+              <p class="block-title">51.014.489/0001-91</p>
+              <p class="block-title">mateus.saad2@gmail.com</p>
+              <p>(44) 9970-7380 <a href="https://wa.me/+554499707380"><i class="fa-brands fa-whatsapp whatsapp-icon" style="color: #24cc63;"></i>
+                </a></i>
+              </p>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+            <div class="widget">
+              <!-- Add your logo here -->
+              <%= image_tag 'spierfit_v1_165x85.png', alt: 'Logo', class: 'footer-logo' %>
+            </div>
+          </div>
+          <!-- End Col -->
+        </div>
+        <!-- End Row -->
+      </div>
+    </section>
+    <!-- Footer Area End -->
+    <!-- Copyright Section Start -->
+    <div class="site-info text-center">
+      <p>&copy; 2024 - Todos os Direitos Reservados.</p>
+    </div>
+    <!-- Copyright Section End -->
+  </footer>
+  <!-- Go to Top Link -->
+  <a href="#" class="back-to-top">
+    <i class="lni-chevron-up"></i>
+  </a>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader" id="loader-1"></div>
+  </div>
+  <!-- End Preloader -->
+  <!-- jQuery first, then Tether, then Bootstrap JS. -->
+  <%= javascript_include_tag 'jquery-min', 'popper.min', 'bootstrap.min', 'owl.carousel', 'jquery.nav', 'scrolling-nav', 'jquery.easing.min', 'nivo-lightbox', 'jquery.magnific-popup.min', 'form-validator.min', 'contact-form-script', 'whatsappfromforms', 'main', 'data-turbolinks-track': 'reload' %>
+  </body>
+</html>
