@@ -1,0 +1,516 @@
+<!--==============================
+Preloader
+==============================-->
+<div class="preloader">
+  <div class="preloader-inner">
+    <span class="loader"></span>
+  </div>
+</div>
+
+<div class="popup-search-box">
+  <button class="searchClose"><i class="fal fa-times"></i></button>
+  <form action="#">
+    <input type="text" placeholder="Search Here..">
+    <button type="submit"><i class="fal fa-search"></i></button>
+  </form>
+</div>
+
+<div class="sidemenu-wrapper">
+  <div class="sidemenu-content">
+    <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
+    <div class="widget footer-widget">
+      <div class="widget-about">
+        <div class="footer-logo">
+          <%= link_to image_tag('logo-white.svg', alt: 'Fitmas'), root_path %>
+        </div>
+        <p class="about-text">
+          A gym, also known as a fitness center or health club, is a facility dedicated to physical fitness and exercise gyms and typically offer a range.
+        </p>
+        <div class="social-btn style2">
+          <%= link_to content_tag(:i, '', class: 'fab fa-facebook'), 'https://www.facebook.com/' %>
+          <%= link_to content_tag(:i, '', class: 'fab fa-twitter'), 'https://twitter.com/' %>
+          <%= link_to content_tag(:i, '', class: 'fab fa-pinterest-p'), 'https://pinterest.com/' %>
+          <%= link_to content_tag(:i, '', class: 'fab fa-instagram'), 'https://instagram.com/' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget widget_nav_menu footer-widget">
+      <h3 class="widget_title">Quick Links</h3>
+      <ul class="menu">
+        <li><%= link_to 'About Us', "#" %></li>
+        <li><%= link_to 'Our Mission', "#" %></li>
+        <li><%= link_to 'Meet The Teams', "#" %></li>
+        <li><%= link_to 'Our Projects', "#" %></li>
+        <li><%= link_to 'Contact Us', "#" %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--==============================
+Mobile Menu
+==============================-->
+<div class="mobile-menu-wrapper">
+  <div class="mobile-menu-area text-center">
+    <button class="menu-toggle"><i class="fal fa-times"></i></button>
+    <div class="mobile-logo">
+      <%= link_to image_tag('logo.svg', alt: 'Fitmas'), root_path %>
+    </div>
+    <div class="mobile-menu">
+      <ul>
+        <li class="menu-item-has-children">
+          <%= link_to 'Home', '#' %>
+          <ul class="sub-menu">
+            <li><%= link_to 'Home 01', root_path %></li>
+            <li><%= link_to 'Home 02', "#" %></li>
+            <li><%= link_to 'Home 03', "#" %></li>
+          </ul>
+        </li>
+        <li class="menu-item-has-children">
+          <%= link_to 'Pages', '#' %>
+          <ul class="sub-menu">
+            <li><%= link_to 'Team Page', "#" %></li>
+            <li><%= link_to 'Team Page 02', "#" %></li>
+            <li><%= link_to 'Team Details', "#" %></li>
+            <li><%= link_to 'Gallery Page', "#" %></li>
+            <li><%= link_to 'Gallery Page 02', "#" %></li>
+            <li><%= link_to 'Project Page', "#" %></li>
+            <li><%= link_to 'Project Details', "#" %></li>
+            <li><%= link_to 'Shop Page', "#" %></li>
+            <li><%= link_to 'Shop Details', "#" %></li>
+            <li><%= link_to 'Pricing Page', "#" %></li>
+            <li><%= link_to 'Error Page', "#" %></li>
+          </ul>
+        </li>
+        <li class="menu-item-has-children">
+          <%= link_to 'Project', '#' %>
+          <ul class="sub-menu">
+            <li><%= link_to 'Projects', "#" %></li>
+            <li><%= link_to 'Project Details', "#" %></li>
+          </ul>
+        </li>
+        <li class="menu-item-has-children">
+          <%= link_to 'Service', '#' %>
+          <ul class="sub-menu">
+            <li><%= link_to 'Service', "#" %></li>
+            <li><%= link_to 'Service Details', "#" %></li>
+          </ul>
+        </li>
+        <li class="menu-item-has-children">
+          <%= link_to 'Blog', '#' %>
+          <ul class="sub-menu">
+            <li><%= link_to 'Blog', "#" %></li>
+            <li><%= link_to 'Blog 02', "#" %></li>
+            <li><%= link_to 'Blog Details', "#" %></li>
+          </ul>
+        </li>
+        <li><%= link_to 'Contact', "#" %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--==============================
+Header Area
+==============================-->
+<!--==============================
+Header Area
+==============================-->
+<header class="nav-header header-layout1">
+  <div class="sticky-wrapper">
+    <div class="menu-area">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-auto">
+            <div class="header-logo">
+              <%= link_to image_tag('logo.svg', alt: 'logo'), root_path %>
+            </div>
+          </div>
+
+          <div class="col-auto">
+
+            <div class="navbar-right d-inline-flex d-lg-none">
+              <button type="button" class="menu-toggle icon-btn">
+                <i class="far fa-bars"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-auto">
+            <div class="header-button">
+              <%= link_to 'Get a Quote', '#', class: 'btn d-xl-block d-none' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!--==============================
+Hero Area
+==============================-->
+<div class="hero-wrapper hero-1" id="hero">
+  <div class="global-carousel" id="heroSlider1" data-fade="true" data-slide-show="1" data-lg-slide-show="1" data-md-slide-show="1" data-sm-slide-show="1" data-xs-slide-show="1" data-arrows="true" data-xl-arrows="true" data-ml-arrows="true">
+    <div class="hero-slider" data-bg-src="<%= asset_path('hero/hero_bg_1_1.png') %>">
+      <div class="hero-shape1 shape-mockup movingX" data-bottom="165px" data-right="0">
+        <%= image_tag 'hero/hero_shape_1.png', alt: 'img' %>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="hero-style1">
+              <span class="hero-subtitle" data-ani="slideinup" data-ani-delay="0s">Welcome To Our Company</span>
+              <h1 class="hero-title text-white" data-ani="slideinup" data-ani-delay="0.1s">
+                The Best <span>Fitness</span> Studio In Town
+              </h1>
+              <div class="btn-group" data-ani="slideinup" data-ani-delay="0.2s">
+                <%= link_to 'Make Appointment', "#", class: 'btn style2' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-slider" data-bg-src="<%= asset_path('hero/hero_bg_1_2.png') %>">
+      <div class="hero-shape1 shape-mockup movingX" data-bottom="165px" data-right="0">
+        <%= image_tag 'hero/hero_shape_1.png', alt: 'img' %>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="hero-style1">
+              <span class="hero-subtitle" data-ani="slideinup" data-ani-delay="0s">Welcome To Our Company</span>
+              <h1 class="hero-title text-white" data-ani="slideinup" data-ani-delay="0.1s">
+                The Best <span>Fitness</span> Studio In Town
+              </h1>
+              <div class="btn-group" data-ani="slideinup" data-ani-delay="0.2s">
+                <%= link_to 'Make Appointment', "#", class: 'btn style2' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-arrow">
+    <button data-slick-prev="#heroSlider1" class="slick-arrow slick-prev">PREV</button>
+    <button data-slick-next="#heroSlider1" class="slick-arrow slick-next">NEXT</button>
+  </div>
+</div>
+
+<!--==============================
+Service Area 01
+==============================-->
+<div class="service-area-1 space overflow-hidden">
+  <div class="container">
+    <div class="title-area">
+      <span class="sub-title">Our Features</span>
+      <h2 class="sec-title text-white">Services We're Offering</h2>
+    </div>
+  </div>
+
+  <div class="container-fluid p-0">
+    <div class="row global-carousel service-slider-1" data-slide-show="4" data-ml-slide-show="3" data-lg-slide-show="3" data-md-slide-show="2" data-sm-slide-show="1" data-xs-slide-show="1" data-dots="false">
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
+            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
+            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
+              Read More <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!--==============================
+Why-choose-us Area
+==============================-->
+<div class="service-bg-area" data-bg-src="<%= asset_path('bg/service-bg.png') %>">
+  <div class="sec-shape-top">
+    <%= image_tag 'bg/sec-shape-top.png', alt: 'img' %>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="wcu-wrap">
+          <div class="title-area mb-50">
+            <span class="sub-title">Why Choose Us?</span>
+            <h2 class="sec-title text-white">Why Choose Us?</h2>
+            <p class="sec-text text-white">
+              Sed ut perspiciatis unde omnis iste natus voluptatem accusantium dolore mque laudantium aperiam eaquecy inventore veritatis.
+            </p>
+          </div>
+
+          <div class="accordion-area accordion" id="faqAccordion">
+            <div class="accordion-card active">
+              <div class="accordion-header" id="collapse-item-1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                  What are your gym's operating hours?
+                </button>
+              </div>
+              <div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="collapse-item-1" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  <p class="faq-text">
+                    Our standard membership provides access to our gym facilities during regular operating hours.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-card ">
+                <div class="accordion-header" id="collapse-item-2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2"> What amenities and facilities does your gym offer?</button>
+                </div>
+                <div id="collapse-2" class="accordion-collapse collapse " aria-labelledby="collapse-item-2" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p class="faq-text">Professionally are many variations of passages the majority have suffered alteration in some fo injected humour, or randomised words believable.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-card ">
+                <div class="accordion-header" id="collapse-item-3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3"> Do you provide personal training services?</button>
+                </div>
+                <div id="collapse-3" class="accordion-collapse collapse " aria-labelledby="collapse-item-3" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p class="faq-text">Contributors are many variations of passages the majority have suffered alteration in some fo injected humour, or randomised words believable.</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-shape-bottom">
+    <%= image_tag 'bg/sec-shape-bottom.png', alt: 'img' %>
+  </div>
+</div>
+
+<!--==============================
+About Area
+==============================-->
+<div class="space-bottom">
+  <div class="container">
+    <span class="sub-title">More About Us</span>
+    <h2 class="sec-title">Unlock Your Full Potential, Achieve Your Goals.</h2>
+    <p class="sec-text">
+      Welcome to Fitmas. your ultimate destination for achieving your fitness goals. We understand the importance of leading a healthy lifestyle and provide a top-notch fitness facility to support you in your fitness journey.
+    </p>
+
+    <div class="about-tab-1">
+      <div class="filter-menu-active">
+        <button data-filter=".cat1" class="active" type="button">Our Mission</button>
+        <button data-filter=".cat2" type="button">Our Vision</button>
+        <button data-filter=".cat3" type="button">Our Goal</button>
+      </div>
+
+      <div class="filter-active-cat1">
+        <div class="filter-item cat1">
+          <div class="about-tab-icon">
+            <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+          </div>
+          <p class="about-tab-text">Gyms play a vital role in promoting an active and healthy lifestyle.</p>
+        </div>
+        <!-- Repeat for other categories -->
+      </div>
+    </div>
+
+    <div class="btn-wrap mt-40">
+      <%= link_to 'Make Appointment', "#", class: 'btn' %>
+      <div class="about-info-wrap">
+        <div class="icon"><i class="fas fa-phone-volume"></i></div>
+        <div class="details">
+          <p class="about-info-title">Need Help?</p>
+          <%= link_to '(+258) 2569 2582', 'tel:+25825692582', class: 'about-info-link' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--==============================
+Footer Area
+==============================-->
+<footer class="footer-wrapper footer-layout1" data-bg-src="<%= asset_path('bg/footer-1-bg.png') %>">
+  <div class="container">
+    <div class="contact-card">
+      <div class="info-card">
+        <div class="info-card_icon"><i class="fas fa-location-dot"></i></div>
+        <div class="info-card_content">
+          <p class="info-card_text">Gym Location</p>
+          <%= link_to 'Marina Lane Berlin', 'https://www.google.com/maps', class: 'info-card_link' %>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card_icon"><i class="fas fa-envelope"></i></div>
+        <div class="info-card_content">
+          <p class="info-card_text">Email Address</p>
+          <%= mail_to 'health@Fitmas.com', 'health@Fitmas.com', class: 'info-card_link' %>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card_icon"><i class="fas fa-phone-volume"></i></div>
+        <div class="info-card_content">
+          <p class="info-card_text">Phone Number</p>
+          <%= link_to '(+189) 2538-2145', 'tel:+18925382145', class: 'info-card_link' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget-area">
+      <div class="row justify-content-between">
+        <div class="col-md-6 col-xl-3">
+          <div class="widget footer-widget">
+            <div class="widget-about">
+              <div class="footer-logo">
+                <%= link_to image_tag('logo-white.svg', alt: 'Fitmas'), root_path %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="copyright-wrap">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-auto align-self-center">
+          <p class="copyright-text text-center">
+            © 2024 <%= link_to 'SpierFit', '#' %>. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll To Top -->
+<div class="scroll-top">
+  <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+    <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 307.919;"></path>
+  </svg>
+</div>
