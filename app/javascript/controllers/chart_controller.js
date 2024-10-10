@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
 
-// Definir `chart` globalmente para que possa ser acessado em outros arquivos
 window.chart = null;
 
 export default class extends Controller {

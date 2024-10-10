@@ -62,5 +62,5 @@ Rails.application.routes.draw do
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root to: 'welcome#index'
+  root to: 'pages#welcome'
 end
