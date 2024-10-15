@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_26_183757) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_10_194738) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_26_183757) do
     t.datetime "updated_at", null: false
     t.bigint "exercise_set_id"
     t.index ["exercise_set_id"], name: "index_arduino_data_on_exercise_set_id"
+  end
+
+  create_table "data_points", force: :cascade do |t|
+    t.integer "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "exercise_sets", force: :cascade do |t|

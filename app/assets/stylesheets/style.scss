@@ -37,7 +37,7 @@
     4.6. Blog
     4.7. Comments
     4.8. Hero Area
-    4.9. Error    
+    4.9. Error
     4.00. Popup Search
     4.00. Popup Side Menu
     4.00. Wocommerce
@@ -7626,7 +7626,7 @@ table.woocommerce-product-attributes {
   padding: 11px 39px;
   font-size: 18px;
   font-weight: 500;
-  border-radius: 15px ​15px 0;
+  border-radius: 15px 15px 0;
 }
 .login-tab button.nav-link.active {
   background-color: var(--theme-color);
@@ -11464,6 +11464,11 @@ span.select2-selection.select2-selection--single:focus {
   margin-top: -0.3em;
   margin-bottom: 5px;
   font-weight: 500;
+  color: var(--white-color);
+  background-image: linear-gradient(to left, var(--white-color), var(--white-color));
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: 0 2px;
 }
 .service-card_title a {
   color: var(--white-color);
@@ -11512,6 +11517,7 @@ span.select2-selection.select2-selection--single:focus {
 .service-card.style2 .service-card_title {
   font-size: 24px;
   margin-bottom: 13px;
+  color: var(--title-color);
 }
 .service-card.style2 .service-card_title a {
   color: var(--title-color);
@@ -11649,36 +11655,35 @@ span.select2-selection.select2-selection--single:focus {
     margin: 0 10px;
   }
 }
+
 /* Extra small devices */
 @media (max-width: 575px) {
-  .service-slider-1 {
-    margin: 30px 0px 0px;
-  }
   .service-bg-area {
-    margin-top: -12px;
-    margin-bottom: -6px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .sec-shape-top {
+    transform: translateY(-10px); /* Faz o topo subir */
   }
   .sec-shape-bottom {
-    margin-top: -5px;
+    transform: translateY(10px); /* Faz o bottom descer */
   }
 }
-/* Extra small devices */
+
+/* Para dispositivos ainda menores */
 @media (max-width: 375px) {
   .service-bg-area {
-    margin-top: -10px;
-    margin-bottom: -4px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
-  .service-bg-area .sec-shape-top {
-    transform: translateY(-2px);
+  .sec-shape-top {
+    transform: translateY(-15px); /* Ajusta para telas muito pequenas */
   }
-  .service-bg-area .sec-shape-bottom {
-    margin-top: -10px;
-    transform: translateY(2px);
-  }
-  .service-card {
-    padding: 30px 30px 25px;
+  .sec-shape-bottom {
+    transform: translateY(15px); /* Ajusta o bottom para descer mais */
   }
 }
+
 @media (max-width: 320px) {
   .service-bg-area .sec-shape-top {
     transform: translateY(-4px);
@@ -11689,6 +11694,8 @@ span.select2-selection.select2-selection--single:focus {
     transform: translateY(3px);
   }
 }
+
+
 /*******body mass index*******/
 .service-bg2-area {
   margin-top: -120px;
