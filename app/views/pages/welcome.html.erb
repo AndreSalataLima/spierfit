@@ -21,7 +21,7 @@ Preloader
     <div class="widget footer-widget">
       <div class="widget-about">
         <div class="footer-logo">
-          <%= link_to image_tag('logo-white.svg', alt: 'Fitmas'), root_path %>
+          <%= link_to image_tag('spierfit_190x46.png', alt: 'Spierfit'), root_path %>
         </div>
         <p class="about-text">
           A gym, also known as a fitness center or health club, is a facility dedicated to physical fitness and exercise gyms and typically offer a range.
@@ -53,59 +53,12 @@ Mobile Menu
 ==============================-->
 <div class="mobile-menu-wrapper">
   <div class="mobile-menu-area text-center">
-    <button class="menu-toggle"><i class="fal fa-times"></i></button>
     <div class="mobile-logo">
-      <%= link_to image_tag('logo.svg', alt: 'Fitmas'), root_path %>
+      <%= link_to image_tag('spierfit_190x46.png', alt: 'Spierfit'), root_path %>
     </div>
     <div class="mobile-menu">
       <ul>
-        <li class="menu-item-has-children">
-          <%= link_to 'Home', '#' %>
-          <ul class="sub-menu">
-            <li><%= link_to 'Home 01', root_path %></li>
-            <li><%= link_to 'Home 02', "#" %></li>
-            <li><%= link_to 'Home 03', "#" %></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <%= link_to 'Pages', '#' %>
-          <ul class="sub-menu">
-            <li><%= link_to 'Team Page', "#" %></li>
-            <li><%= link_to 'Team Page 02', "#" %></li>
-            <li><%= link_to 'Team Details', "#" %></li>
-            <li><%= link_to 'Gallery Page', "#" %></li>
-            <li><%= link_to 'Gallery Page 02', "#" %></li>
-            <li><%= link_to 'Project Page', "#" %></li>
-            <li><%= link_to 'Project Details', "#" %></li>
-            <li><%= link_to 'Shop Page', "#" %></li>
-            <li><%= link_to 'Shop Details', "#" %></li>
-            <li><%= link_to 'Pricing Page', "#" %></li>
-            <li><%= link_to 'Error Page', "#" %></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <%= link_to 'Project', '#' %>
-          <ul class="sub-menu">
-            <li><%= link_to 'Projects', "#" %></li>
-            <li><%= link_to 'Project Details', "#" %></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <%= link_to 'Service', '#' %>
-          <ul class="sub-menu">
-            <li><%= link_to 'Service', "#" %></li>
-            <li><%= link_to 'Service Details', "#" %></li>
-          </ul>
-        </li>
-        <li class="menu-item-has-children">
-          <%= link_to 'Blog', '#' %>
-          <ul class="sub-menu">
-            <li><%= link_to 'Blog', "#" %></li>
-            <li><%= link_to 'Blog 02', "#" %></li>
-            <li><%= link_to 'Blog Details', "#" %></li>
-          </ul>
-        </li>
-        <li><%= link_to 'Contact', "#" %></li>
+        <li><%= link_to 'Saiba Mais', '#', class: 'btn' %></li>
       </ul>
     </div>
   </div>
@@ -115,31 +68,71 @@ Mobile Menu
 Header Area
 ==============================-->
 <header class="nav-header header-layout1">
-  <div class="menu-area">
-    <div class="container-fluid">
-      <div class="row align-items-center justify-content-between">
-        <!-- Logo da Empresa -->
-        <div class="col-auto">
-          <div class="header-logo">
-            <%= link_to image_tag('logo.svg', alt: 'SpierFit'), root_path %>
-          </div>
+    <div class="header-top d-lg-block d-none">
+        <div class="container-fluid">
+            <div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
+                <div class="col-auto d-none d-lg-block">
+                    <div class="header-links">
+                        <ul>
+                            <li><i class="far fa-envelope"></i><%= mail_to 'pedro@spierfit.com', 'pedro@spierfit.com' %></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="header-links">
+                        <ul>
+                            <li>
+                                <div class="social-links">
+                                    <span class="me-3">Visite nossas redes sociais</span>
+                                    <%= link_to content_tag(:i, '', class: 'fab fa-instagram'), 'https://www.instagram.com/' %>
+                                    <%= link_to content_tag(:i, '', class: 'fab fa-facebook-f'), 'https://www.facebook.com/' %>
+                                    <%= link_to content_tag(:i, '', class: 'fab fa-linkedin-in'), 'https://www.linkedin.com/' %>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Call to Action e Login -->
-        <div class="col-auto d-flex align-items-center">
-          <!-- Call to Action -->
-          <div class="header-button me-3">
-            <%= link_to 'Comece Agora', '#', class: 'btn btn-primary' %>
-          </div>
-          <!-- Link de Login -->
-          <div class="header-login">
-            <%= link_to 'Login', new_user_session_path, class: 'btn btn-link' %>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+    <div class="sticky-wrapper">
+        <!-- Main Menu Area -->
+        <div class="menu-area">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-start justify-content-between">
+                    <div class="col-auto">
+                        <div class="header-logo">
+                            <%= link_to image_tag('spierfit_190x46.png', alt: 'logo'), root_path %>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <nav class="main-menu d-none d-lg-inline-block">
+                          <ul>
+                            <li><%= link_to 'Benefícios', '#beneficios' %></li>
+                            <li><%= link_to 'Como Ajudamos', '#como-ajudamos' %></li>
+                            <li><%= link_to 'Nossa Tecnologia', '#nossa-tecnologia' %></li>
+                            <li><%= link_to 'Contato', '#contato' %></li>
+                          </ul>
+                        </nav>
+                        <div class="navbar-right d-inline-flex d-lg-none">
+                            <!-- Remove the menu toggle button -->
+                            <%= link_to 'Login', '#', class: 'btn' %>
+                        </div>
+                    </div>
+                    <div class="col-auto ms-auto d-lg-block d-none">
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <div class="header-button">
+                        <%= link_to 'Login', '#', class: 'btn d-xl-block d-none' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
+
+
 
 
 <!--==============================
@@ -200,7 +193,7 @@ Hero Area
 <!--==============================
 Service Area 01
 ==============================-->
-<div class="service-area-1 space overflow-hidden">
+<div id="beneficios" class="service-area-1 space overflow-hidden">
   <div class="container">
     <div class="title-area">
       <span class="sub-title">Benefícios</span>
@@ -279,7 +272,7 @@ Service Area 01
 <!--==============================
 Why-choose-us Area
 ==============================-->
-<div class="service-bg-area" data-bg-src="<%= asset_path('bg/service-bg.png') %>">
+<div id="como-ajudamos" class="service-bg-area" data-bg-src="<%= asset_path('bg/service-bg.png') %>">
   <div class="sec-shape-top">
     <%= image_tag 'bg/sec-shape-top.png', alt: 'img' %>
   </div>
@@ -296,7 +289,7 @@ Why-choose-us Area
                 <div class="col-lg-6">
                   <div class="wcu-wrap">
                     <div class="title-area mb-50">
-                      <span class="sub-title">Soluções</span>
+                      <span class="sub-title">Como Ajudamos</span>
                       <h2 class="sec-title text-white">Você Enfrenta Estes Desafios?</h2>
                       <p class="sec-text text-white">Sabemos que muitas academias enfrentam desafios que podem impactar seus negócios e a satisfação dos seus clientes. Veja alguns dos problemas que podemos ajudar a resolver:</p>
                     </div>
@@ -348,7 +341,7 @@ Why-choose-us Area
             </div>
         </div>
 
-  <div class="sec-shape-bottom">
+  <div id="nossa-tecnologia" class="sec-shape-bottom">
     <%= image_tag 'bg/sec-shape-bottom.png', alt: 'img' %>
   </div>
 </div>
@@ -363,12 +356,12 @@ Nossos Serviços
             <div class="col-lg-6">
                 <div class="about-content-wrap">
                     <div class="title-area mb-0">
-                        <span class="sub-title">Nossos Serviços</span>
-                        <h2 class="sec-title">Maximize o Potencial da Sua Academia</h2>
-                        <p class="sec-text">Na SpierFit, oferecemos soluções tecnológicas avançadas que transformam o ambiente de treino. Instalamos sensores que coletam e analisam dados em tempo real, proporcionando insights valiosos para melhorar a experiência dos seus clientes e aumentar a eficiência da sua academia.</p>
+                      <span class="sub-title">Nossa Tecnologia</span>
+                      <h2 class="sec-title">Maximize o Potencial da Sua Academia</h2>
+                      <p class="sec-text">Na SpierFit, oferecemos soluções tecnológicas avançadas que transformam o ambiente de treino. Instalamos sensores que coletam e analisam dados em tempo real, proporcionando insights valiosos para melhorar a experiência dos seus clientes e aumentar a eficiência da sua academia.</p>
 
                         <!-- Tabs para Missão, Visão e Objetivo -->
-                        <div class="about-tab-1">
+                        <div id="contato" class="about-tab-1">
                             <div class="filter-menu-active">
                                 <button data-filter=".cat1" class="active" type="button">Instalação Rápida</button>
                                 <button data-filter=".cat2" type="button">Análise de Dados</button>
@@ -463,7 +456,7 @@ Footer Area
           <div class="widget footer-widget">
             <div class="widget-about">
               <div class="footer-logo">
-                <%= link_to image_tag('logo-white.svg', alt: 'Fitmas'), root_path %>
+                <%= link_to image_tag('spierfit_v1_165x85.png', alt: 'Spierfit'), root_path %>
               </div>
             </div>
           </div>
