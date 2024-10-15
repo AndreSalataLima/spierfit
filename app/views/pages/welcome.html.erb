@@ -114,33 +114,26 @@ Mobile Menu
 <!--==============================
 Header Area
 ==============================-->
-<!--==============================
-Header Area
-==============================-->
 <header class="nav-header header-layout1">
-  <div class="sticky-wrapper">
-    <div class="menu-area">
-      <div class="container-fluid">
-        <div class="row align-items-center justify-content-between">
-          <div class="col-auto">
-            <div class="header-logo">
-              <%= link_to image_tag('logo.svg', alt: 'logo'), root_path %>
-            </div>
+  <div class="menu-area">
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-between">
+        <!-- Logo da Empresa -->
+        <div class="col-auto">
+          <div class="header-logo">
+            <%= link_to image_tag('logo.svg', alt: 'SpierFit'), root_path %>
           </div>
+        </div>
 
-          <div class="col-auto">
-
-            <div class="navbar-right d-inline-flex d-lg-none">
-              <button type="button" class="menu-toggle icon-btn">
-                <i class="far fa-bars"></i>
-              </button>
-            </div>
+        <!-- Call to Action e Login -->
+        <div class="col-auto d-flex align-items-center">
+          <!-- Call to Action -->
+          <div class="header-button me-3">
+            <%= link_to 'Comece Agora', '#', class: 'btn btn-primary' %>
           </div>
-
-          <div class="col-auto">
-            <div class="header-button">
-              <%= link_to 'Get a Quote', '#', class: 'btn d-xl-block d-none' %>
-            </div>
+          <!-- Link de Login -->
+          <div class="header-login">
+            <%= link_to 'Login', new_user_session_path, class: 'btn btn-link' %>
           </div>
         </div>
       </div>
@@ -162,12 +155,12 @@ Hero Area
         <div class="row">
           <div class="col-xl-6 col-lg-7 col-md-9">
             <div class="hero-style1">
-              <span class="hero-subtitle" data-ani="slideinup" data-ani-delay="0s">Welcome To Our Company</span>
+              <span class="hero-subtitle" data-ani="slideinup" data-ani-delay="0s">No data, no gain</span>
               <h1 class="hero-title text-white" data-ani="slideinup" data-ani-delay="0.1s">
-                The Best <span>Fitness</span> Studio In Town
+                Solução para <span>Academias</span> Inteligentes
               </h1>
               <div class="btn-group" data-ani="slideinup" data-ani-delay="0.2s">
-                <%= link_to 'Make Appointment', "#", class: 'btn style2' %>
+                <%= link_to 'Saiba Mais', "#", class: 'btn style2' %>
               </div>
             </div>
           </div>
@@ -183,12 +176,12 @@ Hero Area
         <div class="row">
           <div class="col-xl-6 col-lg-7 col-md-9">
             <div class="hero-style1">
-              <span class="hero-subtitle" data-ani="slideinup" data-ani-delay="0s">Welcome To Our Company</span>
+              <span class="hero-subtitle" data-ani="slideinup" data-ani-delay="0s">No data, no gain</span>
               <h1 class="hero-title text-white" data-ani="slideinup" data-ani-delay="0.1s">
-                The Best <span>Fitness</span> Studio In Town
+                Solução para <span>Academias</span> Inteligentes
               </h1>
               <div class="btn-group" data-ani="slideinup" data-ani-delay="0.2s">
-                <%= link_to 'Make Appointment', "#", class: 'btn style2' %>
+                <%= link_to 'Saiba Mais', "#", class: 'btn style2' %>
               </div>
             </div>
           </div>
@@ -203,30 +196,28 @@ Hero Area
   </div>
 </div>
 
+
 <!--==============================
 Service Area 01
 ==============================-->
 <div class="service-area-1 space overflow-hidden">
   <div class="container">
     <div class="title-area">
-      <span class="sub-title">Our Features</span>
-      <h2 class="sec-title text-white">Services We're Offering</h2>
+      <span class="sub-title">Benefícios</span>
+      <h2 class="sec-title">Como Podemos Ajudar Sua Academia</h2>
     </div>
   </div>
 
   <div class="container-fluid p-0">
     <div class="row global-carousel service-slider-1" data-slide-show="4" data-ml-slide-show="3" data-lg-slide-show="3" data-md-slide-show="2" data-sm-slide-show="1" data-xs-slide-show="1" data-dots="false">
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg- col-md-6">
         <div class="service-card">
           <div class="service-card_icon">
             <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
           </div>
           <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
+            <h4 class="service-card_title h5">Instalação Simples</h4>
+            <p class="service-card_text">Compatível com todos os equipamentos da sua academia.</p>
           </div>
         </div>
       </div>
@@ -237,11 +228,21 @@ Service Area 01
             <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
           </div>
           <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
+            <h4 class="service-card_title h5">Feedback Imediato</h4>
+            <p class="service-card_text">Acompanhe cada treino com métricas instantâneas e precisas.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-card_icon">
+            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+          </div>
+          <div class="service-card_content">
+            <h4 class="service-card_title h5">Análise Precisa</h4>
+            <p class="service-card_text">Obtenha insights valiosos para melhorar o treino de seus clientes.</p>
           </div>
         </div>
       </div>
@@ -252,11 +253,8 @@ Service Area 01
             <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
           </div>
           <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
+            <h4 class="service-card_title h5">Treinos Adaptados</h4>
+            <p class="service-card_text">Crie planos de treino personalizados para cada cliente.</p>
           </div>
         </div>
       </div>
@@ -267,76 +265,13 @@ Service Area 01
             <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
           </div>
           <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
+            <h4 class="service-card_title h5">Cliente Fidelizado</h4>
+            <p class="service-card_text">Uma experiência única que mantém seus alunos engajados.</p>
           </div>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6">
-        <div class="service-card">
-          <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
-          </div>
-          <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6">
-        <div class="service-card">
-          <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
-          </div>
-          <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6">
-        <div class="service-card">
-          <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
-          </div>
-          <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6">
-        <div class="service-card">
-          <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
-          </div>
-          <div class="service-card_content">
-            <h4 class="service-card_title h5"><%= link_to 'Tons of Equipment', "#" %></h4>
-            <p class="service-card_text">Lacinia montes est odio tpor volutpat rhoncus quisque sagittis</p>
-            <%= link_to '#', class: 'link-btn', tabindex: '0' do %>
-              Read More <i class="fas fa-arrow-right"></i>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-
+    </div>
     </div>
   </div>
 </div>
@@ -349,60 +284,69 @@ Why-choose-us Area
     <%= image_tag 'bg/sec-shape-top.png', alt: 'img' %>
   </div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="wcu-wrap">
-          <div class="title-area mb-50">
-            <span class="sub-title">Why Choose Us?</span>
-            <h2 class="sec-title text-white">Why Choose Us?</h2>
-            <p class="sec-text text-white">
-              Sed ut perspiciatis unde omnis iste natus voluptatem accusantium dolore mque laudantium aperiam eaquecy inventore veritatis.
-            </p>
-          </div>
-
-          <div class="accordion-area accordion" id="faqAccordion">
-            <div class="accordion-card active">
-              <div class="accordion-header" id="collapse-item-1">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                  What are your gym's operating hours?
-                </button>
-              </div>
-              <div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="collapse-item-1" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                  <p class="faq-text">
-                    Our standard membership provides access to our gym facilities during regular operating hours.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-card ">
-                <div class="accordion-header" id="collapse-item-2">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2"> What amenities and facilities does your gym offer?</button>
-                </div>
-                <div id="collapse-2" class="accordion-collapse collapse " aria-labelledby="collapse-item-2" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                        <p class="faq-text">Professionally are many variations of passages the majority have suffered alteration in some fo injected humour, or randomised words believable.</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="wcu-thumb">
+                        <%= image_tag 'normal/wcu_1-2.png', alt: 'img', class: 'img-1' %>
                     </div>
                 </div>
-            </div>
-            
-            <div class="accordion-card ">
-                <div class="accordion-header" id="collapse-item-3">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3"> Do you provide personal training services?</button>
-                </div>
-                <div id="collapse-3" class="accordion-collapse collapse " aria-labelledby="collapse-item-3" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                        <p class="faq-text">Contributors are many variations of passages the majority have suffered alteration in some fo injected humour, or randomised words believable.</p>
+
+                <!-- Texto e Título alterados para refletir problemas potenciais -->
+                <div class="col-lg-6">
+                  <div class="wcu-wrap">
+                    <div class="title-area mb-50">
+                      <span class="sub-title">Soluções</span>
+                      <h2 class="sec-title text-white">Você Enfrenta Estes Desafios?</h2>
+                      <p class="sec-text text-white">Sabemos que muitas academias enfrentam desafios que podem impactar seus negócios e a satisfação dos seus clientes. Veja alguns dos problemas que podemos ajudar a resolver:</p>
                     </div>
+
+                    <!-- Accordion para destacar cada problema potencial -->
+                    <div class="accordion-area accordion" id="faqAccordion">
+                      <div class="accordion-card active">
+                        <div class="accordion-header" id="collapse-item-1">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                            Baixa retenção de clientes
+                          </button>
+                        </div>
+                        <div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="collapse-item-1" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                            <p class="faq-text">A falta de monitoramento e análise de dados pode levar à perda de clientes que buscam experiências mais personalizadas e tecnologia avançada em seus treinos.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="accordion-card">
+                        <div class="accordion-header" id="collapse-item-2">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+                            Dificuldade em se diferenciar no mercado
+                          </button>
+                        </div>
+                        <div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="collapse-item-2" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                            <p class="faq-text">Em um mercado competitivo, academias que não utilizam tecnologia avançada perdem a oportunidade de se destacar oferecendo experiências diferenciadas para os usuários.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="accordion-card">
+                        <div class="accordion-header" id="collapse-item-3">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                            Falta de visibilidade sobre o desempenho dos clientes
+                          </button>
+                        </div>
+                        <div id="collapse-3" class="accordion-collapse collapse" aria-labelledby="collapse-item-3" data-bs-parent="#faqAccordion">
+                          <div class="accordion-body">
+                            <p class="faq-text">Sem uma análise detalhada dos dados de treino, é difícil para os gestores de academias entenderem o progresso dos clientes e oferecerem feedbacks personalizados que aumentem a satisfação.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
   <div class="sec-shape-bottom">
     <%= image_tag 'bg/sec-shape-bottom.png', alt: 'img' %>
@@ -410,46 +354,79 @@ Why-choose-us Area
 </div>
 
 <!--==============================
-About Area
+Nossos Serviços
 ==============================-->
 <div class="space-bottom">
-  <div class="container">
-    <span class="sub-title">More About Us</span>
-    <h2 class="sec-title">Unlock Your Full Potential, Achieve Your Goals.</h2>
-    <p class="sec-text">
-      Welcome to Fitmas. your ultimate destination for achieving your fitness goals. We understand the importance of leading a healthy lifestyle and provide a top-notch fitness facility to support you in your fitness journey.
-    </p>
+    <div class="container">
+        <div class="row">
+            <!-- Conteúdo do lado esquerdo -->
+            <div class="col-lg-6">
+                <div class="about-content-wrap">
+                    <div class="title-area mb-0">
+                        <span class="sub-title">Nossos Serviços</span>
+                        <h2 class="sec-title">Maximize o Potencial da Sua Academia</h2>
+                        <p class="sec-text">Na SpierFit, oferecemos soluções tecnológicas avançadas que transformam o ambiente de treino. Instalamos sensores que coletam e analisam dados em tempo real, proporcionando insights valiosos para melhorar a experiência dos seus clientes e aumentar a eficiência da sua academia.</p>
 
-    <div class="about-tab-1">
-      <div class="filter-menu-active">
-        <button data-filter=".cat1" class="active" type="button">Our Mission</button>
-        <button data-filter=".cat2" type="button">Our Vision</button>
-        <button data-filter=".cat3" type="button">Our Goal</button>
-      </div>
+                        <!-- Tabs para Missão, Visão e Objetivo -->
+                        <div class="about-tab-1">
+                            <div class="filter-menu-active">
+                                <button data-filter=".cat1" class="active" type="button">Instalação Rápida</button>
+                                <button data-filter=".cat2" type="button">Análise de Dados</button>
+                                <button data-filter=".cat3" type="button">Feedback Personalizado</button>
+                            </div>
 
-      <div class="filter-active-cat1">
-        <div class="filter-item cat1">
-          <div class="about-tab-icon">
-            <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
-          </div>
-          <p class="about-tab-text">Gyms play a vital role in promoting an active and healthy lifestyle.</p>
+                            <div class="filter-active-cat1">
+                                <!-- Instalação Rápida -->
+                                <div class="filter-item cat1">
+                                    <div class="about-tab-icon">
+                                        <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+                                    </div>
+                                    <p class="about-tab-text">Nossa equipe instala sensores de última geração em seus equipamentos de forma rápida e eficaz, sem interromper as operações da academia.</p>
+                                </div>
+
+                                <!-- Análise de Dados -->
+                                <div class="filter-item cat2">
+                                    <div class="about-tab-icon">
+                                        <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+                                    </div>
+                                    <p class="about-tab-text">Coletamos e processamos dados em tempo real, oferecendo análises detalhadas sobre o desempenho dos seus clientes e o uso dos equipamentos.</p>
+                                </div>
+
+                                <!-- Feedback Personalizado -->
+                                <div class="filter-item cat3">
+                                    <div class="about-tab-icon">
+                                        <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+                                    </div>
+                                    <p class="about-tab-text">Com base nos dados coletados, fornecemos feedbacks personalizados para os seus clientes, aumentando a retenção e a satisfação geral.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action e Informações de Contato -->
+                    <div class="btn-wrap mt-40">
+                        <%= link_to 'Fale Conosco', "#", class: 'btn' %>
+                        <div class="about-info-wrap">
+                            <div class="icon"><i class="fas fa-phone-volume"></i></div>
+                            <div class="details">
+                                <p class="about-info-title">Precisa de Ajuda?</p>
+                                <%= link_to '(44) 9970-7380', 'https://wa.me/+554499707380', class: 'about-info-link' %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imagem do lado direito -->
+            <div class="col-lg-6">
+                <div class="about-thumb mb-5 mb-lg-0">
+                    <%= image_tag 'normal/about_1-1.png', alt: 'img', class: 'about-img-1' %>
+                </div>
+            </div>
         </div>
-        <!-- Repeat for other categories -->
-      </div>
     </div>
-
-    <div class="btn-wrap mt-40">
-      <%= link_to 'Make Appointment', "#", class: 'btn' %>
-      <div class="about-info-wrap">
-        <div class="icon"><i class="fas fa-phone-volume"></i></div>
-        <div class="details">
-          <p class="about-info-title">Need Help?</p>
-          <%= link_to '(+258) 2569 2582', 'tel:+25825692582', class: 'about-info-link' %>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
+
 
 <!--==============================
 Footer Area
@@ -460,22 +437,22 @@ Footer Area
       <div class="info-card">
         <div class="info-card_icon"><i class="fas fa-location-dot"></i></div>
         <div class="info-card_content">
-          <p class="info-card_text">Gym Location</p>
-          <%= link_to 'Marina Lane Berlin', 'https://www.google.com/maps', class: 'info-card_link' %>
+          <p class="info-card_text">Localização</p>
+          <%= link_to 'Maringá', 'https://www.google.com/maps/place/Maring%C3%A1,+State+of+Paran%C3%A1,+Brazil/@-23.4101972,-52.1333672,11z/data=!3m1!4b1!4m6!3m5!1s0x94ecd6ee42618c1f:0xc356592828e03925!8m2!3d-23.4209995!4d-51.9330558!16zL20vMDF0dnpx?entry=ttu&g_ep=EgoyMDI0MTAwOS4wIKXMDSoASAFQAw%3D%3D', class: 'info-card_link' %>
         </div>
       </div>
       <div class="info-card">
         <div class="info-card_icon"><i class="fas fa-envelope"></i></div>
         <div class="info-card_content">
-          <p class="info-card_text">Email Address</p>
-          <%= mail_to 'health@Fitmas.com', 'health@Fitmas.com', class: 'info-card_link' %>
+          <p class="info-card_text">E-mail de contato</p>
+          <%= mail_to 'mateus@spierfit.com', 'mateus@spierfit.com', class: 'info-card_link' %>
         </div>
       </div>
       <div class="info-card">
         <div class="info-card_icon"><i class="fas fa-phone-volume"></i></div>
         <div class="info-card_content">
-          <p class="info-card_text">Phone Number</p>
-          <%= link_to '(+189) 2538-2145', 'tel:+18925382145', class: 'info-card_link' %>
+          <p class="info-card_text">Contato</p>
+          <%= link_to '+(55) 44 9970-7980', 'https://wa.me/+554499707380', class: 'info-card_link' %>
         </div>
       </div>
     </div>
