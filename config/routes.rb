@@ -56,11 +56,19 @@ Rails.application.routes.draw do
     resources :machines, only: [:index, :new, :create]
   end
 
+  # Rotas para o ESP32
+  get 'esp32/register', to: 'esp32#register'
+  post 'esp32/register', to: 'esp32#register'
+  post 'esp32/receive_data', to: 'esp32#receive_data'
+  # Visualizar os dados recebidos, pode adicionar:
+  get 'esp32/data_points', to: 'esp32#data_points'
+
+
   mount ActionCable.server => '/cable'
 
   post 'arduino_cloud_data/receive_data', to: 'arduino_cloud_data#receive_data'
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root to: 'welcome#index'
+  root to: 'pages#welcome'
 end
