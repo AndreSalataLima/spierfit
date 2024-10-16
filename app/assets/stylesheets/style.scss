@@ -4948,16 +4948,7 @@ ul.wp-block-latest-posts li:last-child {
   padding-left: 50px;
   position: relative;
 }
-.header-layout1 .main-menu:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: -2px;
-  height: calc(100% + 3px);
-  width: 1px;
-  background: var(--border-color);
-  transform: rotate(-10deg);
-}
+
 .header-layout1 .main-menu > ul > li > a {
   padding: 36.5px 0;
 }
@@ -8941,6 +8932,20 @@ span.select2-selection.select2-selection--single:focus {
 .about-tab-1 .filter-item .about-tab-icon {
   flex: none;
 }
+.about-tab-icon i {
+  font-size: 44px;
+  line-height: 52px;
+  width: 44px;
+  height: 52px;
+}
+.red-icon {
+  color: red;
+  font-size: 44px; /* Ajuste conforme necessário */
+  width: 44px;
+  height: 52px;
+  font-weight: 300; /* Deixa o ícone mais fino */
+  -webkit-text-stroke: 1px red; /* Controla a espessura da borda */
+}
 .about-tab-1 .filter-item .about-tab-text {
   margin-bottom: -0.4em;
   margin-top: -0.4em;
@@ -11459,6 +11464,10 @@ span.select2-selection.select2-selection--single:focus {
 }
 .service-card_icon {
   flex: none;
+  font-size: 44px; /* Largura aproximada */
+  line-height: 52px; /* Altura aproximada */
+  width: 44px;
+  height: 52px;
 }
 .service-card_title {
   margin-top: -0.3em;
