@@ -1,16 +1,49 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>SpierFit</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fitmas - Gym & Fitness HTML Template</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'welcome', media: 'all', 'data-turbolinks-track': 'reload' %>
-  </head>
+  <!-- Meta Tags -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Fitmas - Gym & Fitness HTML Template">
+  <meta name="keywords" content="Fitmas - Gym & Fitness HTML Template">
+  <meta name="robots" content="INDEX,FOLLOW">
 
-  <body>
+  <!-- Favicon -->
+  <%= favicon_link_tag 'favicons/favicon.png', rel: 'icon', type: 'image/png', sizes: '32x32' %>
 
-    <%= yield %>
-  </body>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Kumbh+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+
+  <!-- CSS Files -->
+  <%= stylesheet_link_tag 'bootstrap.min', 'fontawesome.min', 'magnific-popup.min', 'slick.min', 'style', media: 'all', 'data-turbo-track': 'reload' %>
+
+</head>
+<body>
+  <%= yield %>
+
+<!-- JS Files -->
+<%= javascript_include_tag 'vendor/jquery-3.6.0.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'bootstrap.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'slick.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'jquery.magnific-popup.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'jquery.counterup.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'jquery-ui.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'imagesloaded.pkgd.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'isotope.pkgd.min', 'data-turbo-track': 'reload' %>
+<%= javascript_include_tag 'main', 'data-turbo-track': 'reload' %>
+
+
+<%= javascript_include_tag 'welcome', 'data-turbo-track': 'reload' %>
+
+
+</body>
 </html>

@@ -12,7 +12,6 @@ class ExerciseSetsController < ApplicationController
     :process_new_data
   ]
 
-  # Método responsável por exibir a página de execução
   def show
     @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
     recalculate_and_update_exercise_set(@arduino_data)
@@ -25,6 +24,7 @@ class ExerciseSetsController < ApplicationController
     calculate_force_and_power_from_arduino_data(@arduino_data)
 
   end
+
   # Método para servir dados de repetições e séries via JSON
   def reps_and_sets
     last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 0
@@ -43,13 +43,10 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
+  # Método para atualizar o peso do conjunto de exercícios
   def update_weight
     new_weight = params[:exercise_set][:weight].to_f
-
     if @exercise_set.update(weight: new_weight)
-      # **No need to call recalculate_and_update_exercise_set here**
-      # The weight will be captured when the next series starts
-
       broadcast_exercise_set_data
       render json: { status: "success", weight: @exercise_set.weight }
     else
@@ -58,10 +55,9 @@ class ExerciseSetsController < ApplicationController
   end
 
 
-
+  # Método para atualizar o tempo de descanso do conjunto de exercícios
   def update_rest_time
     if @exercise_set.update(rest_time: params[:rest_time])
-      # No need to call `recalculate_and_update_exercise_set` here
       broadcast_exercise_set_data
       render json: { status: "success", rest_time: @exercise_set.rest_time }
     else
@@ -84,10 +80,8 @@ class ExerciseSetsController < ApplicationController
       energy_consumed: @exercise_set.energy_consumed
     }
 
-    # Use uma variável de cache para armazenar o último dado transmitido
     @last_broadcasted ||= {}
 
-    # Só transmita se houver alterações
     unless current_broadcast == @last_broadcasted
       ActionCable.server.broadcast(
         "exercise_sets_#{@exercise_set.id}_channel",
