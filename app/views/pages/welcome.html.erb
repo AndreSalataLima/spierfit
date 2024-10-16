@@ -1,54 +1,4 @@
 <!--==============================
-Preloader
-==============================-->
-<div class="preloader">
-  <div class="preloader-inner">
-    <span class="loader"></span>
-  </div>
-</div>
-
-<div class="popup-search-box">
-  <button class="searchClose"><i class="fal fa-times"></i></button>
-  <form action="#">
-    <input type="text" placeholder="Search Here..">
-    <button type="submit"><i class="fal fa-search"></i></button>
-  </form>
-</div>
-
-<div class="sidemenu-wrapper">
-  <div class="sidemenu-content">
-    <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
-    <div class="widget footer-widget">
-      <div class="widget-about">
-        <div class="footer-logo">
-          <%= link_to image_tag('spierfit_190x46.png', alt: 'Spierfit'), root_path %>
-        </div>
-        <p class="about-text">
-          A gym, also known as a fitness center or health club, is a facility dedicated to physical fitness and exercise gyms and typically offer a range.
-        </p>
-        <div class="social-btn style2">
-          <%= link_to content_tag(:i, '', class: 'fab fa-facebook'), 'https://www.facebook.com/' %>
-          <%= link_to content_tag(:i, '', class: 'fab fa-twitter'), 'https://twitter.com/' %>
-          <%= link_to content_tag(:i, '', class: 'fab fa-pinterest-p'), 'https://pinterest.com/' %>
-          <%= link_to content_tag(:i, '', class: 'fab fa-instagram'), 'https://instagram.com/' %>
-        </div>
-      </div>
-    </div>
-
-    <div class="widget widget_nav_menu footer-widget">
-      <h3 class="widget_title">Quick Links</h3>
-      <ul class="menu">
-        <li><%= link_to 'About Us', "#" %></li>
-        <li><%= link_to 'Our Mission', "#" %></li>
-        <li><%= link_to 'Meet The Teams', "#" %></li>
-        <li><%= link_to 'Our Projects', "#" %></li>
-        <li><%= link_to 'Contact Us', "#" %></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!--==============================
 Mobile Menu
 ==============================-->
 <div class="mobile-menu-wrapper">
@@ -84,9 +34,9 @@ Header Area
                             <li>
                                 <div class="social-links">
                                     <span class="me-3">Visite nossas redes sociais</span>
-                                    <%= link_to content_tag(:i, '', class: 'fab fa-instagram'), 'https://www.instagram.com/' %>
-                                    <%= link_to content_tag(:i, '', class: 'fab fa-facebook-f'), 'https://www.facebook.com/' %>
-                                    <%= link_to content_tag(:i, '', class: 'fab fa-linkedin-in'), 'https://www.linkedin.com/' %>
+                                    <%= link_to content_tag(:i, '', class: 'fab fa-instagram'), 'https://www.instagram.com/spierfit/' %>
+                                    <%#= link_to content_tag(:i, '', class: 'fab fa-facebook-f'), 'https://www.facebook.com/spierfit' %>
+                                    <%#= link_to content_tag(:i, '', class: 'fab fa-linkedin-in'), 'https://www.linkedin.com/spierfit' %>
                                 </div>
                             </li>
                         </ul>
@@ -115,15 +65,14 @@ Header Area
                           </ul>
                         </nav>
                         <div class="navbar-right d-inline-flex d-lg-none">
-                            <!-- Remove the menu toggle button -->
-                            <%= link_to 'Login', '#', class: 'btn' %>
+                            <%= link_to 'Login', new_user_session_path, class: 'btn' %>
                         </div>
                     </div>
                     <div class="col-auto ms-auto d-lg-block d-none">
-                    </div>
                     <div class="col-auto d-none d-lg-block">
+                    </div>
                         <div class="header-button">
-                        <%= link_to 'Login', '#', class: 'btn d-xl-block d-none' %>
+                        <%= link_to 'Login', new_user_session_path, class: 'btn d-xl-block d-none' %>
                         </div>
                     </div>
                 </div>
@@ -140,10 +89,7 @@ Hero Area
 ==============================-->
 <div class="hero-wrapper hero-1" id="hero">
   <div class="global-carousel" id="heroSlider1" data-fade="true" data-slide-show="1" data-lg-slide-show="1" data-md-slide-show="1" data-sm-slide-show="1" data-xs-slide-show="1" data-arrows="true" data-xl-arrows="true" data-ml-arrows="true">
-    <div class="hero-slider" data-bg-src="<%= asset_path('hero/hero_bg_1_1.png') %>">
-      <div class="hero-shape1 shape-mockup movingX" data-bottom="165px" data-right="0">
-        <%= image_tag 'hero/hero_shape_1.png', alt: 'img' %>
-      </div>
+    <div class="hero-slider" data-bg-src="<%= asset_path('banner_3_v2_1920x856.png') %>">
       <div class="container">
         <div class="row">
           <div class="col-xl-6 col-lg-7 col-md-9">
@@ -161,10 +107,7 @@ Hero Area
       </div>
     </div>
 
-    <div class="hero-slider" data-bg-src="<%= asset_path('hero/hero_bg_1_2.png') %>">
-      <div class="hero-shape1 shape-mockup movingX" data-bottom="165px" data-right="0">
-        <%= image_tag 'hero/hero_shape_1.png', alt: 'img' %>
-      </div>
+    <div class="hero-slider" data-bg-src="<%= asset_path('banner_2_v2_1920x856.png') %>">
       <div class="container">
         <div class="row">
           <div class="col-xl-6 col-lg-7 col-md-9">
@@ -184,9 +127,14 @@ Hero Area
   </div>
 
   <div class="hero-arrow">
-    <button data-slick-prev="#heroSlider1" class="slick-arrow slick-prev">PREV</button>
-    <button data-slick-next="#heroSlider1" class="slick-arrow slick-next">NEXT</button>
+    <button data-slick-prev="#heroSlider1" class="slick-arrow slick-prev">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <button data-slick-next="#heroSlider1" class="slick-arrow slick-next">
+      <i class="fas fa-arrow-up"></i>
+    </button>
   </div>
+
 </div>
 
 
@@ -206,7 +154,7 @@ Service Area 01
       <div class="col-lg- col-md-6">
         <div class="service-card">
           <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+            <i class="fas fa-cogs" style="width: 44px; height: 52px;"></i>
           </div>
           <div class="service-card_content">
             <h4 class="service-card_title h5">Instalação Simples</h4>
@@ -218,7 +166,7 @@ Service Area 01
       <div class="col-lg-4 col-md-6">
         <div class="service-card">
           <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+            <i class="fas fa-comment-alt style="width: 44px; height: 52px;""></i>
           </div>
           <div class="service-card_content">
             <h4 class="service-card_title h5">Feedback Imediato</h4>
@@ -231,7 +179,7 @@ Service Area 01
       <div class="col-lg-4 col-md-6">
         <div class="service-card">
           <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+            <i class="fas fa-chart-line" style="width: 44px; height: 52px;"></i>
           </div>
           <div class="service-card_content">
             <h4 class="service-card_title h5">Análise Precisa</h4>
@@ -243,7 +191,7 @@ Service Area 01
       <div class="col-lg-4 col-md-6">
         <div class="service-card">
           <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+            <i class="fas fa-dumbbell" style="width: 44px; height: 52px;"></i>
           </div>
           <div class="service-card_content">
             <h4 class="service-card_title h5">Treinos Adaptados</h4>
@@ -255,7 +203,7 @@ Service Area 01
       <div class="col-lg-4 col-md-6">
         <div class="service-card">
           <div class="service-card_icon">
-            <%= image_tag 'icon/service-icon_1-1.svg', alt: 'img' %>
+            <i class="fas fa-heart" style="width: 44px; height: 52px;"></i>
           </div>
           <div class="service-card_content">
             <h4 class="service-card_title h5">Cliente Fidelizado</h4>
@@ -281,7 +229,7 @@ Why-choose-us Area
             <div class="row">
                 <div class="col-lg-6">
                     <div class="wcu-thumb">
-                        <%= image_tag 'normal/wcu_1-2.png', alt: 'img', class: 'img-1' %>
+                        <%= image_tag 'partner_1_533x595.jpg', alt: 'img', class: 'img-1' %>
                     </div>
                 </div>
 
@@ -298,13 +246,13 @@ Why-choose-us Area
                     <div class="accordion-area accordion" id="faqAccordion">
                       <div class="accordion-card active">
                         <div class="accordion-header" id="collapse-item-1">
-                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                            Baixa retenção de clientes
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
+                            Custo elevado para aquisição de novos equipamentos
                           </button>
                         </div>
-                        <div id="collapse-1" class="accordion-collapse collapse show" aria-labelledby="collapse-item-1" data-bs-parent="#faqAccordion">
+                        <div id="collapse-1" class="accordion-collapse collapse" aria-labelledby="collapse-item-1" data-bs-parent="#faqAccordion">
                           <div class="accordion-body">
-                            <p class="faq-text">A falta de monitoramento e análise de dados pode levar à perda de clientes que buscam experiências mais personalizadas e tecnologia avançada em seus treinos.</p>
+                            <p class="faq-text">Equipamentos de alta qualidade e tecnologia avançada são essenciais para atrair e reter clientes, mas o custo de aquisição pode ser proibitivo para muitas academias. Esse investimento pode comprometer o fluxo de caixa, especialmente em um mercado competitivo, onde a renovação constante do maquinário é vista como um diferencial. Porém, muitas vezes, os benefícios desses equipamentos não são aproveitados ao máximo pela falta de integração tecnológica, o que dificulta o retorno sobre o investimento. Nossa solução permite otimizar o uso dos equipamentos já existentes, maximizando sua eficiência e prolongando seu ciclo de vida, evitando a necessidade de gastos frequentes com novas aquisições.</p>
                           </div>
                         </div>
                       </div>
@@ -317,7 +265,7 @@ Why-choose-us Area
                         </div>
                         <div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="collapse-item-2" data-bs-parent="#faqAccordion">
                           <div class="accordion-body">
-                            <p class="faq-text">Em um mercado competitivo, academias que não utilizam tecnologia avançada perdem a oportunidade de se destacar oferecendo experiências diferenciadas para os usuários.</p>
+                            <p class="faq-text">Em um mercado saturado, onde academias oferecem serviços semelhantes, a dificuldade em se destacar é uma preocupação constante. Muitas vezes, os diferenciais tradicionais, como a oferta de aulas específicas ou personal trainers, não são suficientes para atrair um público que valoriza inovação e resultados mensuráveis. Nossa tecnologia oferece a vantagem competitiva que você precisa, ao integrar dados e análises avançadas no dia a dia da sua academia. Com monitoramento em tempo real do desempenho dos clientes e feedbacks personalizados, sua academia se posiciona como líder em inovação, entregando uma experiência de treino superior.</p>
                           </div>
                         </div>
                       </div>
@@ -325,12 +273,12 @@ Why-choose-us Area
                       <div class="accordion-card">
                         <div class="accordion-header" id="collapse-item-3">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                            Falta de visibilidade sobre o desempenho dos clientes
+                            Dificuldade em medir a satisfação dos clientes
                           </button>
                         </div>
                         <div id="collapse-3" class="accordion-collapse collapse" aria-labelledby="collapse-item-3" data-bs-parent="#faqAccordion">
                           <div class="accordion-body">
-                            <p class="faq-text">Sem uma análise detalhada dos dados de treino, é difícil para os gestores de academias entenderem o progresso dos clientes e oferecerem feedbacks personalizados que aumentem a satisfação.</p>
+                            <p class="faq-text">Sem métricas claras, muitas academias operam no escuro quando se trata de entender a real satisfação de seus clientes. A falta de dados detalhados sobre o uso dos serviços e o desempenho durante os treinos impede que os gestores façam ajustes necessários para melhorar a experiência dos usuários. Nossa solução coleta e analisa dados em tempo real, oferecendo insights valiosos sobre o comportamento dos seus clientes, sua evolução e preferências. Isso não só ajuda a melhorar os serviços oferecidos, mas também possibilita uma comunicação mais eficiente e personalizada, criando uma conexão mais forte e duradoura com o cliente.</p>
                           </div>
                         </div>
                       </div>
@@ -372,7 +320,7 @@ Nossos Serviços
                                 <!-- Instalação Rápida -->
                                 <div class="filter-item cat1">
                                     <div class="about-tab-icon">
-                                        <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+                                        <i class="fas fa-stopwatch red-icon"></i>
                                     </div>
                                     <p class="about-tab-text">Nossa equipe instala sensores de última geração em seus equipamentos de forma rápida e eficaz, sem interromper as operações da academia.</p>
                                 </div>
@@ -380,7 +328,7 @@ Nossos Serviços
                                 <!-- Análise de Dados -->
                                 <div class="filter-item cat2">
                                     <div class="about-tab-icon">
-                                        <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+                                        <i class="fas fa-chart-line red-icon"></i>
                                     </div>
                                     <p class="about-tab-text">Coletamos e processamos dados em tempo real, oferecendo análises detalhadas sobre o desempenho dos seus clientes e o uso dos equipamentos.</p>
                                 </div>
@@ -388,7 +336,7 @@ Nossos Serviços
                                 <!-- Feedback Personalizado -->
                                 <div class="filter-item cat3">
                                     <div class="about-tab-icon">
-                                        <%= image_tag 'icon/about-icon.svg', alt: 'img' %>
+                                        <i class="fas fa-clipboard-check red-icon"></i>
                                     </div>
                                     <p class="about-tab-text">Com base nos dados coletados, fornecemos feedbacks personalizados para os seus clientes, aumentando a retenção e a satisfação geral.</p>
                                 </div>
@@ -398,7 +346,8 @@ Nossos Serviços
 
                     <!-- Call to Action e Informações de Contato -->
                     <div class="btn-wrap mt-40">
-                        <%= link_to 'Fale Conosco', "#", class: 'btn' %>
+                        <a href="https://wa.me/+554499707380" class="btn">Saiba mais</a>
+                        <%#= link_to 'Fale Conosco', "#", class: 'btn' %>
                         <div class="about-info-wrap">
                             <div class="icon"><i class="fas fa-phone-volume"></i></div>
                             <div class="details">
@@ -413,7 +362,7 @@ Nossos Serviços
             <!-- Imagem do lado direito -->
             <div class="col-lg-6">
                 <div class="about-thumb mb-5 mb-lg-0">
-                    <%= image_tag 'normal/about_1-1.png', alt: 'img', class: 'about-img-1' %>
+                    <%= image_tag 'cardio_gif.gif', alt: 'img', class: 'about-img-1' %>
                 </div>
             </div>
         </div>
@@ -450,14 +399,13 @@ Footer Area
       </div>
     </div>
 
-    <div class="widget-area">
-      <div class="row justify-content-between">
-        <div class="col-md-6 col-xl-3">
-          <div class="widget footer-widget">
-            <div class="widget-about">
-              <div class="footer-logo">
-                <%= link_to image_tag('spierfit_v1_165x85.png', alt: 'Spierfit'), root_path %>
-              </div>
+  <div class="widget-area">
+    <div class="row justify-content-center"> <!-- Mude justify-content-between para justify-content-center -->
+      <div class="col-auto"> <!-- Mude col-md-6 col-xl-3 para col-auto para ajuste automático -->
+        <div class="widget footer-widget">
+          <div class="widget-about">
+            <div class="footer-logo text-center"> <!-- Adicione text-center para centralizar o conteúdo -->
+              <%= link_to image_tag('spierfit_v1_165x85.png', alt: 'Spierfit'), root_path %>
             </div>
           </div>
         </div>
