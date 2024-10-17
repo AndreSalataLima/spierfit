@@ -8833,12 +8833,14 @@ span.select2-selection.select2-selection--single:focus {
 ----------------------------------------------*/
 .about-thumb {
   position: relative;
-  padding-right: 68px;
-  display: inline-block;
+  padding-right: 0; /* Remova ou ajuste */
+  display: flex; /* Usar flexbox ajuda a centralizar */
+  justify-content: center; /* Centraliza horizontalmente */
   height: 100%;
 }
+
 .about-thumb .about-img-1 {
-  border-radius: 20px;
+  border-radius: 20px !important;
   height: 100%;
   object-fit: cover;
 }
@@ -9218,8 +9220,13 @@ span.select2-selection.select2-selection--single:focus {
   .goal-thumb-1,
   .about-thumb {
     height: auto;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
   }
+   .about-thumb {
+    padding-top: 40px; /* Adiciona um padding de 20px acima do GIF */
+  }
+
 }
 /* Small devices */
 @media (max-width: 767px) {
@@ -9272,7 +9279,9 @@ span.select2-selection.select2-selection--single:focus {
 /* Extra small devices */
 @media (max-width: 375px) {
   .about-thumb {
-    padding-right: 38px;
+    padding-right: 0; /* Ajuste ou remova o padding */
+    display: flex;
+    justify-content: center;
   }
   .about-thumb .about-img-2 {
     width: 180px;
@@ -14615,7 +14624,7 @@ span.select2-selection.select2-selection--single:focus {
 
 .space,
 .space-bottom {
-  padding-bottom: var(--section-space);
+  padding-bottom: calc(var(--section-space) / 4); /* Reduz o padding para metade */
 }
 
 .space-extra,
@@ -14646,7 +14655,7 @@ span.select2-selection.select2-selection--single:focus {
   }
   .space,
   .space-bottom {
-    padding-bottom: var(--section-space-mobile);
+    padding-bottom: calc(var(--section-space-mobile) / 4); /* Reduz o padding no mobile também */
   }
   .space-extra,
   .space-extra-top {
