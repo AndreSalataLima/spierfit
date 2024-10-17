@@ -9,8 +9,9 @@ class Esp32Controller < ApplicationController
 
   def receive_data
     sensor_value = params[:sensor_value]
-    DataPoint.create(value: sensor_value)
-    Rails.logger.info "Data received: #{sensor_value}"
+    mac_address = params[:mac_address]  # Captura o endereço MAC enviado
+    DataPoint.create(value: sensor_value, mac_address: mac_address)  # Armazena o valor e o MAC
+    Rails.logger.info "Data received: #{sensor_value} from MAC: #{mac_address}"
     render json: { status: 'Data saved' }, status: :ok
   end
 
