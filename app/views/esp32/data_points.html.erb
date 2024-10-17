@@ -10,6 +10,7 @@
           <tr class="text-[#9c9c9c] text-xs">
             <th class="text-left py-2">ID</th>
             <th class="text-left py-2">Valor</th>
+            <th class="text-left py-2">MAC Address</th> <!-- Nova coluna -->
             <th class="text-left py-2">Criado em</th>
           </tr>
         </thead>
@@ -18,11 +19,12 @@
             <tr class="border-b border-[#393939]">
               <td class="py-2"><%= data_point.id %></td>
               <td class="py-2"><%= data_point.value %></td>
+              <td class="py-2"><%= data_point.mac_address %></td> <!-- Exibe o MAC Address -->
               <td class="py-2"><%= data_point.created_at %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
-
+  </div>
 </div>
