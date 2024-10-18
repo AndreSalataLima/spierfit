@@ -92,4 +92,10 @@ Rails.application.configure do
 
   config.assets.js_compressor = :terser
 
+
+  config.action_cable.url = 'wss://spierfit.herokuapp.com/cable'
+  config.action_cable.allowed_request_origins = [ 'https://spierfit.herokuapp.com', %r{https://spierfit.herokuapp.com/.*} ]
+
+
+
 end
