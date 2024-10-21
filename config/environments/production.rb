@@ -95,9 +95,10 @@ Rails.application.configure do
   config.action_cable.mount_path = '/cable'
 
   config.action_cable.url = 'wss://spierfit.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = ['https://spierfit.herokuapp.com']
+  config.action_cable.allowed_request_origins = [ 'https://spierfit.herokuapp.com' ]
 
-  config.action_cable.adapter = :redis
+  config.action_cable.cable = { adapter: 'redis', url: ENV.fetch('REDIS_URL') }
+
 
 
 end
