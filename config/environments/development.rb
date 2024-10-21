@@ -72,7 +72,7 @@ Rails.application.configure do
   # Allow requests from the Raspberry Pi's IP or any IP (for development)
   config.action_cable.allowed_request_origins = [/http:\/\/192\.168\.1\.\d+:\d+/]
 
-  config.log_level = :debug
+  config.action_cable.cable = { adapter: 'redis', url: 'redis://localhost:6379/1' }
 
 
 end
