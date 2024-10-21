@@ -1,6 +1,9 @@
 {
   "name": "spierfit",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.20.4"
+  },
   "scripts": {
     "start": "bundle exec rails s",
     "python-task": "cd api_python && python3 script.py"
