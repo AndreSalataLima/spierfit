@@ -63,11 +63,16 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
-  # Configuração para suporte a WebSocket
-  config.action_cable.url = "ws://localhost:3001/cable"
-  config.action_cable.allowed_request_origins = [ 'http://localhost:8080', /http:\/\/localhost:*/ ]
-
-  # Permitir todas as origens para conexões Action Cable
+  # Allow connections from any origin (for development only)
   config.action_cable.disable_request_forgery_protection = true
+
+  # Set the Action Cable URL
+  config.action_cable.url = "ws://192.168.1.54:3001/cable"
+
+  # Allow requests from the Raspberry Pi's IP or any IP (for development)
+  config.action_cable.allowed_request_origins = [/http:\/\/192\.168\.1\.\d+:\d+/]
+
+  config.log_level = :debug
+
 
 end
