@@ -34,8 +34,8 @@
   <div class="mb-4">
     <div class="w-full md:w-96 h-52 relative"
         data-controller="chart"
-        data-chart-data-value="<%= @arduino_data.map { |datum| datum.value } %>"
-        data-chart-labels-value="<%= @arduino_data.map { |datum| datum.recorded_at.strftime('%b %d') } %>">
+        data-chart-data-value="<%= @data_points.map { |point| point.value } %>"
+        data-chart-labels-value="<%= @data_points.map { |point| point.created_at.strftime('%b %d') } %>">
       <canvas id="chart-1" class="w-full h-full"></canvas>
     </div>
   </div>

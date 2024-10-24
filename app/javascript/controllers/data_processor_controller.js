@@ -7,7 +7,7 @@ export default class extends Controller {
   connect() {
     this.timer = setInterval(() => {
       this.processNewData();
-    }, 1000); // Adjust the interval as needed
+    }, 10000); // Adjust the interval as needed
   }
 
   disconnect() {
