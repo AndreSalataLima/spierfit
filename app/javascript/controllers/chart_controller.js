@@ -39,8 +39,8 @@ export default class extends Controller {
             legend: { display: false }
           },
           scales: {
-            x: { display: false },
-            y: { display: false, ticks: { suggestedMin: -1100, suggestedMax: -1030 } }
+            // x: { display: false },
+            // y: { display: false, ticks: { suggestedMin: -1100, suggestedMax: -1030 } }
           }
         }
       });

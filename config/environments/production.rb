@@ -94,11 +94,17 @@ Rails.application.configure do
 
   config.action_cable.mount_path = '/cable'
 
-  config.action_cable.url = 'wss://spierfit.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = [ 'https://spierfit.herokuapp.com' ]
+  config.action_cable.url = 'wss://spierfit.com/cable'
+  config.action_cable.allowed_request_origins = [
+    'https://spierfit.com',
+    'http://spierfit.com'
+  ]
 
-  config.action_cable.cable = { adapter: 'redis', url: ENV.fetch('REDIS_URL') }
-
-
+  # Configurar a conexão com o Redis usando SSL e desabilitando a verificação temporariamente
+  config.action_cable.cable = {
+    adapter: 'redis',
+    url: ENV.fetch('REDIS_URL'),
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } # desativa verificação SSL, usar temporariamente
+  }
 
 end
