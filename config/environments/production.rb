@@ -100,11 +100,11 @@ Rails.application.configure do
     'http://spierfit.com'
   ]
 
-  # Configurar a conexão com o Redis usando SSL e desabilitando a verificação temporariamente
-  config.action_cable.cable = {
-    adapter: 'redis',
-    url: ENV.fetch('REDIS_URL'),
-    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } # desativa verificação SSL, usar temporariamente
-  }
+# Configurar a conexão com o Redis usando SSL e desabilitando a verificação temporariamente
+config.action_cable.cable = {
+  adapter: 'redis',
+  url: ENV.fetch('REDIS_URL'),
+  ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } # desativa verificação SSL, usar temporariamente
+}
 
 end
