@@ -24,14 +24,15 @@
     </div>
 
     <!-- Gráfico Container -->
-    <div class="mb-4">
+    <div class="mb-4" data-exercise-set-id="<%= @exercise_set.id %>">
       <div class="w-full md:w-96 h-52 relative"
-           data-controller="chart"
-           data-chart-data-value="<%= @arduino_data.map { |datum| datum.value } %>"
-           data-chart-labels-value="<%= @arduino_data.map { |datum| datum.recorded_at.strftime('%b %d') } %>">
+          data-controller="chart"
+          data-chart-data-value="<%= @data_points.map { |point| point.value } %>"
+          data-chart-labels-value="<%= @data_points.map { |point| point.created_at.strftime('%b %d') } %>">
         <canvas id="chart-1" class="w-full h-full"></canvas>
       </div>
     </div>
+
 
     <!-- Details Section (Polling for Series/Reps Updates) -->
     <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">
@@ -60,7 +61,10 @@
           </div>
         </div>
       <% else %>
-        <!-- Valores padrão quando não há dados -->
+
+
+
+        <!-- Valores padrão quando não há dados-->
         <div class="flex justify-between my-3 text-white text-sm">
           <div class="flex flex-col items-center">
             <div data-reps-series-target="reps" class="text-base font-semibold">0</div>
@@ -80,7 +84,7 @@
       <% end %>
     </div>
 
-    <!-- Rest Time and Force Section -->
+    <!-- Rest Time and Force Section-->
     <div class="flex justify-between my-3 text-white text-sm">
       <div data-controller="rest-time"
            data-rest-time-exercise-set-id-value="<%= @exercise_set.id %>"
@@ -99,7 +103,8 @@
     </div>
   </div>
 
-  <!-- Counter Buttons for Weight -->
+
+  <!-- Counter Buttons for Weight-->
   <div data-controller="weight" data-exercise-set-id="<%= @exercise_set.id %>"
        class="flex items-center justify-center mb-4">
     <button data-action="click->weight#decrease" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">-</button>
@@ -108,6 +113,7 @@
     </div>
     <button data-action="click->weight#increase" class="bg-[#912002] text-white rounded-full w-8 h-8 flex items-center justify-center text-lg">+</button>
   </div>
+
 
   <!-- Bottom Navigation -->
   <div class="bottom-navigation w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center"

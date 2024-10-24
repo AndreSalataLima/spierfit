@@ -13,16 +13,15 @@ class ExerciseSetsController < ApplicationController
   ]
 
   def show
-    @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-    recalculate_and_update_exercise_set(@arduino_data)
+    @data_points = @exercise_set.data_points.order(:created_at)
+    recalculate_and_update_exercise_set(@data_points)
     broadcast_exercise_set_data
-    calculate_force_and_power_from_arduino_data(@arduino_data)
+    calculate_force_and_power_from_data_points(@data_points)
   end
 
   def edit
-    @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-    calculate_force_and_power_from_arduino_data(@arduino_data)
-
+    @data_points = @exercise_set.data_points.order(:created_at)
+    calculate_force_and_power_from_data_points(@data_points)
   end
 
   # Método para servir dados de repetições e séries via JSON
@@ -31,7 +30,6 @@ class ExerciseSetsController < ApplicationController
     last_series_details = @exercise_set.reps_per_series[last_series_number.to_s] || { "reps" => 0 }
     render json: { reps: last_series_details["reps"], sets: last_series_number, in_series: @exercise_set.in_series }
   end
-
 
   # Método para atualizar o conjunto de exercícios
   def update
@@ -54,7 +52,6 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
-
   # Método para atualizar o tempo de descanso do conjunto de exercícios
   def update_rest_time
     if @exercise_set.update(rest_time: params[:rest_time])
@@ -64,7 +61,6 @@ class ExerciseSetsController < ApplicationController
       render json: { status: "error", message: @exercise_set.errors.full_messages.to_sentence }, status: :unprocessable_entity
     end
   end
-
 
   def complete
     @exercise_set.update(completed: true)
@@ -91,10 +87,9 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
-
   def process_new_data
-    @arduino_data = @exercise_set.arduino_data.order(:recorded_at)
-    recalculate_and_update_exercise_set(@arduino_data)
+    @data_points = @exercise_set.data_points.order(:created_at)
+    recalculate_and_update_exercise_set(@data_points)
     render json: { status: 'processed' }
   end
 
@@ -108,8 +103,8 @@ class ExerciseSetsController < ApplicationController
     params.require(:exercise_set).permit(:reps, :sets, :weight, :rest_time, :energy_consumed, reps_per_series: {})
   end
 
-  def recalculate_and_update_exercise_set(arduino_data)
-    results = detect_series_and_reps(arduino_data)
+  def recalculate_and_update_exercise_set(data_points)
+    results = detect_series_and_reps(data_points)
 
     new_reps = results[:reps_per_series].values.last&.dig('reps') || 0
     new_sets = results[:series_count]
@@ -133,11 +128,8 @@ class ExerciseSetsController < ApplicationController
     end
   end
 
-
-
-  # Método para detectar séries e repetições nos dados do Arduino
-  def detect_series_and_reps(arduino_data)
-
+  # Método para detectar séries e repetições nos dados do sensor
+  def detect_series_and_reps(data_points)
     series_count = 0
     reps_in_current_series = 0
     in_series = false
@@ -147,9 +139,9 @@ class ExerciseSetsController < ApplicationController
     previous_series_end_time = nil
     series_start_time = nil
 
-    arduino_data.each_with_index do |data_point, index|
+    data_points.each_with_index do |data_point, index|
       value = data_point.value
-      time = data_point.recorded_at
+      time = data_point.created_at
 
       if !in_series && value > -1400
         # Start of a new series
@@ -215,32 +207,14 @@ class ExerciseSetsController < ApplicationController
     { series_count: series_count, reps_per_series: reps_per_series, in_series: in_series }
   end
 
-
-
-  def weight_at_time(time, weight_changes)
-    # Default weight
-    weight_at_time = @exercise_set.weight
-
-    weight_changes.each do |change|
-      change_time = Time.parse(change["changed_at"])
-      if change_time <= time
-        weight_at_time = change["weight"]
-      else
-        break
-      end
-    end
-
-    weight_at_time
-  end
-
   # Função para calcular a força e potência e atualizar os campos no banco de dados
-  def calculate_force_and_power_from_arduino_data(arduino_data)
+  def calculate_force_and_power_from_data_points(data_points)
     total_eccentric_time = 0
     total_concentric_time = 0
     total_distance = 0
 
-    # Processar dados do Arduino para calcular tempo excêntrico, concêntrico e distância
-    arduino_data.each_cons(2) do |prev, curr|
+    # Processar dados do sensor para calcular tempo excêntrico, concêntrico e distância
+    data_points.each_cons(2) do |prev, curr|
       # Verificar se ambos os valores estão acima de -1400
       next if prev.value.abs < 1400 || curr.value.abs < 1400
 
