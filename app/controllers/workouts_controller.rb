@@ -2,7 +2,24 @@ class WorkoutsController < ApplicationController
   before_action :set_workout, only: %i[show edit update destroy complete]
 
   def index
+    params[:period] ||= 'week'
+
     @workouts = current_user.workouts
+
+    if params[:day].present? && params[:month].present? && params[:year].present?
+      date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+      @workouts = @workouts.where(created_at: date.beginning_of_day..date.end_of_day)
+    elsif params[:month].present? && params[:year].present?
+      date = Date.new(params[:year].to_i, params[:month].to_i)
+      @workouts = @workouts.where(created_at: date.beginning_of_month..date.end_of_month)
+    elsif params[:year].present?
+      date = Date.new(params[:year].to_i)
+      @workouts = @workouts.where(created_at: date.beginning_of_year..date.end_of_year)
+    end
+
+    # Calcula as calorias queimadas por dia da semana
+    @calories_burned_per_day = @workouts.group_by { |workout| workout.created_at.strftime('%a') }
+                                         .transform_values { |workouts| workouts.sum(&:calories_burned) }
   end
 
   def show

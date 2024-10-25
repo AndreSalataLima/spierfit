@@ -2,48 +2,129 @@
 
 <div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
   <!-- Top Navigation -->
-  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-2">
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
     <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
     <div class="absolute inset-0 flex items-center justify-between px-4">
-      <!-- Back Button -->
       <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
         <i class="fa fa-arrow-left text-white text-sm"></i>
       <% end %>
-      <!-- Title -->
       <div class="flex-1 text-center">
         <div class="text-white text-base font-semibold">Treinos</div>
       </div>
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="flex flex-col items-center w-full max-w-[428px]">
-    <div class="text-white text-lg font-semibold mb-4">Histórico de Treinos:</div>
-    <div class="w-full overflow-x-auto">
-      <table class="min-w-full bg-[#202020] rounded-[30px] text-white">
-        <thead>
-          <tr class="bg-[#303030]">
-            <th class="py-3 px-4 text-left">Data</th>
-            <th class="py-3 px-4 text-left">Força</th>
-            <th class="py-3 px-4 text-center">Desempenho</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @workouts.each do |workout| %>
-            <tr class="border-b border-[#393939]">
-              <td class="py-3 px-4"><%= workout.created_at.strftime('%d/%m') %></td>
-              <td class="py-3 px-4"><%= workout.calories_burned %></td>
-              <td class="py-3 px-4 text-center">
-                <%= link_to 'Consultar', workout, class: "text-blue-500 underline" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+  <!-- Filtro por Semana, Mês e Ano -->
+  <div class="w-full flex justify-center items-center mb-6">
+    <div class="flex gap-4">
+      <!-- Botão para Semana -->
+      <%= button_to "Semana", workouts_path, method: :get, params: { period: 'week' }, class: "w-[120px] h-12 text-center #{params[:period] == 'week' ? 'bg-[#a52502] text-white font-semibold' : 'bg-[#202020] text-[#9c9c9c] font-medium'} rounded-full" %>
+
+      <!-- Botão para Mês -->
+      <%= button_to "Mês", workouts_path, method: :get, params: { period: 'month' }, class: "w-[120px] h-12 text-center #{params[:period] == 'month' ? 'bg-[#a52502] text-white font-semibold' : 'bg-[#202020] text-[#9c9c9c] font-medium'} rounded-full" %>
+
+      <!-- Botão para Ano -->
+      <%= button_to "Ano", workouts_path, method: :get, params: { period: 'year' }, class: "w-[120px] h-12 text-center #{params[:period] == 'year' ? 'bg-[#a52502] text-white font-semibold' : 'bg-[#202020] text-[#9c9c9c] font-medium'} rounded-full" %>
     </div>
-
-
   </div>
+
+
+
+  <!-- Card de Progresso de Intensidade -->
+  <div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] px-6 py-6 mb-6">
+    <div class="text-white text-lg font-semibold mb-4">Intensidade</div>
+    <div class="flex justify-between items-center text-[#9c9c9c] text-xs mb-4">
+      <span>0</span>
+      <span>500</span>
+    </div>
+    <div class="flex justify-between text-white text-sm mb-4">
+      <% %w[Dom Seg Ter Qua Qui Sex Sáb].each do |day| %>
+        <span><%= day %></span>
+      <% end %>
+    </div>
+    <div class="flex justify-between items-end h-20">
+      <% %w[Sun Mon Tue Wed Thu Fri Sat].each do |day| %>
+        <div class="bg-[#a52502] w-2" style="height: <%= (@calories_burned_per_day[day] || 0) / 500.0 * 100 %>%" rounded-md"></div>
+      <% end %>
+    </div>
+  </div>
+
+ <!-- Sessão de Metas (Indicadores de Progresso) -->
+  <% # Exemplo de progresso dinâmico para vários treinos %>
+  <% progress_data = { "A" => { completed: 6, total: 18 }, "B" => { completed: 12, total: 18 }, "C" => { completed: 18, total: 18 }, "D" => { completed: 9, total: 18 }, "E" => { completed: 3, total: 18 } } %>
+
+  <!-- Contêiner para o grid -->
+  <div class="w-full max-w-[428px] px-4 mb-6 mx-auto">
+    <!-- Usando grid layout para garantir 3 metas por linha -->
+    <div class="grid grid-cols-3 gap-4">
+      <% progress_data.each do |label, data| %>
+        <% progress = (data[:completed].to_f / data[:total]) * 100 %> <!-- Calcula o percentual -->
+
+        <!-- Card para cada treino -->
+        <div class="flex flex-col items-center bg-transparent p-2">
+          <!-- Placeholder para o treino (A, B, C, ...) -->
+          <div class="w-10 h-10 bg-[#303030] rounded-full flex items-center justify-center text-white text-sm font-semibold mb-2">
+            <%= label %>
+          </div>
+
+          <!-- Círculo de progresso -->
+          <svg class="w-16 h-16" viewBox="0 0 100 100">
+            <!-- Círculo de fundo -->
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#303030" stroke-width="12"></circle>
+            <!-- Círculo de progresso -->
+            <path d="M50,50 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"
+                  stroke="#a52502"
+                  stroke-width="12"
+                  fill="none"
+                  style="stroke-dasharray: 282.743; stroke-dashoffset: <%= 282.743 * (1 - progress / 100.0) %>;">
+            </path>
+          </svg>
+
+          <!-- Números inferiores (Realizado / Planejado) -->
+          <div class="text-white text-sm mt-2">
+            <%= "#{data[:completed]}/#{data[:total]}" %>
+          </div>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+
+
+
+
+  <!-- Histórico de Treinos (Cards) -->
+  <% @workouts.each do |workout| %>
+    <div class="w-full max-w-[408px] bg-[#202020] rounded-[30px] px-6 py-4 mb-4">
+      <div class="text-[#d9d9d9] text-base font-medium mb-2">
+        Treino <%= workout.id %> - <%= workout.created_at.strftime('%d/%m/%Y') %>
+      </div>
+
+      <!-- Flexbox para alinhar os itens na mesma linha -->
+      <div class="flex justify-between items-center text-[#9c9c9c] text-xs mb-2">
+        <div class="flex items-center gap-2">
+          <span>Força:</span>
+          <span class="text-white"><%= workout.calories_burned %></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span>Séries:</span>
+          <span class="text-white"><%= 10 %></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span>Exercícios:</span>
+          <span class="text-white"><%= 10 %></span>
+        </div>
+
+        <!-- Ponta de Seta + Texto "Avançar" -->
+        <%= link_to workout, class: "text-white flex items-center gap-1" do %>
+          <span></span>
+          <i class="fa fa-chevron-right text-lg"></i> <!-- Apenas a ponta da seta -->
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+
 
   <!-- Bottom Navigation -->
   <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
