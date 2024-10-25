@@ -1,0 +1,55 @@
+<%= content_for :title, "Alunos - SpierFit" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Alunos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulário de Pesquisa -->
+  <div class="w-full max-w-[428px] px-4 mb-4">
+    <%= form_with url: users_index_personal_path(@personal), method: :get, local: true do |f| %>
+      <div class="flex items-center">
+        <%= f.text_field :query, placeholder: "Pesquisar aluno...", class: "w-full h-10 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400" %>
+        <%= f.submit "Buscar", class: "ml-2 bg-[#a52502] text-white font-semibold px-4 py-2 rounded-full" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Cards de Usuários -->
+  <% if @users.present? %>
+    <% @users.each do |user| %>
+      <div class="w-full max-w-[408px] bg-[#202020] rounded-[30px] px-6 py-4 mb-4 flex justify-between items-center">
+        <div class="text-[#d9d9d9] text-base font-medium">
+          <%= user.name %>
+        </div>
+
+        <!-- Link com seta para a direita -->
+        <%= link_to user, class: "text-white flex items-center" do %>
+          <i class="fa fa-arrow-right text-lg"></i>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-white text-center mt-6">Nenhum aluno encontrado para esta academia.</p>
+  <% end %>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+    <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+    <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
+    <%= link_to select_equipment_machines_path, class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center" do %>
+      <i class="fa fa-dumbbell text-white"></i>
+    <% end %>
+    <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+    <div class="text-white text-sm"><i class="fa fa-user"></i></div>
+  </div>
+</div>

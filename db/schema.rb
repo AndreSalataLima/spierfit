@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_25_144659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -142,7 +142,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "gym_id", null: false
     t.index ["email"], name: "index_personals_on_email", unique: true
+    t.index ["gym_id"], name: "index_personals_on_gym_id"
     t.index ["reset_password_token"], name: "index_personals_on_reset_password_token", unique: true
     t.index ["user_id"], name: "index_personals_on_user_id"
   end
@@ -205,6 +207,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
   add_foreign_key "exercise_sets", "machines"
   add_foreign_key "exercise_sets", "workouts"
   add_foreign_key "machines", "gyms"
+  add_foreign_key "personals", "gyms"
   add_foreign_key "personals", "users"
   add_foreign_key "users", "gyms"
   add_foreign_key "weight_changes", "exercise_sets"
