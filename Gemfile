@@ -32,6 +32,9 @@ end
 
 group :development do
   gem "web-console"     # For console access on error pages
+  gem 'bullet'
+  # gem 'rack-mini-profiler'
+
 end
 
 gem "tzinfo-data", platforms: %i[windows jruby]
