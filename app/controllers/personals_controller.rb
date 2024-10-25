@@ -1,8 +1,17 @@
 class PersonalsController < ApplicationController
-  before_action :set_personal, only: %i[show edit update destroy dashboard]
+  before_action :authenticate_personal!
+  before_action :set_personal, only: %i[show edit update destroy dashboard users_index]
 
   def index
     @personals = Personal.all
+  end
+
+  def users_index
+    @users = if params[:query].present?
+               @personal.gym.users.where("name ILIKE ?", "%#{params[:query]}%")
+             else
+               @personal.gym.users
+             end
   end
 
   def show
@@ -50,6 +59,11 @@ class PersonalsController < ApplicationController
 
   def set_personal
     @personal = Personal.find(params[:id])
+
+    # Verificação adicional
+    unless @personal.gym.present?
+      redirect_to root_path, alert: "Acesso não autorizado"
+    end
   end
 
   def personal_params
