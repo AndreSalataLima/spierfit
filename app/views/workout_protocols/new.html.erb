@@ -1,0 +1,131 @@
+<%= content_for :title, "Novo Protocolo - SpierFit" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Navegação Superior -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Novo Protocolo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulário de Novo Protocolo -->
+  <div class="w-full max-w-[428px] px-4" data-controller="muscle-group">
+  <%= form_with model: [@personal, @user, @workout_protocol], data: { turbo: false } do |f| %>
+      <!-- Campos do Protocolo -->
+      <div class="mb-4">
+        <%= f.label :name, 'Nome do Protocolo', class: "text-white" %>
+        <%= f.text_field :name, class: "input-field", placeholder: "Digite o nome do protocolo" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :description, 'Descrição', class: "text-white" %>
+        <%= f.text_area :description, class: "input-field h-20", placeholder: "Descreva o protocolo" %>
+      </div>
+
+      <!-- Modal para Adicionar Exercício -->
+      <div
+        id="exerciseModal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
+        data-muscle-group-target="modal"
+      >
+        <div class="w-full max-w-md bg-[#151515] rounded-[30px] p-6">
+          <h2 class="text-white text-lg font-semibold mb-4">Adicionar Exercício - <span data-muscle-group-target="modalTitle"></span></h2>
+          <!-- Contêiner dos Campos do Exercício -->
+          <div data-muscle-group-target="exerciseFieldsContainer">
+            <!-- O partial será inserido aqui via JavaScript -->
+          </div>
+          <!-- Botões -->
+          <div class="flex justify-end space-x-2 mt-4">
+            <button type="button" data-action="click->muscle-group#closeModal" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-full">Cancelar</button>
+            <button type="button" data-action="click->muscle-group#saveExercise" class="bg-[#a52502] text-white font-bold py-2 px-4 rounded-full">Salvar</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- Loop de Grupos Musculares -->
+      <% @muscle_groups.each do |muscle_group| %>
+        <div class="muscle-group-section mb-4 w-full bg-[#151515] rounded-[30px]">
+          <!-- Cabeçalho do Grupo Muscular -->
+          <div class="muscle-group-header flex justify-between items-center p-4">
+            <h2 class="text-white font-semibold text-lg"><%= muscle_group %></h2>
+            <button
+              type="button"
+              data-action="click->muscle-group#toggle"
+              data-muscle-group="<%= muscle_group.parameterize %>"
+              class="text-white text-2xl focus:outline-none"
+            >+</button>
+          </div>
+
+          <!-- Container de Exercícios -->
+          <div
+            id="exercises-<%= muscle_group.parameterize %>"
+            data-muscle-group-target="container"
+            class="exercises-container hidden px-4 pb-4"
+          >
+            <!-- Lista de Exercícios Adicionados -->
+            <div data-exercises-container>
+              <% f.fields_for :protocol_exercises do |pe_form| %>
+                <% if pe_form.object.muscle_group == muscle_group %>
+                  <!-- Exibição dos cards de exercícios -->
+                  <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-2 flex justify-between items-center">
+                    <div>
+                      <div class="text-white font-semibold"><%= pe_form.object.exercise&.name %></div>
+                      <div class="text-gray-400">Dia do treino: <%= pe_form.object.day %></div>
+                    </div>
+                    <!-- Campos ocultos para enviar no formulário -->
+                    <%= pe_form.hidden_field :muscle_group %>
+                    <%= pe_form.hidden_field :exercise_id %>
+                    <%= pe_form.hidden_field :day %>
+                    <%= pe_form.hidden_field :sets %>
+                    <%= pe_form.hidden_field :min_repetitions %>
+                    <%= pe_form.hidden_field :max_repetitions %>
+                    <%= pe_form.hidden_field :observation %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+
+            <!-- Botão para adicionar novo exercício -->
+            <button
+              type="button"
+              data-action="click->muscle-group#openModal"
+              data-muscle-group="<%= muscle_group %>"
+              class="bg-[#a52502] text-white font-semibold h-10 rounded-full w-full mt-2"
+            >
+              Adicionar Exercício
+            </button>
+          </div> <!-- Fechando o container de exercícios -->
+        </div> <!-- Fechando a seção do grupo muscular -->
+      <% end %> <!-- Fechando o loop dos grupos musculares -->
+
+      <!-- Meta de Execução -->
+      <div class="mb-4">
+        <%= f.label :execution_goal, 'Meta de Execução', class: "text-white" %>
+        <%= f.number_field :execution_goal, class: "input-field", placeholder: "Selecione o número de treinos" %>
+      </div>
+
+      <!-- Botão de Submissão -->
+      <%= f.submit 'Concluir', class: "w-full bg-[#a52502] text-white font-bold h-10 rounded-full" %>
+    <% end %>
+  </div>
+</div>
+
+<% if @workout_protocol.errors.any? %>
+  <div class="error-messages bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <strong>Foram encontrados os seguintes erros:</strong>
+    <ul class="mt-2">
+      <% @workout_protocol.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

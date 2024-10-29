@@ -1,0 +1,41 @@
+<!-- app/views/protocol_exercises/_protocol_exercise_fields.html.erb -->
+<%= fields_for "workout_protocol[protocol_exercises_attributes][]", protocol_exercise do |pe_form| %>
+  <div class="exercise-fields">
+    <!-- Hidden field for muscle_group -->
+    <%= pe_form.hidden_field :muscle_group %>
+
+    <!-- Exercise Selection -->
+    <div class="mb-2">
+      <%= pe_form.label :exercise_id, 'Exercício', class: "text-gray-400" %>
+      <%= pe_form.collection_select :exercise_id, Exercise.where(muscle_group: protocol_exercise.muscle_group), :id, :name, { prompt: 'Selecione um exercício' }, class: "input-field" %>
+    </div>
+
+    <!-- Number of Sets -->
+    <div class="mb-2">
+      <%= pe_form.label :sets, 'Séries', class: "text-gray-400" %>
+      <%= pe_form.number_field :sets, class: "input-field", placeholder: "Número de séries" %>
+    </div>
+
+    <!-- Min and Max Repetitions -->
+    <div class="mb-2">
+      <%= pe_form.label :min_repetitions, 'Repetições Mínimas', class: "text-gray-400" %>
+      <%= pe_form.number_field :min_repetitions, class: "input-field", placeholder: "Mínimo" %>
+    </div>
+    <div class="mb-2">
+      <%= pe_form.label :max_repetitions, 'Repetições Máximas', class: "text-gray-400" %>
+      <%= pe_form.number_field :max_repetitions, class: "input-field", placeholder: "Máximo" %>
+    </div>
+
+    <!-- Day of Training -->
+    <div class="mb-2">
+      <%= pe_form.label :day, 'Dia do Treino', class: "text-gray-400" %>
+      <%= pe_form.select :day, options_for_select(('A'..'G').to_a), { prompt: 'Selecione o dia' }, class: "input-field" %>
+    </div>
+
+    <!-- Observation -->
+    <div class="mb-2">
+      <%= pe_form.label :observation, 'Observação', class: "text-gray-400" %>
+      <%= pe_form.text_area :observation, class: "input-field h-16", placeholder: "Observação" %>
+    </div>
+  </div>
+<% end %>

@@ -1,17 +1,35 @@
 class PersonalsController < ApplicationController
   before_action :authenticate_personal!
   before_action :set_personal, only: %i[show edit update destroy dashboard users_index]
+  before_action :ensure_gym_selected, only: [:users_index]
 
   def index
     @personals = Personal.all
   end
 
   def users_index
-    @users = if params[:query].present?
-               @personal.gym.users.where("name ILIKE ?", "%#{params[:query]}%")
-             else
-               @personal.gym.users
-             end
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+
+    # Verifica se há um parâmetro de pesquisa 'query'
+    if params[:query].present?
+      # Filtra os usuários da academia pelo nome que contenha a query (case insensitive)
+      @users = @gym.users.where("name ILIKE ?", "%#{params[:query]}%")
+    else
+      # Se não houver query, retorna todos os usuários da academia
+      @users = @gym.users
+    end
+  end
+
+
+  def gyms_index
+    @gyms = current_personal.gyms
+  end
+
+  def select_gym
+    gym_id = params[:gym_id]
+    gym = current_personal.gyms.find(gym_id)
+    session[:current_gym_id] = gym.id
+    redirect_to users_index_personal_path(current_personal), notice: "Academia selecionada: #{gym.name}"
   end
 
   def show
@@ -51,8 +69,6 @@ class PersonalsController < ApplicationController
   end
 
   def dashboard
-    # @personal já está definido pelo before_action :set_personal
-    # Adicione aqui a lógica específica para carregar os dados do dashboard do personal
   end
 
   private
@@ -61,12 +77,19 @@ class PersonalsController < ApplicationController
     @personal = Personal.find(params[:id])
 
     # Verificação adicional
-    unless @personal.gym.present?
-      redirect_to root_path, alert: "Acesso não autorizado"
+    unless @personal.gyms.present? && session[:current_gym_id]
+      redirect_to gyms_index_personal_path(current_personal), alert: 'Por favor, selecione uma academia.'
     end
   end
 
   def personal_params
     params.require(:personal).permit(:user_id, :specialization, :availability, :bio, :rating, :languages, :emergency_contact, :current_clients, :certifications, :photos, :plans, :achievements)
   end
+
+  def ensure_gym_selected
+    unless session[:current_gym_id]
+      redirect_to gyms_index_personal_path(current_personal), alert: 'Por favor, selecione uma academia.'
+    end
+  end
+
 end

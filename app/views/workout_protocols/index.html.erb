@@ -1,4 +1,4 @@
-<%= content_for :title, "Personais - SpierFit" %>
+<%= content_for :title, "Protocolos de Treino - SpierFit" %>
 
 <div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
   <!-- Navegação Superior -->
@@ -9,25 +9,25 @@
         <i class="fa fa-arrow-left text-white text-sm"></i>
       <% end %>
       <div class="flex-1 text-center">
-        <div class="text-white text-base font-semibold">Lista de Personais</div>
+        <div class="text-white text-base font-semibold">Protocolos de Treino</div>
       </div>
-      <%= link_to 'Novo Personal', new_personal_registration_path, class: "text-white font-semibold" %>
+      <%= link_to 'Novo', new_personal_user_workout_protocol_path(@personal, @user), class: "text-white font-semibold" %>
     </div>
   </div>
 
-  <!-- Lista de Personais -->
-  <% if @personals.present? %>
-    <% @personals.each do |personal| %>
+  <!-- Lista de Protocolos de Treino -->
+  <% if @workout_protocols.present? %>
+    <% @workout_protocols.each do |protocol| %>
       <div class="w-full max-w-[408px] bg-[#202020] rounded-[30px] px-6 py-4 mb-4 flex justify-between items-center">
         <div class="text-[#d9d9d9] text-base font-medium">
-          <%= personal.name %>
+          <%= protocol.name %>
         </div>
-        <%= link_to personal_path(personal), class: "text-white flex items-center" do %>
+        <%= link_to user_workout_protocol_path(@user, protocol), class: "text-white flex items-center" do %>
           <i class="fa fa-arrow-right text-lg"></i>
         <% end %>
       </div>
     <% end %>
   <% else %>
-    <p class="text-white text-center mt-6">Nenhum personal encontrado.</p>
+    <p class="text-white text-center mt-6">Nenhum protocolo de treino encontrado.</p>
   <% end %>
 </div>

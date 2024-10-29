@@ -5,10 +5,19 @@ Rails.application.routes.draw do
 
   resources :exercises
 
-  resources :personals do
+  resources :personals, only: [:index, :show, :create, :update, :destroy] do
     member do
       get 'dashboard', to: 'personals#dashboard'
-      get 'users_index'
+      get 'gyms_index', to: 'personals#gyms_index'
+      post 'select_gym', to: 'personals#select_gym'
+      get 'users_index', to: 'personals#users_index'
+    end
+
+    # Escopo de rotas de users e workout_protocols dentro de personals
+    resources :users, only: [] do
+      resources :workout_protocols do
+        resources :protocol_exercises, only: [:create, :update, :destroy]
+      end
     end
   end
 
@@ -48,6 +57,11 @@ Rails.application.routes.draw do
       get 'dashboard', to: 'users#dashboard'
     end
     resources :workouts, only: [:index, :new, :create]
+
+    # Escopo para acesso direto aos workout_protocols do user
+    resources :workout_protocols do
+      resources :protocol_exercises, only: [:create, :update, :destroy]
+    end
   end
 
   resources :gyms do
@@ -57,16 +71,15 @@ Rails.application.routes.draw do
     resources :machines, only: [:index, :new, :create]
   end
 
+  resources :protocol_exercises, only: [:new]
+
   # Rotas para o ESP32
   get 'esp32/register', to: 'esp32#register'
   post 'esp32/register', to: 'esp32#register'
   post 'esp32/receive_data', to: 'esp32#receive_data'
-  # Visualizar os dados recebidos, pode adicionar:
   get 'esp32/data_points', to: 'esp32#data_points'
 
-
   mount ActionCable.server => '/cable'
-
 
   post 'arduino_cloud_data/receive_data', to: 'arduino_cloud_data#receive_data'
   get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
