@@ -3,7 +3,7 @@ class Gym < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_and_belongs_to_many :users
-  has_many :personals
+  has_and_belongs_to_many :personals
   has_many :machines
   has_many :workouts, through: :machines
 end

@@ -3,7 +3,14 @@ class Personal < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
 
-  belongs_to :gym
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :gyms
+  has_many :users, through: :gyms
   has_many :workouts
+  has_many :workout_protocols
+
+
+  def inspect
+    "#<#{self.class} id: #{id}, name: #{name}>"
+  end
+
 end

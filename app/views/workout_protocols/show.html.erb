@@ -1,0 +1,36 @@
+<%= content_for :title, "#{@workout_protocol.name} - SpierFit" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Navegação Superior -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold"><%= @workout_protocol.name %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalhes do Protocolo -->
+  <div class="w-full max-w-[428px] px-4">
+    <div class="bg-[#202020] rounded-lg p-4 mb-4">
+      <p class="text-[#d9d9d9] text-base font-medium">Meta de Execução: <%= @workout_protocol.execution_goal %> vezes</p>
+      <p class="text-[#d9d9d9] mt-2"><%= @workout_protocol.description %></p>
+    </div>
+
+    <!-- Lista de Exercícios -->
+    <h2 class="text-white font-semibold mb-2">Exercícios</h2>
+    <% @workout_protocol.protocol_exercises.each do |exercise| %>
+      <div class="bg-[#151515] rounded-lg p-4 mb-2">
+        <p class="text-[#d9d9d9] font-medium">Exercício: <%= exercise.exercise.name %></p>
+        <p class="text-gray-400">Grupo Muscular: <%= exercise.muscle_group %></p>
+        <p class="text-gray-400">Séries: <%= exercise.sets %> | Repetições: <%= exercise.repetitions %></p>
+        <p class="text-gray-400">Dia: <%= exercise.day %></p>
+        <p class="text-gray-400">Observação: <%= exercise.observation %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
