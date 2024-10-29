@@ -143,7 +143,7 @@ class ExerciseSetsController < ApplicationController
       value = data_point.value
       time = data_point.created_at
 
-      if !in_series && value > -1400
+      if !in_series && value > -130
         # Start of a new series
         in_series = true
         ready_for_new_rep = true
@@ -174,7 +174,7 @@ class ExerciseSetsController < ApplicationController
 
       elsif in_series
         # Process repetitions (existing logic)
-        if value > -880 && ready_for_new_rep
+        if value > -82 && ready_for_new_rep
           reps_in_current_series += 1
           ready_for_new_rep = false
 
@@ -183,11 +183,11 @@ class ExerciseSetsController < ApplicationController
 
         end
 
-        if value < -1050
+        if value < -97.5
           ready_for_new_rep = true
         end
 
-        if value <= -1400
+        if value <= -130
           consecutive_low_values += 1
         else
           consecutive_low_values = 0
@@ -216,7 +216,7 @@ class ExerciseSetsController < ApplicationController
     # Processar dados do sensor para calcular tempo excêntrico, concêntrico e distância
     data_points.each_cons(2) do |prev, curr|
       # Verificar se ambos os valores estão acima de -1400
-      next if prev.value.abs < 1400 || curr.value.abs < 1400
+      next if prev.value.abs < 300 || curr.value.abs < 130
 
       delta_value = curr.value - prev.value
       total_distance += delta_value.abs # Somar a distância absoluta entre valores consecutivos

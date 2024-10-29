@@ -22,9 +22,10 @@
         <div class="text-[#d9d9d9] text-base font-medium">
           <%= protocol.name %>
         </div>
-        <%= link_to user_workout_protocol_path(@user, protocol), class: "text-white flex items-center" do %>
-          <i class="fa fa-arrow-right text-lg"></i>
-        <% end %>
+      <%= link_to personal_user_workout_protocol_path(@personal, @user, protocol), class: "text-white flex items-center" do %>
+        <i class="fa fa-arrow-right text-lg"></i>
+      <% end %>
+
       </div>
     <% end %>
   <% else %>

@@ -8,6 +8,17 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def show
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+
+    # Agrupa os exercícios por dia e calcula o progresso de cada dia
+    progress_data = {}
+    days = @workout_protocol.protocol_exercises.pluck(:day).uniq
+    days.each do |day|
+      total = @workout_protocol.protocol_exercises.where(day: day).sum(:sets)  # soma das séries planejadas para o dia
+      progress_data[day] = { completed: 0, total: total } # inicializa completed como 0
+    end
+
+    @progress_data = progress_data
   end
 
   def new
