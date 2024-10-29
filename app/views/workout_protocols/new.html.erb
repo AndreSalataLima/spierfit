@@ -118,14 +118,3 @@
     <% end %>
   </div>
 </div>
-
-<% if @workout_protocol.errors.any? %>
-  <div class="error-messages bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-    <strong>Foram encontrados os seguintes erros:</strong>
-    <ul class="mt-2">
-      <% @workout_protocol.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
