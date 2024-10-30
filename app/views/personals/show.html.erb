@@ -1,72 +1,51 @@
-<p>
-  <strong>Name:</strong>
-  <%= @personal.name %>
-</p>
+<%= content_for :title, "#{@personal.name} - SpierFit" %>
 
-<p>
-  <strong>Email:</strong>
-  <%= @personal.email %>
-</p>
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Navegação Superior -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold"><%= @personal.name %></div>
+      </div>
+      <%= link_to 'Editar', edit_personal_registration_path, class: "text-white font-semibold" %>
+    </div>
+  </div>
 
-<p>
-  <strong>Specialization:</strong>
-  <%= @personal.specialization %>
-</p>
+  <!-- Informações do Personal -->
+  <div class="w-full max-w-[408px] bg-[#202020] rounded-[30px] px-6 py-4 mb-4 flex flex-col">
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Especialização:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.specialization %></p>
 
-<p>
-  <strong>Availability:</strong>
-  <%= @personal.availability %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Biografia:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.bio %></p>
 
-<p>
-  <strong>Bio:</strong>
-  <%= @personal.bio %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Disponibilidade:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.availability %></p>
 
-<p>
-  <strong>Rating:</strong>
-  <%= @personal.rating %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Avaliação:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.rating %></p>
 
-<p>
-  <strong>Languages:</strong>
-  <%= @personal.languages %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Idiomas:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.languages %></p>
 
-<p>
-  <strong>Emergency Contact:</strong>
-  <%= @personal.emergency_contact %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Clientes Atuais:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.current_clients %></p>
 
-<p>
-  <strong>Current Clients:</strong>
-  <%= @personal.current_clients %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Certificações:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.certifications %></p>
 
-<p>
-  <strong>Certifications:</strong>
-  <%= @personal.certifications %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Planos:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.plans %></p>
 
-<p>
-  <strong>Photos:</strong>
-  <%= @personal.photos %>
-</p>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Conquistas:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.achievements %></p>
 
-<p>
-  <strong>Plans:</strong>
-  <%= @personal.plans %>
-</p>
-
-<p>
-  <strong>Achievements:</strong>
-  <%= @personal.achievements %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @personal.user&.name %>
-</p>
-
-<%= link_to 'Edit', edit_personal_path(@personal) %> |
-<%= link_to 'Back', personals_path %>
+    <div class="text-[#d9d9d9] text-lg font-medium mb-2">Contato de Emergência:</div>
+    <p class="text-[#d9d9d9] mb-4"><%= @personal.emergency_contact %></p>
+  </div>
+</div>
+ApplicationRecord

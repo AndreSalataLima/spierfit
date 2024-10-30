@@ -57,15 +57,14 @@ class MachinesController < ApplicationController
 
   def exercises
     if current_user
-      current_user.update(gym_id: @machine.gym_id) if @machine.gym_id.present?
+      current_user.update(gym_id: @machine.gym_id) if @machine.gym_id.present? && current_user.gym_id != @machine.gym_id
       @exercises = @machine.exercises
-      Rails.logger.info "Machine ID: #{params[:id]}"
-      Rails.logger.info "Exercises loaded: #{@exercises.map(&:name)}"
       render 'machines/exercises/index'
     else
       redirect_to new_user_session_path
     end
   end
+
 
   def start_exercise_set
     if current_user
