@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_29_075344) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -102,6 +102,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
     t.index ["reset_password_token"], name: "index_gyms_on_reset_password_token", unique: true
   end
 
+  create_table "gyms_personals", id: false, force: :cascade do |t|
+    t.bigint "gym_id", null: false
+    t.bigint "personal_id", null: false
+    t.index ["gym_id", "personal_id"], name: "index_gyms_personals_on_gym_id_and_personal_id", unique: true
+    t.index ["personal_id", "gym_id"], name: "index_gyms_personals_on_personal_id_and_gym_id"
+  end
+
   create_table "gyms_users", id: false, force: :cascade do |t|
     t.bigint "gym_id", null: false
     t.bigint "user_id", null: false
@@ -147,6 +154,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
     t.index ["user_id"], name: "index_personals_on_user_id"
   end
 
+  create_table "protocol_exercises", force: :cascade do |t|
+    t.bigint "workout_protocol_id", null: false
+    t.bigint "exercise_id", null: false
+    t.string "muscle_group"
+    t.integer "sets"
+    t.integer "repetitions"
+    t.string "day"
+    t.text "observation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "min_repetitions"
+    t.integer "max_repetitions"
+    t.index ["exercise_id"], name: "index_protocol_exercises_on_exercise_id"
+    t.index ["workout_protocol_id"], name: "index_protocol_exercises_on_workout_protocol_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "phone"
@@ -175,6 +198,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["exercise_set_id"], name: "index_weight_changes_on_exercise_set_id"
+  end
+
+  create_table "workout_protocols", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "execution_goal"
+    t.bigint "user_id", null: false
+    t.bigint "personal_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personal_id"], name: "index_workout_protocols_on_personal_id"
+    t.index ["user_id"], name: "index_workout_protocols_on_user_id"
   end
 
   create_table "workouts", force: :cascade do |t|
@@ -206,8 +241,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_091404) do
   add_foreign_key "exercise_sets", "workouts"
   add_foreign_key "machines", "gyms"
   add_foreign_key "personals", "users"
+  add_foreign_key "protocol_exercises", "exercises"
+  add_foreign_key "protocol_exercises", "workout_protocols"
   add_foreign_key "users", "gyms"
   add_foreign_key "weight_changes", "exercise_sets"
+  add_foreign_key "workout_protocols", "personals"
+  add_foreign_key "workout_protocols", "users"
   add_foreign_key "workouts", "gyms"
   add_foreign_key "workouts", "personals"
   add_foreign_key "workouts", "users"

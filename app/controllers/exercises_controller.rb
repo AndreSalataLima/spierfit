@@ -6,6 +6,11 @@ class ExercisesController < ApplicationController
   end
 
   def show
+    @exercise = Exercise.find(params[:id])
+
+    respond_to do |format|
+      format.json { render json: @exercise }
+    end
   end
 
   def new
