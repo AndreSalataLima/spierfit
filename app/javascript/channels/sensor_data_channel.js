@@ -30,6 +30,13 @@ if (exerciseSetId) {
     {
       received(data) {
         if (data && data.sensor_value && data.recorded_at) {
+          const generatedTime = new Date(data.recorded_at);
+          const displayedTime = new Date();
+          const totalTime = ((displayedTime - generatedTime) / 1000).toFixed(3); // seconds with milliseconds
+
+          console.log(`Dado gerado em ${generatedTime.toISOString()}, dado exibido em ${displayedTime.toISOString()}. Tempo total: ${totalTime} segundos`);
+
+          // Update chart or other UI elements
           const chartData = [data.recorded_at, data.sensor_value];
           updateChart(chartData);
         }

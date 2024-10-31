@@ -7,26 +7,36 @@ class Esp32Controller < ApplicationController
   end
 
   def receive_data
-    # Assuming data comes in as JSON with 'distance' and 'mac_address'
     data = JSON.parse(request.body.read)
-    distance = data['distance']
+    distance = data['sensor_value']
     mac_address = data['mac_address']
-    timestamp = Time.current
+    creation_time_str = data['creation_time']  # Timestamp string from ESP32
 
-    # Process and store data
-    data_point = store_data(distance, mac_address, timestamp)
+    # Parse the timestamp into a Time object
+    sensor_time = Time.strptime(creation_time_str, '%Y-%m-%dT%H:%M:%S%z')
 
-    # Broadcast the data to connected clients
-    broadcast_data(data_point)
+    # Store data
+    data_point = DataPoint.create!(
+      value: distance.to_f,
+      mac_address: mac_address,
+      created_at: sensor_time,
+      exercise_set: current_exercise_set
+    )
+
+    # Broadcast data to frontend
+    SensorDataChannel.broadcast_to(
+      current_exercise_set,
+      sensor_value: data_point.value,
+      mac_address: data_point.mac_address,
+      recorded_at: data_point.created_at.iso8601(3)  # Include milliseconds
+    )
 
     render json: { status: 'Success', message: 'Data received and processed' }, status: :ok
-  rescue JSON::ParserError => e
-    Rails.logger.error "JSON parse error: #{e.message}"
-    render json: { status: 'Error', message: 'Invalid JSON format' }, status: :bad_request
   rescue StandardError => e
     Rails.logger.error "Error processing data: #{e.message}"
     render json: { status: 'Error', message: e.message }, status: :internal_server_error
   end
+
 
   private
 
