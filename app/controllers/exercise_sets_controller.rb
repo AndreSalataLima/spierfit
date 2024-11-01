@@ -25,11 +25,20 @@ class ExerciseSetsController < ApplicationController
   end
 
   # Método para servir dados de repetições e séries via JSON
-  def reps_and_sets
-    last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 0
-    last_series_details = @exercise_set.reps_per_series[last_series_number.to_s] || { "reps" => 0 }
-    render json: { reps: last_series_details["reps"], sets: last_series_number, in_series: @exercise_set.in_series }
-  end
+def reps_and_sets
+  @data_points = @exercise_set.data_points.order(:created_at)
+  recalculate_and_update_exercise_set(@data_points)
+
+  last_series_number = @exercise_set.reps_per_series.keys.map(&:to_i).max || 0
+  last_series_details = @exercise_set.reps_per_series[last_series_number.to_s] || { "reps" => 0 }
+
+  render json: {
+    reps: last_series_details["reps"],
+    sets: last_series_number,
+    in_series: @exercise_set.in_series
+  }
+end
+
 
   # Método para atualizar o conjunto de exercícios
   def update
