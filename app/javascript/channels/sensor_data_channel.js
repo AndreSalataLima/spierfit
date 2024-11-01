@@ -34,7 +34,7 @@ if (exerciseSetId) {
           const displayedTime = new Date();
           const totalTime = ((displayedTime - generatedTime) / 1000).toFixed(3); // seconds with milliseconds
 
-          console.log(`Dado gerado em ${generatedTime.toISOString()}, dado exibido em ${displayedTime.toISOString()}. Tempo total: ${totalTime} segundos`);
+          console.log(`Dado gerado em ${generatedTime.toISOString()}, dado exibido em ${displayedTime.toISOString()}, valor do dado exibido ${data.sensor_value}. Tempo total: ${totalTime} segundos`);
 
           // Update chart or other UI elements
           const chartData = [data.recorded_at, data.sensor_value];

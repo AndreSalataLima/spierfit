@@ -6,7 +6,6 @@ class DataPoint < ApplicationRecord
   private
 
   def broadcast_data_point
-    Rails.logger.info "Broadcasting data for ExerciseSet: #{exercise_set&.id || 'No ExerciseSet'}"
     data_points = DataPoint.where(exercise_set: exercise_set).order(:recorded_at)
     data_to_broadcast = data_points.map do |datum|
       {
@@ -15,8 +14,6 @@ class DataPoint < ApplicationRecord
         create_at: datum.recorded_at
       }
     end
-    ActionCable.server.broadcast "sensor_data_channel", { data: data_to_broadcast }
-    Rails.logger.info "Broadcasted data: #{data_to_broadcast}"
   rescue StandardError => e
     Rails.logger.error "Error broadcasting data: #{e.message}"
   end
