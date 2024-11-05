@@ -41,10 +41,10 @@ Rails.application.routes.draw do
 
   resources :exercise_sets do
     member do
-      post 'complete', to: 'exercise_sets#complete'
+      # post 'complete', to: 'exercise_sets#complete'
       patch 'update_weight', to: 'exercise_sets#update_weight'
       patch 'update_rest_time'
-      patch 'complete'
+      patch 'complete', to: 'exercise_sets#complete'
       get :reps_and_sets
       get :process_new_data
     end

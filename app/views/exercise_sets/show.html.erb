@@ -115,12 +115,10 @@
 
 
   <!-- Bottom Navigation -->
-  <div class="bottom-navigation w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center"
-       data-controller="navigation"
-       data-navigation-exercise-set-id-value="<%= @exercise_set.id %>">
+  <div class="bottom-navigation w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
     <div class="text-white text-sm"><i class="fa fa-home"></i></div>
     <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
-    <%= link_to edit_exercise_set_path(@exercise_set.id), class: "bg-[#a52502] rounded-full p-3", data: { turbo: false } do %>
+    <%= button_to complete_exercise_set_path(@exercise_set), method: :patch, class: "bg-[#a52502] rounded-full p-3", data: { turbo: false }, form: { "data-turbo" => "false" } do %>
       <i class="fa-solid fa-stop text-white text-lg"></i>
     <% end %>
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
