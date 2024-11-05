@@ -11,6 +11,10 @@ class ExerciseSetsController < ApplicationController
     :reps_and_sets,
     :process_new_data
   ]
+  before_action :redirect_if_completed, only: [:show]
+  before_action :set_cache_headers, only: [:show]
+
+
 
   def show
     @data_points = @exercise_set.data_points.order(:created_at)
@@ -73,8 +77,8 @@ end
 
   def complete
     @exercise_set.update(completed: true)
-    broadcast_exercise_set_data
-    redirect_to user_index_machines_path, notice: 'Exercise set was successfully completed.'
+    @exercise_set.machine.update(current_user_id: nil)
+    redirect_to edit_exercise_set_path(@exercise_set), notice: 'Exercise set was successfully completed.'
   end
 
   def broadcast_exercise_set_data
@@ -299,6 +303,17 @@ end
     time_per_series
   end
 
+  def set_cache_headers
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+  
+  def redirect_if_completed
+    if @exercise_set.completed?
+      redirect_to machine_exercises_machine_path(@exercise_set.machine), alert: 'This exercise set has already been completed.'
+    end
+  end
 
 
 end
