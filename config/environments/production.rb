@@ -107,4 +107,9 @@ config.action_cable.cable = {
   ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE } # desativa verificação SSL, usar temporariamente
 }
 
+config.log_level = :debug
+
+# Desabilitar a compressão WebSocket
+config.action_cable.websocket_compression = false
+
 end
