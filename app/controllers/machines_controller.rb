@@ -68,10 +68,19 @@ class MachinesController < ApplicationController
 
   def start_exercise_set
     if current_user
-      workout = current_user.workouts.find_or_create_by!(completed: false) do |workout|
-        workout.gym_id = @machine.gym_id
-        workout.workout_type = 'General'
-        workout.goal = 'Fitness'
+      if @machine.current_user_id.present? && @machine.current_user_id != current_user.id
+        redirect_to user_index_machines_path, alert: 'Esta máquina está atualmente em uso por outro usuário.'
+        return
+      end
+
+      # Lock the machine to the current user
+      @machine.update(current_user_id: current_user.id)
+
+      # Proceed to create the exercise set
+      workout = current_user.workouts.find_or_create_by!(completed: false) do |w|
+        w.gym_id = @machine.gym_id
+        w.workout_type = 'General'
+        w.goal = 'Fitness'
       end
 
       exercise_set = workout.exercise_sets.create!(
@@ -114,7 +123,7 @@ class MachinesController < ApplicationController
   end
 
   def machine_params
-    params.require(:machine).permit(:name, :description, :status, exercise_ids: [])
+    params.require(:machine).permit(:name, :description, :status, :mac_address, exercise_ids: [])
   end
 
   def set_equipment_list
