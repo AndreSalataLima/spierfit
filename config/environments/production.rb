@@ -109,5 +109,4 @@ config.action_cable.cable = {
 
 config.log_level = :debug
 
-
 end
