@@ -108,8 +108,4 @@ config.action_cable.cable = {
 }
 
 config.log_level = :debug
-
-# Desabilitar a compressão WebSocket
-config.action_cable.use_websocket_compression = false
-
 end
