@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, BigInteger, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, DateTime, BigInteger
 from database import Base
 
 class DataPoint(Base):
@@ -11,7 +10,7 @@ class DataPoint(Base):
     recorded_at = Column(DateTime)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
-    exercise_set_id = Column(BigInteger, ForeignKey("exercise_sets.id"))
+    exercise_set_id = Column(BigInteger)  # Removed ForeignKey constraint
 
     # Comment out or remove the relationship
     # exercise_set = relationship("ExerciseSet", back_populates="data_points")
