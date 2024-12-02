@@ -47,6 +47,7 @@ Rails.application.routes.draw do
       patch 'complete', to: 'exercise_sets#complete'
       get :reps_and_sets
       get :process_new_data
+      get :chart_data
     end
   end
 

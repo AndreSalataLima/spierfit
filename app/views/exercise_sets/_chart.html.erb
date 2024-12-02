@@ -1,0 +1,15 @@
+<turbo-frame id="chart_frame">
+  <div class="mb-4"
+       data-controller="chart"
+       data-chart-data-value="<%= data_points.map { |point| point.value } %>"
+       data-chart-labels-value="<%= data_points.map { |point| point.created_at.strftime('%H:%M:%S') } %>"
+       data-chart-data-url-value="<%= chart_data_exercise_set_path(exercise_set) %>">
+    <canvas id="chart-<%= exercise_set.id %>" class="w-full h-full"></canvas>
+  </div>
+
+  <!-- Adicionando os dados no HTML como data-* attributes -->
+  <div id="chart-data"
+       data-chart-data="<%= data_points.map { |point| point.value }.to_json %>"
+       data-chart-labels="<%= data_points.map { |point| point.created_at.strftime('%H:%M:%S') }.to_json %>">
+  </div>
+</turbo-frame>
