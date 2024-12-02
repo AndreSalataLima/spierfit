@@ -7,9 +7,9 @@
     <canvas id="chart-<%= exercise_set.id %>" class="w-full h-full"></canvas>
   </div>
 
-  <!-- Adicionando os dados no HTML como data-* attributes -->
   <div id="chart-data"
        data-chart-data="<%= data_points.map { |point| point.value }.to_json %>"
-       data-chart-labels="<%= data_points.map { |point| point.created_at.strftime('%H:%M:%S') }.to_json %>">
+       data-chart-labels="<%= data_points.map { |point| point.created_at.strftime('%H:%M:%S') }.to_json %>"
+       data-chart-creation-times="<%= data_points.map { |point| point.recorded_at.iso8601 }.to_json %>">
   </div>
 </turbo-frame>
