@@ -76,13 +76,35 @@ export default class extends Controller {
           // Extrair dados do novo HTML gerado
           const newDataPoints = JSON.parse(doc.querySelector("#chart-data").dataset.chartData);
           const newLabels = JSON.parse(doc.querySelector("#chart-data").dataset.chartLabels);
+          const creationTimes = JSON.parse(doc.querySelector("#chart-data").dataset.chartCreationTimes);
 
           // Verificar se o último valor é diferente do anterior
           const latestValue = newDataPoints[newDataPoints.length - 1];
+          const latestCreationTime = creationTimes[creationTimes.length - 1]; // Hora de criação do último dado
+
           if (latestValue !== lastValue) {
-            // Atualizar o gráfico apenas se o novo valor for diferente
-            this.chart.data.labels = newLabels.slice(-40); // Últimos 40 rótulos
-            this.chart.data.datasets[0].data = this.invertValues(newDataPoints.slice(-40)); // Últimos 40 valores invertidos
+            // Converter o timestamp de criação para um objeto Date
+            const creationDate = new Date(latestCreationTime);
+
+            // Ajustar o timestamp para UTC, somando 3 horas
+            const adjustedCreationDate = new Date(creationDate.getTime() + 10800 * 1000);
+
+            // Calcular a diferença entre o horário ajustado e o atual
+            const now = new Date();
+            const timeDifference = (now - adjustedCreationDate) / 1000; // Em segundos
+
+            // Log no console
+            console.log(
+              `Tempo entre criação e visualização do dado: ${timeDifference.toFixed(
+                3
+              )} segundos`
+            );
+
+            // Atualizar o gráfico
+            this.chart.data.labels = newLabels.slice(-40);
+            this.chart.data.datasets[0].data = this.invertValues(
+              newDataPoints.slice(-40)
+            );
             this.chart.update();
 
             lastValue = latestValue; // Atualiza o último valor registrado
@@ -93,10 +115,8 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 400); // Atualiza a cada 300ms
+    }, 400); // Atualiza a cada 400ms
   }
-
-
 
 
 
