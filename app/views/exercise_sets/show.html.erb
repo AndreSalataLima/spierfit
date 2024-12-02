@@ -22,16 +22,11 @@
       <%= @exercise_set.exercise.name %>
     </div>
 
-    <!-- Gráfico Container -->
-    <div class="mb-4" data-exercise-set-id="<%= @exercise_set.id %>">
-      <div class="w-full md:w-96 h-52 relative"
-          data-controller="chart"
-          data-chart-data-value="<%= @data_points.map { |point| point.value } %>"
-          data-chart-labels-value="<%= @data_points.map { |point| point.created_at.strftime('%b %d') } %>">
-        <canvas id="chart-1" class="w-full h-full"></canvas>
-      </div>
+    <!-- Gráfico Container com Turbo Frame -->
+    <div class="exercise-set-container">
+      <!-- Renderiza o gráfico (Polling) -->
+      <%= render partial: 'chart', locals: { data_points: @exercise_set.data_points.order(:created_at), exercise_set: @exercise_set } %>
     </div>
-
 
     <!-- Details Section (Polling for Series/Reps Updates) -->
     <div data-controller="reps-series" data-reps-series-exercise-set-id-value="<%= @exercise_set.id %>">

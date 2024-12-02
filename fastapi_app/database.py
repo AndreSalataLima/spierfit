@@ -4,18 +4,25 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # Load environment variables from .env file
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
+# Obtém a URL do banco de dados
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in the environment variables.")
 
+# Cria o engine do SQLAlchemy
 engine = create_engine(DATABASE_URL)
+
+# Cria a sessão
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Cria a classe base declarativa
 Base = declarative_base()
 
-# Dependency to get a session
+# Dependência para obter a sessão do banco de dados
 def get_db():
     db = SessionLocal()
     try:

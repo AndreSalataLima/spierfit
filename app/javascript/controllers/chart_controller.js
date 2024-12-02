@@ -1,49 +1,103 @@
 import { Controller } from "@hotwired/stimulus";
 
-window.chart = null;
-
 export default class extends Controller {
   static values = {
     data: Array,
-    labels: Array
-  }
+    labels: Array,
+    chartDataUrl: String // Nova propriedade para a URL de dados do gráfico
+  };
 
   connect() {
     console.log("ChartController connected");
 
-    const ctx = document.getElementById('chart-1').getContext('2d');
-
-    // Verifica se o gráfico já foi criado
-    if (!window.chart) {
-      // Cria o gráfico apenas se ele ainda não existir
-      window.chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: this.labelsValue,  // Labels passadas do backend
-          datasets: [{
-            label: '',
-            data: this.dataValue,  // Dados passados do backend
-            borderColor: 'rgba(250, 35, 39, 0.5)',  // Cor da borda suavizada
-            fill: true,
-            backgroundColor: 'rgba(250, 35, 39, 0.3)',  // Cor de preenchimento
-            pointRadius: 0,  // Remove os pontos do gráfico
-            borderJoinStyle: 'round',
-            tension: 0.4,  // Adiciona suavização às curvas das linhas
-            fill: 'start',
-          }]
-        },
-        options: {
-          responsive: false,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false }
-          },
-          scales: {
-            // x: { display: false },
-            // y: { display: false, ticks: { suggestedMin: -1100, suggestedMax: -1030 } }
-          }
-        }
-      });
-    }
+    this.initializeChart();
+    this.startPolling(); // Inicia o polling
   }
+
+  initializeChart() {
+    const ctx = this.element.querySelector("canvas").getContext("2d");
+
+    this.chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: this.labelsValue.slice(-40), // Apenas os últimos 40 rótulos
+        datasets: [
+          {
+            label: "Sensor Data",
+            data: this.invertValues(this.dataValue.slice(-40)), // Apenas os últimos 40 valores invertidos
+            borderColor: "rgba(250, 35, 39, 0.5)",
+            backgroundColor: "rgba(250, 35, 39, 0.3)",
+            fill: true,
+            pointRadius: 0,
+            tension: 0.8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            ticks: { display: false } // Ocultar números do eixo X
+          },
+          y: {
+            ticks: { display: false }, // Ocultar números do eixo Y
+            min: 1650, // Limite inferior fixo do eixo Y
+            max: 500  // Limite superior fixo do eixo Y
+          }
+        },
+        animation: false // Desativa completamente as animações
+      }
+    });
+  }
+
+
+
+
+  invertValues(data) {
+    // Inverte os valores (positivo vira negativo e vice-versa)
+    return data.map(value => -value);
+  }
+
+  startPolling() {
+    let lastValue = null; // Armazena o último valor adicionado ao gráfico
+
+    setInterval(async () => {
+      try {
+        const response = await fetch(this.chartDataUrlValue);
+        if (response.ok) {
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+
+          // Extrair dados do novo HTML gerado
+          const newDataPoints = JSON.parse(doc.querySelector("#chart-data").dataset.chartData);
+          const newLabels = JSON.parse(doc.querySelector("#chart-data").dataset.chartLabels);
+
+          // Verificar se o último valor é diferente do anterior
+          const latestValue = newDataPoints[newDataPoints.length - 1];
+          if (latestValue !== lastValue) {
+            // Atualizar o gráfico apenas se o novo valor for diferente
+            this.chart.data.labels = newLabels.slice(-40); // Últimos 40 rótulos
+            this.chart.data.datasets[0].data = this.invertValues(newDataPoints.slice(-40)); // Últimos 40 valores invertidos
+            this.chart.update();
+
+            lastValue = latestValue; // Atualiza o último valor registrado
+          }
+        } else {
+          console.error("Erro ao buscar dados:", response.status);
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar o gráfico:", error);
+      }
+    }, 400); // Atualiza a cada 300ms
+  }
+
+
+
+
+
 }
