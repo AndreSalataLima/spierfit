@@ -95,7 +95,7 @@ export default class extends Controller {
 
             // Log no console
             console.log(
-              `Tempo entre criação e visualização do dado: ${timeDifference.toFixed(
+              `Diferença entre criação do dado e visualização pelo usuário (ajustada): ${timeDifference.toFixed(
                 3
               )} segundos`
             );
@@ -117,6 +117,7 @@ export default class extends Controller {
       }
     }, 400); // Atualiza a cada 400ms
   }
+
 
 
 
