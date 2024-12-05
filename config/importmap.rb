@@ -9,3 +9,5 @@ pin_all_from "app/javascript/channels", under: "channels"
 pin "chartkick", to: "chartkick.js"
 pin "Chart.bundle", to: "Chart.bundle.js"
 pin "@rails/actioncable", to: "actioncable.esm.js"
+pin "chart.js" # @4.4.7
+pin "@kurkle/color", to: "@kurkle--color.js" # @0.3.4

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.7",
     "chartkick": "^5.0.1",
     "html5-qrcode": "^2.3.8"
   }

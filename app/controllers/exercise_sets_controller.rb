@@ -9,11 +9,11 @@ class ExerciseSetsController < ApplicationController
     :update_weight,
     :update_rest_time,
     :reps_and_sets,
-    :process_new_data
+    :process_new_data,
+    :chart_data
   ]
   before_action :redirect_if_completed, only: [:show]
   before_action :set_cache_headers, only: [:show]
-
 
 
   def show
@@ -27,6 +27,12 @@ class ExerciseSetsController < ApplicationController
     @data_points = @exercise_set.data_points.order(:created_at)
     calculate_force_and_power_from_data_points(@data_points)
   end
+
+  def chart_data
+    @data_points = @exercise_set.data_points.order(:created_at)
+    render partial: 'chart', locals: { data_points: @data_points, exercise_set: @exercise_set }
+  end
+
 
   # Método para servir dados de repetições e séries via JSON
 def reps_and_sets
@@ -80,6 +86,7 @@ end
     @exercise_set.machine.update(current_user_id: nil)
     redirect_to edit_exercise_set_path(@exercise_set), notice: 'Exercise set was successfully completed.'
   end
+
 
   def broadcast_exercise_set_data
     current_broadcast = {
@@ -275,10 +282,7 @@ end
 
     # Atualizar os campos average_force e power_in_watts no banco de dados
     @exercise_set.update(average_force: total_average_force, power_in_watts: power_in_watts)
-
   end
-
-
 
   # Função auxiliar para calcular a proporção de tempo para cada série
   def calculate_time_proportion_per_series
@@ -308,7 +312,7 @@ end
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
-  
+
   def redirect_if_completed
     if @exercise_set.completed?
       redirect_to machine_exercises_machine_path(@exercise_set.machine), alert: 'This exercise set has already been completed.'

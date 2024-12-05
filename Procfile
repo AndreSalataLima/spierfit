@@ -1,2 +1,1 @@
-web: bundle exec puma -C config/puma.rb
-release: bundle exec rails assets:precompile
+web: bundle exec rails server -p $PORT -e production
