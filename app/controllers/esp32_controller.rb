@@ -10,25 +10,30 @@ class Esp32Controller < ApplicationController
     data = JSON.parse(request.body.read)
     distance = data['sensor_value']
     mac_address = data['mac_address']
-    creation_time_str = data['creation_time']  # Timestamp string from ESP32
+    creation_time_str = data['creation_time']
 
-    # Parse the timestamp into a Time object
+    # Converter a string de tempo em um objeto Time
     sensor_time = Time.strptime(creation_time_str, '%Y-%m-%dT%H:%M:%S%z')
 
-    # Store data
+    es = current_exercise_set
+    if es.nil?
+      render json: {status: 'Error', message: 'Nenhum ExerciseSet ativo encontrado'}, status: :bad_request
+      return
+    end
+
     data_point = DataPoint.create!(
       value: distance.to_f,
       mac_address: mac_address,
       created_at: sensor_time,
-      exercise_set: current_exercise_set
+      exercise_set: es
     )
 
-    # Broadcast data to frontend
+    # Se você utiliza ActionCable ou similares, pode transmitir dados para o frontend
     SensorDataChannel.broadcast_to(
-      current_exercise_set,
+      es,
       sensor_value: data_point.value,
       mac_address: data_point.mac_address,
-      recorded_at: data_point.created_at.iso8601(3)  # Include milliseconds
+      recorded_at: data_point.created_at.iso8601(3)
     )
 
     render json: { status: 'Success', message: 'Data received and processed' }, status: :ok
@@ -39,19 +44,6 @@ class Esp32Controller < ApplicationController
 
 
   private
-
-  def store_data(distance, mac_address, timestamp)
-    # Find or create the current exercise set
-    current_exercise_set = ExerciseSet.where(completed: false).order(created_at: :desc).first
-
-    # Adjust according to your data model
-    DataPoint.create!(
-      value: distance,
-      mac_address: mac_address,
-      created_at: timestamp,
-      exercise_set: current_exercise_set
-    )
-  end
 
   def broadcast_data(data_point)
     exercise_set = data_point.exercise_set
@@ -69,4 +61,10 @@ class Esp32Controller < ApplicationController
       Rails.logger.warn "DataPoint #{data_point.id} has no associated ExerciseSet."
     end
   end
+
+  def current_exercise_set
+    ExerciseSet.where(completed: false).order(created_at: :desc).first
+  end
+
+
 end
