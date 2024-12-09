@@ -46,8 +46,8 @@ export default class extends Controller {
             ticks: { display: false },
             // Ajuste min e max conforme necessário
             // Se o valor do sensor varia de 400 (mais perto) a 2000 (mais longe):
-            min: 400,
-            max: 2000,
+            min: -3000,
+            max: 3000,
             // reverse: false  // não usar reverse, assim valores maiores aparecem mais no topo
           }
         },
