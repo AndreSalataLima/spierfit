@@ -115,7 +115,7 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 400); // Atualiza a cada 400ms
+    }, 5000); // Atualiza a cada 400ms
   }
 
 
