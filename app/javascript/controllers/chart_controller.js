@@ -24,7 +24,7 @@ export default class extends Controller {
         datasets: [
           {
             label: "Sensor Data",
-            data: this.invertValues(this.dataValue.slice(-40)), // Apenas os últimos 40 valores invertidos
+            data: this.dataValue.slice(-40), // Apenas os últimos 40 valores
             borderColor: "rgba(250, 35, 39, 0.5)",
             backgroundColor: "rgba(250, 35, 39, 0.3)",
             fill: true,
@@ -45,8 +45,8 @@ export default class extends Controller {
           },
           y: {
             ticks: { display: false }, // Ocultar números do eixo Y
-            min: 0, // Limite inferior fixo do eixo Y
-            max: 2500  // Limite superior fixo do eixo Y
+            min: 2000, // Limite superior fixo do eixo Y (invertido)
+            max: 400   // Limite inferior fixo do eixo Y (invertido)
           }
         },
         animation: false // Desativa completamente as animações
