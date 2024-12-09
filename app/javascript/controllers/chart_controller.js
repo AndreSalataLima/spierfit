@@ -23,7 +23,7 @@ export default class extends Controller {
         datasets: [
           {
             label: "Sensor Data",
-            data: this.dataValue.slice(-40), // agora sem inversão
+            data: this.dataValue.slice(-40).map(value => Math.abs(value)), // Exibe dados em valor absoluto inicialmente
             borderColor: "rgba(250, 35, 39, 0.5)",
             backgroundColor: "rgba(250, 35, 39, 0.3)",
             fill: true,
@@ -44,18 +44,14 @@ export default class extends Controller {
           },
           y: {
             ticks: { display: false },
-            // Ajuste min e max conforme necessário
-            // Se o valor do sensor varia de 400 (mais perto) a 2000 (mais longe):
-            min: -3000,
-            max: 3000,
-            // reverse: false  // não usar reverse, assim valores maiores aparecem mais no topo
+            min: 0,
+            max: 3000
           }
         },
         animation: false
       }
     });
   }
-
 
   startPolling() {
     let lastValue = null;
@@ -81,11 +77,13 @@ export default class extends Controller {
             const now = new Date();
             const timeDifference = (now - adjustedCreationDate) / 1000;
 
-            console.log(`Diferença entre criação do dado e visualização pelo usuário (ajustada): ${timeDifference.toFixed(3)} segundos`);
+            console.log(`Diferença entre criação do dado e visualização: ${timeDifference.toFixed(3)} segundos`);
 
-            // Atualizar o gráfico com dados sem inversão
+            // Atualiza o gráfico com valores absolutos
             this.chart.data.labels = newLabels.slice(-40);
-            this.chart.data.datasets[0].data = newDataPoints.slice(-40);
+            this.chart.data.datasets[0].data = newDataPoints
+              .slice(-40)
+              .map(value => Math.abs(value));
             this.chart.update();
 
             lastValue = latestValue;
@@ -96,6 +94,6 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 500);
+    }, 1000);
   }
 }
