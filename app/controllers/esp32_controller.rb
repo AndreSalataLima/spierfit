@@ -1,5 +1,6 @@
 class Esp32Controller < ApplicationController
   protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token, only: :receive_data
 
 
   def data_points
@@ -12,29 +13,23 @@ class Esp32Controller < ApplicationController
     mac_address = data['mac_address']
     creation_time_str = data['creation_time']
 
-    # Converter a string de tempo em um objeto Time
     sensor_time = Time.strptime(creation_time_str, '%Y-%m-%dT%H:%M:%S%z')
-
-    es = current_exercise_set
-    if es.nil?
-      render json: {status: 'Error', message: 'Nenhum ExerciseSet ativo encontrado'}, status: :bad_request
-      return
-    end
 
     data_point = DataPoint.create!(
       value: distance.to_f,
       mac_address: mac_address,
       created_at: sensor_time,
-      exercise_set: es
+      exercise_set: current_exercise_set # agora definido por um método
     )
 
-    # Se você utiliza ActionCable ou similares, pode transmitir dados para o frontend
-    SensorDataChannel.broadcast_to(
-      es,
-      sensor_value: data_point.value,
-      mac_address: data_point.mac_address,
-      recorded_at: data_point.created_at.iso8601(3)
-    )
+    if current_exercise_set
+      SensorDataChannel.broadcast_to(
+        current_exercise_set,
+        sensor_value: data_point.value,
+        mac_address: data_point.mac_address,
+        recorded_at: data_point.created_at.iso8601(3)
+      )
+    end
 
     render json: { status: 'Success', message: 'Data received and processed' }, status: :ok
   rescue StandardError => e
@@ -42,8 +37,12 @@ class Esp32Controller < ApplicationController
     render json: { status: 'Error', message: e.message }, status: :internal_server_error
   end
 
-
   private
+
+  def current_exercise_set
+    @current_exercise_set ||= ExerciseSet.where(completed: false).order(created_at: :desc).first
+  end
+
 
   def broadcast_data(data_point)
     exercise_set = data_point.exercise_set
