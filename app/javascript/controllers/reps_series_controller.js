@@ -11,7 +11,7 @@ export default class extends Controller {
     this.seriesActive = false;
     this.timer = setInterval(() => {
       this.updateRepsAndSets();
-    }, 1000);
+    }, 5000);
   }
 
   disconnect() {
