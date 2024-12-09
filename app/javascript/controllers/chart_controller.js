@@ -4,14 +4,13 @@ export default class extends Controller {
   static values = {
     data: Array,
     labels: Array,
-    chartDataUrl: String // Nova propriedade para a URL de dados do gráfico
+    chartDataUrl: String
   };
 
   connect() {
     console.log("ChartController connected");
-
     this.initializeChart();
-    this.startPolling(); // Inicia o polling
+    this.startPolling();
   }
 
   initializeChart() {
@@ -20,11 +19,11 @@ export default class extends Controller {
     this.chart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: this.labelsValue.slice(-40), // Apenas os últimos 40 rótulos
+        labels: this.labelsValue.slice(-40),
         datasets: [
           {
             label: "Sensor Data",
-            data: this.dataValue.slice(-40), // Apenas os últimos 40 valores
+            data: this.dataValue.slice(-40), // agora sem inversão
             borderColor: "rgba(250, 35, 39, 0.5)",
             backgroundColor: "rgba(250, 35, 39, 0.3)",
             fill: true,
@@ -41,29 +40,25 @@ export default class extends Controller {
         },
         scales: {
           x: {
-            ticks: { display: false } // Ocultar números do eixo X
+            ticks: { display: false }
           },
           y: {
-            ticks: { display: false }, // Ocultar números do eixo Y
-            min: 2000, // Limite superior fixo do eixo Y (invertido)
-            max: 400   // Limite inferior fixo do eixo Y (invertido)
+            ticks: { display: false },
+            // Ajuste min e max conforme necessário
+            // Se o valor do sensor varia de 400 (mais perto) a 2000 (mais longe):
+            min: 400,
+            max: 2000,
+            // reverse: false  // não usar reverse, assim valores maiores aparecem mais no topo
           }
         },
-        animation: false // Desativa completamente as animações
+        animation: false
       }
     });
   }
 
 
-
-
-  invertValues(data) {
-    // Inverte os valores (positivo vira negativo e vice-versa)
-    return data.map(value => -value);
-  }
-
   startPolling() {
-    let lastValue = null; // Armazena o último valor adicionado ao gráfico
+    let lastValue = null;
 
     setInterval(async () => {
       try {
@@ -73,41 +68,27 @@ export default class extends Controller {
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, "text/html");
 
-          // Extrair dados do novo HTML gerado
           const newDataPoints = JSON.parse(doc.querySelector("#chart-data").dataset.chartData);
           const newLabels = JSON.parse(doc.querySelector("#chart-data").dataset.chartLabels);
           const creationTimes = JSON.parse(doc.querySelector("#chart-data").dataset.chartCreationTimes);
 
-          // Verificar se o último valor é diferente do anterior
           const latestValue = newDataPoints[newDataPoints.length - 1];
-          const latestCreationTime = creationTimes[creationTimes.length - 1]; // Hora de criação do último dado
+          const latestCreationTime = creationTimes[creationTimes.length - 1];
 
           if (latestValue !== lastValue) {
-            // Converter o timestamp de criação para um objeto Date
             const creationDate = new Date(latestCreationTime);
-
-            // Ajustar o timestamp para UTC, somando 3 horas
             const adjustedCreationDate = new Date(creationDate.getTime() + 10800 * 1000);
-
-            // Calcular a diferença entre o horário ajustado e o atual
             const now = new Date();
-            const timeDifference = (now - adjustedCreationDate) / 1000; // Em segundos
+            const timeDifference = (now - adjustedCreationDate) / 1000;
 
-            // Log no console
-            console.log(
-              `Diferença entre criação do dado e visualização pelo usuário (ajustada): ${timeDifference.toFixed(
-                3
-              )} segundos`
-            );
+            console.log(`Diferença entre criação do dado e visualização pelo usuário (ajustada): ${timeDifference.toFixed(3)} segundos`);
 
-            // Atualizar o gráfico
+            // Atualizar o gráfico com dados sem inversão
             this.chart.data.labels = newLabels.slice(-40);
-            this.chart.data.datasets[0].data = this.invertValues(
-              newDataPoints.slice(-40)
-            );
+            this.chart.data.datasets[0].data = newDataPoints.slice(-40);
             this.chart.update();
 
-            lastValue = latestValue; // Atualiza o último valor registrado
+            lastValue = latestValue;
           }
         } else {
           console.error("Erro ao buscar dados:", response.status);
@@ -115,10 +96,6 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 1000); // Atualiza a cada Xms
+    }, 500);
   }
-
-
-
-
 }
