@@ -88,7 +88,7 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 500);
+    }, 200);
   }
 
 }
