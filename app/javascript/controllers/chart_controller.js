@@ -45,7 +45,7 @@ export default class extends Controller {
           y: {
             ticks: { display: false },
             min: 0,
-            max: 2000
+            max: 1500
           }
         },
         animation: false
@@ -74,7 +74,7 @@ export default class extends Controller {
           if (latestValue !== lastValue) {
             // Transformar os dados antes de atualizar o gráfico
             // Supondo uma escala de 0 a 2000
-            const transformedData = newDataPoints.slice(-40).map(value => 2000 - Math.abs(value));
+            const transformedData = newDataPoints.slice(-40).map(value => 1500 - Math.abs(value));
 
             this.chart.data.labels = newLabels.slice(-40);
             this.chart.data.datasets[0].data = transformedData;
@@ -88,7 +88,7 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 1000);
+    }, 500);
   }
 
 }
