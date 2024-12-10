@@ -23,7 +23,7 @@ export default class extends Controller {
         datasets: [
           {
             label: "Sensor Data",
-            data: this.dataValue.slice(-40).map(value => Math.abs(value)), // Exibe dados em valor absoluto inicialmente
+            data: this.dataValue.slice(-40),
             borderColor: "rgba(250, 35, 39, 0.5)",
             backgroundColor: "rgba(250, 35, 39, 0.3)",
             fill: true,
@@ -45,7 +45,7 @@ export default class extends Controller {
           y: {
             ticks: { display: false },
             min: 0,
-            max: 3000
+            max: 2000
           }
         },
         animation: false
@@ -72,18 +72,12 @@ export default class extends Controller {
           const latestCreationTime = creationTimes[creationTimes.length - 1];
 
           if (latestValue !== lastValue) {
-            const creationDate = new Date(latestCreationTime);
-            const adjustedCreationDate = new Date(creationDate.getTime() + 10800 * 1000);
-            const now = new Date();
-            const timeDifference = (now - adjustedCreationDate) / 1000;
+            // Transformar os dados antes de atualizar o gráfico
+            // Supondo uma escala de 0 a 2000
+            const transformedData = newDataPoints.slice(-40).map(value => 2000 - Math.abs(value));
 
-            console.log(`Diferença entre criação do dado e visualização: ${timeDifference.toFixed(3)} segundos`);
-
-            // Atualiza o gráfico com valores absolutos
             this.chart.data.labels = newLabels.slice(-40);
-            this.chart.data.datasets[0].data = newDataPoints
-              .slice(-40)
-              .map(value => Math.abs(value));
+            this.chart.data.datasets[0].data = transformedData;
             this.chart.update();
 
             lastValue = latestValue;
@@ -96,4 +90,5 @@ export default class extends Controller {
       }
     }, 1000);
   }
+
 }
