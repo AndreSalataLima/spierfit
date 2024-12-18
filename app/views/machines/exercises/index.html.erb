@@ -3,28 +3,47 @@
   <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
     <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
     <div class="absolute inset-0 flex items-center justify-between px-4">
-      <!-- Back Button -->
       <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
         <i class="fa fa-arrow-left text-white text-sm"></i>
       <% end %>
-
-      <!-- Title -->
       <div class="flex-1 text-center">
         <div class="text-white text-base font-semibold"><%= @machine.name %></div>
       </div>
     </div>
   </div>
 
-  <!-- Header -->
+  <div class="w-full max-w-[428px] mb-4 text-center">
+    <h1 class="text-white text-base font-semibold">Selecione a distância do equipamento</h1>
+  </div>
+
+  <!-- Formulário para Distâncias -->
+  <div class="bg-[#303030] rounded-lg p-4 w-full max-w-[300px] mx-auto">
+    <h2 class="text-white text-sm font-semibold mb-2">Ajustar Distâncias</h2>
+    <%= form_with(model: @machine, url: machine_path(@machine), method: :patch, local: true, data: { turbo_stream: true } ) do |f| %>
+      <div class="mb-2">
+        <label for="machine_min_distance" class="text-white block mb-1 text-xs">Distância Mínima</label>
+        <%= f.number_field :min_distance, class: "w-full p-2 rounded text-white bg-[#1a1a1a] border border-gray-600 placeholder-gray-400", placeholder: "Ex: 400" %>
+      </div>
+      <div class="mb-2">
+        <label for="machine_max_distance" class="text-white block mb-1 text-xs">Distância Máxima</label>
+        <%= f.number_field :max_distance, class: "w-full p-2 rounded text-white bg-[#1a1a1a] border border-gray-600 placeholder-gray-400", placeholder: "Ex: 2000" %>
+      </div>
+      <%= f.submit "Salvar Distâncias", class: "bg-[#a52502] text-white rounded-full px-4 py-1 text-sm" %>
+    <% end %>
+  </div>
+
   <div class="w-full max-w-[428px] mb-4 text-center">
     <h1 class="text-white text-base font-semibold">Selecione o exercício</h1>
   </div>
+
+  <!-- Flash Messages Area -->
+  <div id="flash-messages" class="w-full max-w-[353px] mb-4"></div>
 
   <!-- Lista de Exercícios -->
   <div class="w-full max-w-[428px] space-y-3 mb-4">
     <% @exercises.each_with_index do |exercise, index| %>
       <%= link_to start_exercise_set_machine_path(@machine, exercise.id), class: "block", data: { turbo: "false" } do %>
-        <div data-controller="toggle-class" data-action="click->toggle-class#toggle" class="w-full bg-[#303030] rounded-[100px] px-3 py-2 flex items-center gap-3">
+        <div class="w-full bg-[#303030] rounded-[100px] px-3 py-2 flex items-center gap-3">
           <div class="w-[28px] h-[28px] bg-[#d9d9d9] rounded-full"></div>
           <div class="text-white text-sm font-['Manrope']"><%= exercise.name %></div>
         </div>
@@ -35,14 +54,13 @@
     <% end %>
   </div>
 
-
   <!-- Bottom Navigation -->
   <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
     <div class="text-white text-sm"><i class="fa fa-home"></i></div>
     <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
-      <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
-        <i class="fa-solid fa-forward text-white text-lg"></i>
-      </a>
+    <a href="/machines/select_equipment" class="bg-[#a52502] rounded-full p-3">
+      <i class="fa-solid fa-forward text-white text-lg"></i>
+    </a>
     <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
     <div class="text-white text-sm"><i class="fa fa-user"></i></div>
   </div>

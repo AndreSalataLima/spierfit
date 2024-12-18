@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_05_143205) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_10_193620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -126,6 +126,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_05_143205) do
     t.bigint "gym_id"
     t.string "mac_address"
     t.integer "current_user_id"
+    t.integer "min_distance"
+    t.integer "max_distance"
     t.index ["gym_id"], name: "index_machines_on_gym_id"
   end
 
