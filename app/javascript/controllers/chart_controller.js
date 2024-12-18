@@ -4,7 +4,9 @@ export default class extends Controller {
   static values = {
     data: Array,
     labels: Array,
-    chartDataUrl: String
+    chartDataUrl: String,
+    minDistance: Number,
+    maxDistance: Number
   };
 
   connect() {
@@ -16,21 +18,23 @@ export default class extends Controller {
   initializeChart() {
     const ctx = this.element.querySelector("canvas").getContext("2d");
 
+    const minDist = this.minDistanceValue || 400;
+    const maxDist = this.maxDistanceValue || 2000;
+
+    // Ajuste a lógica do gráfico conforme necessário, usando minDist e maxDist
     this.chart = new Chart(ctx, {
       type: "line",
       data: {
         labels: this.labelsValue.slice(-40),
-        datasets: [
-          {
-            label: "Sensor Data",
-            data: this.dataValue.slice(-40),
-            borderColor: "rgba(250, 35, 39, 0.5)",
-            backgroundColor: "rgba(250, 35, 39, 0.3)",
-            fill: true,
-            pointRadius: 0,
-            tension: 0.8
-          }
-        ]
+        datasets: [{
+          label: "Sensor Data",
+          data: this.dataValue.slice(-40),
+          borderColor: "rgba(250, 35, 39, 0.5)",
+          backgroundColor: "rgba(250, 35, 39, 0.3)",
+          fill: true,
+          pointRadius: 0,
+          tension: 0.8
+        }]
       },
       options: {
         responsive: true,
@@ -39,13 +43,12 @@ export default class extends Controller {
           legend: { display: false }
         },
         scales: {
-          x: {
-            ticks: { display: false }
-          },
+          x: { ticks: { display: false } },
           y: {
             ticks: { display: false },
+            // Ajuste aqui: por exemplo, se quiser maxDist no topo e minDist em baixo:
             min: 0,
-            max: 1500
+            max: (maxDist - minDist) // Exemplo simples
           }
         },
         animation: false
@@ -72,10 +75,14 @@ export default class extends Controller {
           const latestCreationTime = creationTimes[creationTimes.length - 1];
 
           if (latestValue !== lastValue) {
-            // Transformar os dados antes de atualizar o gráfico
-            // Supondo uma escala de 0 a 2000
-            const transformedData = newDataPoints.slice(-40).map(value => 1500 - Math.abs(value));
+            // Valores mínimos e máximos configurados
+            const minDist = this.minDistanceValue || 400;
+            const maxDist = this.maxDistanceValue || 2000;
 
+            // Transforma os dados com base nos valores configurados
+            const transformedData = newDataPoints.slice(-40).map(value => maxDist - Math.abs(value));
+
+            // Atualiza o gráfico
             this.chart.data.labels = newLabels.slice(-40);
             this.chart.data.datasets[0].data = transformedData;
             this.chart.update();
@@ -88,7 +95,6 @@ export default class extends Controller {
       } catch (error) {
         console.error("Erro ao atualizar o gráfico:", error);
       }
-    }, 200);
+    }, 200); // Ajuste o intervalo de polling conforme necessário
   }
-
 }
