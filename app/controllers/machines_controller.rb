@@ -1,5 +1,5 @@
 class MachinesController < ApplicationController
-  before_action :authenticate_gym!, except: [:exercises, :start_exercise_set, :user_index, :select_equipment]
+  # before_action :authenticate_gym!, except: [:exercises, :start_exercise_set, :user_index, :select_equipment]
   before_action :authenticate_user!, only: [:exercises, :start_exercise_set, :user_index]
   before_action :set_machine, only: [:show, :edit, :update, :destroy, :exercises, :start_exercise_set]
   before_action :set_equipment_list, only: [:new, :create, :edit, :update]
@@ -43,12 +43,25 @@ class MachinesController < ApplicationController
 
   def update
     if @machine.update(machine_params)
-      redirect_to machine_path(@machine), notice: 'Machine was successfully updated.'
+      # Em caso de sucesso, respondemos com Turbo Stream
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flash_messages", locals: { notice: "Distâncias salvas com sucesso." })
+        end
+        format.html { redirect_to exercises_machine_path(@machine), notice: 'Distâncias salvas com sucesso.' }
+      end
     else
-      @equipment_list = EQUIPMENT_LIST
-      render :edit
+      # Em caso de erro, também podemos atualizar a área de flash.
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flash_messages", locals: { alert: "Erro ao salvar distâncias." })
+        end
+        format.html { render :exercises, status: :unprocessable_entity }
+      end
     end
   end
+
+
 
   def destroy
     @machine.destroy
@@ -123,7 +136,7 @@ class MachinesController < ApplicationController
   end
 
   def machine_params
-    params.require(:machine).permit(:name, :description, :status, :mac_address, exercise_ids: [])
+    params.require(:machine).permit(:name, :description, :status, :mac_address, :min_distance, :max_distance, exercise_ids: [])
   end
 
   def set_equipment_list
