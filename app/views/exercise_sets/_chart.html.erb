@@ -1,14 +1,13 @@
 <turbo-frame id="chart_frame">
   <div class="mb-4"
-      data-controller="chart"
-      data-chart-data-value="<%= data_points.map { |point| point.value } %>"
-      data-chart-labels-value="<%= data_points.map { |point| point.created_at.strftime('%H:%M:%S') } %>"
-      data-chart-data-url-value="<%= chart_data_exercise_set_path(exercise_set) %>"
-      data-chart-min-distance-value="<%= exercise_set.machine.min_distance || 400 %>"
-      data-chart-max-distance-value="<%= exercise_set.machine.max_distance || 2000 %>">
+       data-controller="chart"
+       data-chart-data-value="<%= data_points.map { |point| point.value } %>"
+       data-chart-labels-value="<%= data_points.map { |point| point.created_at.strftime('%H:%M:%S') } %>"
+       data-chart-data-url-value="<%= chart_data_exercise_set_path(exercise_set) %>"
+       data-chart-min-distance-value="<%= exercise_set.machine.min_distance || 400 %>"
+       data-chart-max-distance-value="<%= exercise_set.machine.max_distance || 2000 %>">
     <canvas id="chart-<%= exercise_set.id %>" class="w-full h-full"></canvas>
   </div>
-
 
   <div id="chart-data"
        data-chart-data="<%= data_points.map { |point| point.value }.to_json %>"

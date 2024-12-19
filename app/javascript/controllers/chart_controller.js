@@ -18,17 +18,16 @@ export default class extends Controller {
   initializeChart() {
     const ctx = this.element.querySelector("canvas").getContext("2d");
 
-    const minDist = this.minDistanceValue || 400;
-    const maxDist = this.maxDistanceValue || 2000;
+    const minDist = this.minDistanceValue || 0; // Limite inferior
+    const maxDist = this.maxDistanceValue || 2000; // Limite superior
 
-    // Ajuste a lógica do gráfico conforme necessário, usando minDist e maxDist
     this.chart = new Chart(ctx, {
       type: "line",
       data: {
         labels: this.labelsValue.slice(-40),
         datasets: [{
           label: "Sensor Data",
-          data: this.dataValue.slice(-40),
+          data: this.dataValue.slice(-40).map(value => this.transformValue(value, minDist, maxDist)),
           borderColor: "rgba(250, 35, 39, 0.5)",
           backgroundColor: "rgba(250, 35, 39, 0.3)",
           fill: true,
@@ -46,14 +45,24 @@ export default class extends Controller {
           x: { ticks: { display: false } },
           y: {
             ticks: { display: false },
-            // Ajuste aqui: por exemplo, se quiser maxDist no topo e minDist em baixo:
-            min: 0,
-            max: (maxDist - minDist) // Exemplo simples
+            min: 0, // O gráfico é invertido, começa do mínimo relativo
+            max: (maxDist - minDist) // A escala é a diferença entre máximo e mínimo
           }
         },
         animation: false
       }
     });
+  }
+
+  transformValue(value, minDist, maxDist) {
+    // Transforma o valor absoluto e inverte a escala
+    const absValue = Math.abs(value);
+
+    // Garante que o valor esteja no intervalo configurado
+    if (absValue < minDist) return maxDist - minDist; // Valor menor que o mínimo, no topo
+    if (absValue > maxDist) return 0; // Valor maior que o máximo, na base
+
+    return maxDist - absValue; // Inversão do valor, mapeando o topo para valores menores
   }
 
   startPolling() {
@@ -75,14 +84,20 @@ export default class extends Controller {
           const latestCreationTime = creationTimes[creationTimes.length - 1];
 
           if (latestValue !== lastValue) {
-            // Valores mínimos e máximos configurados
-            const minDist = this.minDistanceValue || 400;
+            const minDist = this.minDistanceValue || 0;
             const maxDist = this.maxDistanceValue || 2000;
 
-            // Transforma os dados com base nos valores configurados
-            const transformedData = newDataPoints.slice(-40).map(value => maxDist - Math.abs(value));
+            const creationDate = new Date(latestCreationTime);
+            const now = new Date();
+            const timeDifference = (now - creationDate) / 1000;
 
-            // Atualiza o gráfico
+            console.log(`Dado gerado em ${creationDate.toISOString()}, ` +
+                        `dado exibido em ${now.toISOString()}, ` +
+                        `valor do dado exibido ${latestValue}. ` +
+                        `Tempo total: ${timeDifference.toFixed(3)} segundos`);
+
+            const transformedData = newDataPoints.slice(-40).map(value => this.transformValue(value, minDist, maxDist));
+
             this.chart.data.labels = newLabels.slice(-40);
             this.chart.data.datasets[0].data = transformedData;
             this.chart.update();
