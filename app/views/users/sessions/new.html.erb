@@ -27,10 +27,19 @@
         <%= form.submit "Entrar", class: "text-center text-white text-lg font-bold font-['Manrope']" %>
       </div>
     <% end %>
-
-    <!--
-    <p class="text-center text-white mt-3 mb-0">Não tem uma conta? <%= link_to "Cadastre-se", new_user_registration_path, class: "text-blue-500" %></p>
-     -->
-
   </div>
+
+  <!-- Espaçamento adicional controlado por variável -->
+  <% spacing = "mt-[300px]" %>
+  <div class="w-full <%= spacing %> flex flex-col items-center space-y-4">
+    <p class="text-center text-white text-lg">Acessar como:</p>
+    <div class="flex space-x-6">
+      <a href="<%= new_personal_session_path %>" class="w-1/2 bg-[#a52502] rounded-[100px] flex justify-center items-center py-2 px-4 text-center text-white text-lg font-bold font-['Manrope']">Personal</a>
+      <a href="<%= new_gym_session_path %>" class="w-1/2 bg-[#a52502] rounded-[100px] flex justify-center items-center py-2 px-4 text-center text-white text-lg font-bold font-['Manrope']">Administrador</a>
+    </div>
+  </div>
+
+  <!--
+  <p class="text-center text-white mt-3 mb-0">Não tem uma conta? <%= link_to "Cadastre-se", new_user_registration_path, class: "text-blue-500" %></p>
+  -->
 </div>
