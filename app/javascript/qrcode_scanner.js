@@ -2,12 +2,19 @@ function initializeQrCodeScanner() {
   const startCameraButton = document.getElementById("start-camera");
   const reader = document.getElementById("reader");
 
+  // Certifique-se de que estamos na página certa
+  if (!startCameraButton || !reader) {
+    return; // Não há nada para inicializar
+  }
+
   function startQrCodeScanner() {
     if (window.html5QrCodeInstance) {
       window.html5QrCodeInstance.clear().then(() => {
         window.html5QrCodeInstance = null;
         createQrCodeInstance();
-      }).catch(err => {});
+      }).catch(err => {
+        console.error("Erro ao limpar instância existente do QR Code Scanner:", err);
+      });
     } else {
       createQrCodeInstance();
     }
@@ -23,14 +30,20 @@ function initializeQrCodeScanner() {
       },
       function onScanSuccess(decodedText, decodedResult) {
         html5QrCode.stop().then(() => {
-          window.location.href = decodedText;
-        }).catch(err => {});
+          window.location.href = decodedText; // Redireciona para a URL decodificada
+        }).catch(err => {
+          console.error("Erro ao parar o QR Code Scanner:", err);
+        });
       },
-      function onScanError(errorMessage) {}
-    ).catch(err => {});
+      function onScanError(errorMessage) {
+        // Podemos adicionar logging aqui se necessário
+      }
+    ).catch(err => {
+      console.error("Erro ao iniciar o QR Code Scanner:", err);
+    });
     window.html5QrCodeInstance = html5QrCode;
 
-    // Verificar se o vídeo está disponível e ajustá-lo
+    // Ajustar o elemento de vídeo após o carregamento
     waitForVideoToLoad();
   }
 
@@ -64,11 +77,12 @@ function initializeQrCodeScanner() {
       if (typeof Html5Qrcode !== 'undefined') {
         startQrCodeScanner();
       } else {
-        console.error("Html5Qrcode is not defined.");
+        console.error("Html5Qrcode is not definido.");
       }
     });
   }
 }
 
+// Garante execução apenas quando Turbo carregar ou renderizar a página
 document.addEventListener("turbo:render", initializeQrCodeScanner);
 document.addEventListener("turbo:load", initializeQrCodeScanner);
