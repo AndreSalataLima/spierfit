@@ -1,5 +1,6 @@
 class WorkoutsController < ApplicationController
   before_action :set_workout, only: %i[show edit update destroy complete]
+  before_action :set_workout_protocol, only: [:start_from_protocol]
 
   def index
     params[:period] ||= 'week'

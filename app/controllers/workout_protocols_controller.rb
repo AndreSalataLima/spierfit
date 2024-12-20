@@ -30,11 +30,15 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def create
-    @workout_protocol = @personal.workout_protocols.new(workout_protocol_params)
+    @workout_protocol = if @personal.present?
+                          @personal.workout_protocols.new(workout_protocol_params)
+                        else
+                          @user.workout_protocols.new(workout_protocol_params)
+                        end
     @workout_protocol.user = @user
 
     if @workout_protocol.save
-      redirect_to [@personal, @user, @workout_protocol], notice: 'Protocolo criado com sucesso.'
+      redirect_to [@user, @workout_protocol], notice: 'Protocolo criado com sucesso.'
     else
       render :new
     end
@@ -60,8 +64,8 @@ class WorkoutProtocolsController < ApplicationController
   private
 
   def set_personal_and_user
-    @personal = Personal.find(params[:personal_id])
-    @user = @personal.users.find(params[:user_id])
+    @personal = params[:personal_id] && Personal.find_by(id: params[:personal_id])
+    @user = User.find(params[:user_id])
   end
 
   def set_muscle_groups
