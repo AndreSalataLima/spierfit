@@ -7,7 +7,7 @@
   <%= stylesheet_link_tag "tailwind", "inter-font", "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js" as="script">
+  <%# <link rel="preload" href="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js" as="script"> %>
   <%= yield :head %>
 </head>
 
@@ -37,6 +37,5 @@
   <main class="flex-grow flex items-center justify-center">
     <%= yield %>
   </main>
-  <%= javascript_include_tag "qrcode_scanner" %> <!-- Garantindo que o scanner de QR Code seja carregado em todas as páginas -->
 </body>
 </html>

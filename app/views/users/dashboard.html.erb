@@ -40,19 +40,22 @@
     </div>
 
     <!-- Training Card -->
-    <div data-controller="training-card"
+    <div
+        data-controller="training-card"
         data-action="click->training-card#goToTraining"
         data-training-card-url-value="<%= select_equipment_machines_path %>"
-        class="w-full bg-gradient-to-b from-[#a52502] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer">
+        class="w-full bg-gradient-to-b from-[#a52502] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
+        data-turbo="false">
       <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-[30px]"></div>
       <div class="relative">
         <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
           <div class="text-white text-xs font-medium">Avançado</div>
         </div>
         <div class="text-white text-lg font-semibold">Iniciar Treino</div>
-        <div class="text-white text-xs">Treino focado em alta intensidade</div> <!-- Modificação -->
+        <div class="text-white text-xs">Treino focado em alta intensidade</div>
       </div>
     </div>
+
 
     <!-- History Card -->
     <div data-controller="history-card"
@@ -73,7 +76,9 @@
   <div class="w-full max-w-[450px] bg-[#0e0e0e] rounded-t-[30px] p-4 flex justify-around items-center mt-auto">
     <div class="text-white"><i class="fa fa-home"></i></div>
     <div class="text-white"><i class="fa-solid fa-chart-column"></i></div>
-    <%= link_to select_equipment_machines_path, class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center" do %>
+    <%= link_to select_equipment_machines_path,
+                class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center",
+                data: { turbo: false } do %>
       <i class="fa fa-dumbbell text-white"></i>
     <% end %>
     <div class="text-white"><i class="fa fa-calendar-alt"></i></div>
