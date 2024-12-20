@@ -15,9 +15,7 @@ Rails.application.routes.draw do
 
     # Escopo de rotas de users e workout_protocols dentro de personals
     resources :users, only: [] do
-      resources :workout_protocols do
-        resources :protocol_exercises, only: [:create, :update, :destroy]
-      end
+      resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy]
     end
   end
 
@@ -59,10 +57,7 @@ Rails.application.routes.draw do
     end
     resources :workouts, only: [:index, :new, :create]
 
-    # Escopo para acesso direto aos workout_protocols do user
-    resources :workout_protocols do
-      resources :protocol_exercises, only: [:create, :update, :destroy]
-    end
+    resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   end
 
   resources :gyms do
