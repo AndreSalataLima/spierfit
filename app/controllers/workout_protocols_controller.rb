@@ -61,6 +61,32 @@ class WorkoutProtocolsController < ApplicationController
     redirect_to user_workout_protocols_path(@user), notice: 'Protocolo de treino excluído com sucesso.'
   end
 
+  def show_day
+    # Identificar o dia (A, B, C, etc.)
+    @day = params[:day] # Ex.: "A"
+
+    # Buscar o Protocolo de Treino pelo ID
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+
+    # Carregar os Exercícios do Dia
+    @protocol_exercises_for_day = @workout_protocol.protocol_exercises
+                                                   .includes(:exercise)
+                                                   .where(day: @day)
+
+    # Localizar ou Criar o Workout para o Dia (opcional, se for necessário trackear progresso)
+    @workout = Workout.find_or_create_by!(
+      user_id: current_user.id,
+      workout_protocol_id: @workout_protocol.id,
+      protocol_day: @day,
+      completed: false
+    )
+
+    # Renderizar a View
+    render :show_day
+  end
+
+
+
   private
 
   def set_personal_and_user

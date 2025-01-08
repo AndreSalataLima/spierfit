@@ -57,7 +57,13 @@ Rails.application.routes.draw do
     end
     resources :workouts, only: [:index, :new, :create]
 
-    resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      member do
+        # GET /users/:user_id/workout_protocols/:id/day/:day
+        get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
+      end
+    end
+
   end
 
   resources :gyms do

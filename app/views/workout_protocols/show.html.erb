@@ -72,9 +72,17 @@
                 </div>
               </div>
             <% end %>
+
+            <!-- Botão para Abrir Ficha de Treino -->
+            <div class="mt-4">
+              <%= link_to "Abrir Ficha do Treino #{day}",
+                  day_user_workout_protocol_path(@user, @workout_protocol, day: day),
+                  class: "block w-full text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition" %>
+            </div>
           </div>
         </div>
       <% end %>
     </div>
   </div>
+
 </div>
