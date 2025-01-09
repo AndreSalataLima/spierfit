@@ -15,9 +15,7 @@ Rails.application.routes.draw do
 
     # Escopo de rotas de users e workout_protocols dentro de personals
     resources :users, only: [] do
-      resources :workout_protocols do
-        resources :protocol_exercises, only: [:create, :update, :destroy]
-      end
+      resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy]
     end
   end
 
@@ -59,10 +57,13 @@ Rails.application.routes.draw do
     end
     resources :workouts, only: [:index, :new, :create]
 
-    # Escopo para acesso direto aos workout_protocols do user
-    resources :workout_protocols do
-      resources :protocol_exercises, only: [:create, :update, :destroy]
+    resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      member do
+        # GET /users/:user_id/workout_protocols/:id/day/:day
+        get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
+      end
     end
+
   end
 
   resources :gyms do
@@ -73,6 +74,8 @@ Rails.application.routes.draw do
   end
 
   resources :protocol_exercises, only: [:new]
+
+  get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
 
   # Rotas para o ESP32
   get 'esp32/register', to: 'esp32#register'
