@@ -1,0 +1,57 @@
+<%= content_for :title, "Treino #{@day} - #{@workout_protocol.name} - SpierFit" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Barra de Navegação Superior -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to user_workout_protocol_path(@user, @workout_protocol), class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Treino <%= @day %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercícios do Treino -->
+  <div class="w-full max-w-[428px] px-4">
+    <% @protocol_exercises_for_day.each do |protocol_exercise| %>
+      <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-4 shadow-lg">
+        <!-- Nome do Exercício -->
+        <div class="flex justify-between items-center">
+          <span class="text-white font-semibold text-lg"><%= protocol_exercise.exercise.name %></span>
+          <% if @workout.exercise_sets.where(exercise_id: protocol_exercise.exercise_id).exists? %>
+            <i class="fa fa-check-circle text-[#ff8137] text-xl"></i>
+          <% end %>
+        </div>
+
+        <!-- Detalhes do Exercício -->
+        <div class="mt-2 text-gray-400 text-sm">
+          <p>Séries: <%= protocol_exercise.sets %> | Repetições:
+            <% if protocol_exercise.min_repetitions == protocol_exercise.max_repetitions %>
+              <%= protocol_exercise.min_repetitions %>
+            <% else %>
+              <%= "#{protocol_exercise.min_repetitions} - #{protocol_exercise.max_repetitions}" %>
+            <% end %>
+          </p>
+          <% if protocol_exercise.observation.present? %>
+            <p>Observação: <%= protocol_exercise.observation %></p>
+          <% end %>
+        </div>
+
+        <!-- Botão para Executar Exercício -->
+        <div class="mt-4">
+          <%= link_to "Executar Exercício",
+              select_equipment_machines_path(
+                workout_id: @workout.id,
+                exercise_id: protocol_exercise.exercise_id
+              ),
+              class: "block w-full text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition",
+              data: { turbo: false } %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>
+</div>

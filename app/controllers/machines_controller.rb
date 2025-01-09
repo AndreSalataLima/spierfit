@@ -78,6 +78,9 @@ class MachinesController < ApplicationController
     end
   end
 
+  def select_equipment
+    # Aqui você pode adicionar qualquer lógica necessária para a view
+  end
 
   def start_exercise_set
     if current_user
@@ -86,16 +89,34 @@ class MachinesController < ApplicationController
         return
       end
 
-      # Lock the machine to the current user
+      # Bloqueia a máquina para o usuário atual
       @machine.update(current_user_id: current_user.id)
 
-      # Proceed to create the exercise set
-      workout = current_user.workouts.find_or_create_by!(completed: false) do |w|
-        w.gym_id = @machine.gym_id
-        w.workout_type = 'General'
-        w.goal = 'Fitness'
+      # 1) Verifica se há um workout em aberto
+      workout = current_user.workouts.find_by(completed: false)
+
+      if workout
+        # 2) Checa o último exercise_set
+        last_set = workout.exercise_sets.order(created_at: :desc).first
+
+        if last_set && (Time.current - last_set.created_at) > 120.minutes
+          # 3) Se inativo >120min, encerra esse workout
+          workout.update!(completed: true)
+          workout = nil
+        end
       end
 
+      # 4) Se não existe workout em aberto (ou foi encerrado), cria um novo
+      unless workout
+        workout = current_user.workouts.create!(
+          completed: false,
+          gym_id: @machine.gym_id,
+          workout_type: 'General',
+          goal: 'Fitness'
+        )
+      end
+
+      # 5) Cria o ExerciseSet
       exercise_set = workout.exercise_sets.create!(
         exercise_id: params[:exercise_id],
         machine_id: @machine.id,
@@ -117,10 +138,6 @@ class MachinesController < ApplicationController
     else
       redirect_to new_user_session_path
     end
-  end
-
-  def select_equipment
-    # Aqui você pode adicionar qualquer lógica necessária para a view
   end
 
   private

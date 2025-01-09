@@ -81,7 +81,11 @@
                 data: { turbo: false } do %>
       <i class="fa fa-dumbbell text-white"></i>
     <% end %>
-    <div class="text-white"><i class="fa fa-calendar-alt"></i></div>
+    <%= link_to user_workout_protocols_path(current_user),
+                class: "text-white" do %>
+      <i class="fa fa-calendar-alt"></i>
+    <% end %>
     <div class="text-white"><i class="fa fa-user"></i></div>
   </div>
+
 </div>

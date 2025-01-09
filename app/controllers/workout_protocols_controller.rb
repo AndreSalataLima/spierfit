@@ -30,11 +30,15 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def create
-    @workout_protocol = @personal.workout_protocols.new(workout_protocol_params)
+    @workout_protocol = if @personal.present?
+                          @personal.workout_protocols.new(workout_protocol_params)
+                        else
+                          @user.workout_protocols.new(workout_protocol_params)
+                        end
     @workout_protocol.user = @user
 
     if @workout_protocol.save
-      redirect_to [@personal, @user, @workout_protocol], notice: 'Protocolo criado com sucesso.'
+      redirect_to [@user, @workout_protocol], notice: 'Protocolo criado com sucesso.'
     else
       render :new
     end
@@ -57,11 +61,69 @@ class WorkoutProtocolsController < ApplicationController
     redirect_to user_workout_protocols_path(@user), notice: 'Protocolo de treino excluído com sucesso.'
   end
 
+  def show_day
+    @day = params[:day]  # "A", "B", etc.
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+
+    # Exercícios do dia
+    @protocol_exercises_for_day = @workout_protocol.protocol_exercises
+                                                   .includes(:exercise)
+                                                   .where(day: @day)
+
+    # 1. Verificar se há QUALQUER workout aberto para esse user
+    other_workout = current_user.workouts.find_by(completed: false)
+    if other_workout
+      same_protocol = (other_workout.workout_protocol_id == @workout_protocol.id)
+      same_day = (other_workout.protocol_day == @day)
+
+      # 2. Se não for o mesmo protocolo e dia...
+      unless (same_protocol && same_day)
+        if other_workout.workout_protocol_id.nil?
+          # Caso 1: O outro workout é LIVRE, então “convertê-lo” em Treino A/B/C
+          other_workout.update!(
+            workout_protocol_id: @workout_protocol.id,
+            protocol_day: @day
+          )
+          # Ao fazer isso, “other_workout” agora é o que precisamos
+        else
+          # Caso 2: O outro workout tem OUTRO protocolo => fecha
+          other_workout.update!(completed: true)
+          other_workout = nil
+        end
+      end
+    end
+
+    # 3. Se não existe outro_workout aberto OU o fechamos
+    workout = other_workout
+    if workout
+      # Verificar inatividade
+      last_set = workout.exercise_sets.order(created_at: :desc).first
+      if last_set && (Time.current - last_set.created_at) > 120.minutes
+        workout.update!(completed: true)
+        workout = nil
+      end
+    end
+
+    # 4. Se, após tudo, não temos workout algum, criamos um
+    unless workout
+      workout = current_user.workouts.create!(
+        workout_protocol_id: @workout_protocol.id,
+        protocol_day: @day,
+        completed: false
+      )
+    end
+
+    @workout = workout
+
+    render :show_day
+  end
+
+
   private
 
   def set_personal_and_user
-    @personal = Personal.find(params[:personal_id])
-    @user = @personal.users.find(params[:user_id])
+    @personal = params[:personal_id] && Personal.find_by(id: params[:personal_id])
+    @user = User.find(params[:user_id])
   end
 
   def set_muscle_groups
