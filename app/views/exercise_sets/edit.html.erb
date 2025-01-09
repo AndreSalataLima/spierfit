@@ -20,7 +20,7 @@
     <div class="w-[428px] h-[233px] bg-[#151c1c] rounded-[30px] p-6 flex flex-col items-center justify-center">
       <div class="text-white text-lg font-semibold mb-4">Deseja encerrar o treino?</div>
       <div class="flex gap-4">
-        <%= link_to 'Sim', workout_path(@exercise_set.workout_id), class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full", data: { action: "click->stop-training#closeModal" } %>
+        <%= button_to 'Sim', complete_workout_path(@exercise_set.workout_id), method: :post, class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full", data: { turbo: false } %>
         <%= link_to 'Não', request.fullpath, class: "bg-gray-500 text-white font-bold py-2 px-4 rounded-full", data: { turbo: false } %>
       </div>
     </div>
@@ -141,6 +141,33 @@
     <% end %>
   </div>
 
+  <!-- Contextual Navigation Buttons -->
+  <div class="w-full max-w-[428px] flex justify-between items-center p-3 mb-2">
+    <% if @exercise_set.workout.workout_protocol_id.present? %>
+      <!-- Botão "Ficha de treino" -->
+      <%= link_to "Ficha de treino",
+                  day_user_workout_protocol_path(
+                    current_user.id,
+                    @exercise_set.workout.workout_protocol_id,
+                    @exercise_set.workout.protocol_day
+                  ),
+                  class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full w-[48%] text-center" %>
+
+    <% else %>
+      <!-- Botão "Próximo exercício" -->
+      <%= link_to "Próximo exercício",
+                  select_equipment_machines_path,
+                  class: "bg-[#a52502] text-white font-bold py-2 px-4 rounded-full w-[48%] text-center",
+                  data: { turbo: false } %>
+    <% end %>
+
+    <!-- Botão "Concluir treino" -->
+    <%= button_to "Concluir treino",
+                  complete_workout_path(@exercise_set.workout_id),
+                  method: :post,
+                  class: "bg-gray-500 text-white font-bold py-2 px-4 rounded-full w-[48%] text-center",
+                  data: { turbo: false } %>
+  </div>
 
 
   <!-- Bottom Navigation -->

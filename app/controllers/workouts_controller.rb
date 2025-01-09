@@ -1,6 +1,6 @@
 class WorkoutsController < ApplicationController
   before_action :set_workout, only: %i[show edit update destroy complete]
-  before_action :set_workout_protocol, only: [:start_from_protocol]
+  before_action :set_workout_protocol, only: []
 
   def index
     params[:period] ||= 'week'
@@ -64,8 +64,9 @@ class WorkoutsController < ApplicationController
 
   def complete
     @workout.update(completed: true)
-    redirect_to user_index_machines_path, notice: 'Workout was successfully completed.'
+    redirect_to workout_path(@workout), notice: 'Workout was successfully completed.'
   end
+
 
   def dashboard
     @gym = current_gym

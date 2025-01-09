@@ -75,6 +75,8 @@ Rails.application.routes.draw do
 
   resources :protocol_exercises, only: [:new]
 
+  get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
+
   # Rotas para o ESP32
   get 'esp32/register', to: 'esp32#register'
   post 'esp32/register', to: 'esp32#register'
