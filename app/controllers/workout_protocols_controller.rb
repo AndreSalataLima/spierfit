@@ -23,31 +23,23 @@ class WorkoutProtocolsController < ApplicationController
 
   def new
     @workout_protocol = WorkoutProtocol.new
-    @personal = current_personal
-    @user = User.find(params[:user_id])
-    @muscle_groups = ["Peitoral", "Dorsais", "Deltóides", "Trapézio", "Tríceps", "Bíceps", "Antebraço", "Coxas", "Glúteos", "Panturrilhas", "Abdômen e lombar"]
-    # @workout_protocol.protocol_exercises.build
+    @workout_protocol.personal = @personal if @personal.present?
+    @workout_protocol.gym_id = session[:current_gym_id]
   end
 
   def create
-    @workout_protocol = if @personal.present?
-                          @personal.workout_protocols.new(workout_protocol_params)
-                        else
-                          @user.workout_protocols.new(workout_protocol_params)
-                        end
-
-    # Associar o protocolo à academia atual
+    @workout_protocol = @personal.workout_protocols.new(workout_protocol_params)
     @workout_protocol.gym_id = session[:current_gym_id]
-    @workout_protocol.user = @user
+
+    # Só associe o user se ele estiver presente
+    @workout_protocol.user = @user if @user.present?
 
     if @workout_protocol.save
-      redirect_to [@user, @workout_protocol], notice: 'Protocolo criado com sucesso.'
+      redirect_to prescribed_workouts_personal_path(@personal), notice: 'Protocolo criado com sucesso.'
     else
       render :new, status: :unprocessable_entity
     end
   end
-
-
 
   def edit
   end
@@ -122,13 +114,37 @@ class WorkoutProtocolsController < ApplicationController
     render :show_day
   end
 
+  def assign_to_user
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+    @user = User.find(params[:user_id])
+
+    # Verificar se o usuário está na academia atual
+    if @user.gyms.exists?(id: @workout_protocol.gym_id)
+      # Criar uma cópia ou associação do protocolo ao usuário
+      new_protocol = @workout_protocol.dup
+      new_protocol.user = @user
+      new_protocol.personal = current_personal
+      if new_protocol.save
+        redirect_to prescribed_workouts_personal_path(current_personal), notice: 'Protocolo prescrito com sucesso.'
+      else
+        redirect_to prescribed_workouts_personal_path(current_personal), alert: 'Erro ao prescrever o protocolo.'
+      end
+    else
+      redirect_to prescribed_workouts_personal_path(current_personal), alert: 'O aluno não pertence à academia atual.'
+    end
+  end
 
   private
 
   def set_personal_and_user
-    @personal = params[:personal_id] && Personal.find_by(id: params[:personal_id])
-    @user = User.find(params[:user_id])
+    # Se não existir personal_id, use id (caso seja a rota member do personal)
+    personal_id_param = params[:personal_id] || params[:id]
+    @personal = Personal.find_by(id: personal_id_param) if personal_id_param
+    @user = params[:user_id] ? User.find_by(id: params[:user_id]) : nil
   end
+
+
+
 
   def set_muscle_groups
     @muscle_groups = [

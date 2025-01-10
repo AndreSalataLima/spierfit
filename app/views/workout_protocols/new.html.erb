@@ -16,7 +16,7 @@
 
   <!-- Formulário de Novo Protocolo -->
   <div class="w-full max-w-[428px] px-4" data-controller="muscle-group">
-  <%= form_with model: [@personal, @user, @workout_protocol], data: { turbo: false } do |f| %>
+  <%= form_with url: @user ? personal_user_workout_protocols_path(@personal, @user) : workout_protocols_personal_path(@personal), model: @workout_protocol, data: { turbo: false } do |f| %>
       <!-- Campos do Protocolo -->
       <div class="mb-4">
         <%= f.label :name, 'Nome do Protocolo', class: "text-white" %>

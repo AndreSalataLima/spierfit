@@ -90,6 +90,26 @@ class PersonalsController < ApplicationController
     @users = @gym.users
   end
 
+  def prescribed_workouts
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+
+    if params[:query].present?
+      query = "%#{params[:query]}%"
+      @workout_protocols = WorkoutProtocol
+                           .joins(:user)
+                           .where(personal_id: current_personal.id, gym_id: @gym.id)
+                           .where("users.name ILIKE ? OR workout_protocols.name ILIKE ?", query, query)
+                           .distinct
+    else
+      @workout_protocols = WorkoutProtocol
+                           .where(personal_id: current_personal.id, gym_id: @gym.id)
+                           .distinct
+    end
+  end
+
+
+
+
   private
 
   def set_personal
