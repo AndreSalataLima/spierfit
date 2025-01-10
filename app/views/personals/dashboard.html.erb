@@ -78,20 +78,23 @@
     </div>
 
     <!-- Card: Treinos Prescritos -->
-    <div
-        data-controller="training-card"
-        data-action="click->training-card#goToTraining"
-        data-training-card-url-value="<%= users_index_personal_path %>"
-        class="w-full bg-gradient-to-b from-[#1c8394] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
-        data-turbo="false">
-      <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-[30px]"></div>
-      <div class="relative">
-        <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
-          <div class="text-white text-xs font-medium">{{NÚMERO_DE_TREINOS}}</div>
+  <div
+      data-controller="training-card"
+      data-action="click->training-card#goToTraining"
+      data-training-card-url-value="<%= prescribed_workouts_personal_path(current_personal) %>"
+      class="w-full bg-gradient-to-b from-[#1c8394] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
+      data-turbo="false">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-[30px]"></div>
+    <div class="relative">
+      <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
+        <div class="text-white text-xs font-medium">
+          <div class="text-white text-xs font-medium">{{NÚMERO_DE_PROTOCOLOS}}</div>
         </div>
-        <div class="text-white text-lg font-semibold">Treinos Prescritos</div>
-        <div class="text-white text-xs">ver todos</div>
       </div>
+      <div class="text-white text-lg font-semibold">Treinos Prescritos</div>
+      <div class="text-white text-xs">ver todos</div>
     </div>
+  </div>
+
   </div>
 </div>

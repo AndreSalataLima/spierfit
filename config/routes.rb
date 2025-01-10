@@ -12,7 +12,11 @@ Rails.application.routes.draw do
       post 'select_gym', to: 'personals#select_gym'
       get 'users_index', to: 'personals#users_index'
       get 'wellness_users_index', to: 'personals#wellness_users_index'
-
+      get 'prescribed_workouts', to: 'personals#prescribed_workouts'
+      get 'new_workout_protocol', to: 'workout_protocols#new', as: 'new_workout_protocol'
+      post 'workout_protocols', to: 'workout_protocols#create', as: 'workout_protocols'
+      get 'new_workout_protocol'
+      post 'create_workout_protocol'
     end
 
     # Escopo de rotas de users e workout_protocols dentro de personals
@@ -35,6 +39,7 @@ Rails.application.routes.draw do
   resources :workouts do
     member do
       post 'complete', to: 'workouts#complete'
+
     end
     resources :exercise_sets, only: [:show]
   end
@@ -61,8 +66,8 @@ Rails.application.routes.draw do
 
     resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       member do
-        # GET /users/:user_id/workout_protocols/:id/day/:day
         get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
+        post 'assign_to_user', to: 'workout_protocols#assign_to_user'
       end
     end
 
