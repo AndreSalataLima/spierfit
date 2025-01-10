@@ -35,14 +35,18 @@ class WorkoutProtocolsController < ApplicationController
                         else
                           @user.workout_protocols.new(workout_protocol_params)
                         end
+
+    # Associar o protocolo à academia atual
+    @workout_protocol.gym_id = session[:current_gym_id]
     @workout_protocol.user = @user
 
     if @workout_protocol.save
       redirect_to [@user, @workout_protocol], notice: 'Protocolo criado com sucesso.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
+
 
 
   def edit

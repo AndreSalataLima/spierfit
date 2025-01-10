@@ -11,18 +11,20 @@ class PersonalsController < ApplicationController
     @gym = current_personal.gyms.find(session[:current_gym_id])
 
     if params[:query].present?
-      # Filtrar os alunos diretamente relacionados ao personal
+      # Filtrar os alunos do personal na academia selecionada e com protocolos na mesma academia
       @users = User.joins(:workout_protocols)
-                   .where(workout_protocols: { personal_id: current_personal.id })
-                   .where("name ILIKE ?", "%#{params[:query]}%")
+                   .where(workout_protocols: { personal_id: current_personal.id, gym_id: @gym.id })
+                   .where("users.name ILIKE ?", "%#{params[:query]}%")
                    .distinct
     else
-      # Sem query, listar os alunos do personal
+      # Listar os alunos do personal na academia selecionada e com protocolos na mesma academia
       @users = User.joins(:workout_protocols)
-                   .where(workout_protocols: { personal_id: current_personal.id })
+                   .where(workout_protocols: { personal_id: current_personal.id, gym_id: @gym.id })
                    .distinct
     end
   end
+
+
 
 
   def wellness_users_index
