@@ -29,7 +29,7 @@ class PersonalsController < ApplicationController
     gym_id = params[:gym_id]
     gym = current_personal.gyms.find(gym_id)
     session[:current_gym_id] = gym.id
-    redirect_to users_index_personal_path(current_personal), notice: "Academia selecionada: #{gym.name}"
+    redirect_to dashboard_personal_path(current_personal), notice: "Academia selecionada: #{gym.name}"
   end
 
   def show
@@ -69,6 +69,8 @@ class PersonalsController < ApplicationController
   end
 
   def dashboard
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    @users = @gym.users
   end
 
   private
