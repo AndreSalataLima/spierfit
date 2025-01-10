@@ -1,7 +1,7 @@
 class PersonalsController < ApplicationController
   before_action :authenticate_personal!
-  before_action :set_personal, only: %i[show edit update destroy dashboard users_index]
-  before_action :ensure_gym_selected, only: [:users_index]
+  before_action :set_personal, only: %i[show edit update destroy dashboard users_index wellness_users_index]
+  before_action :ensure_gym_selected, only: [:users_index, :wellness_users_index]
 
   def index
     @personals = Personal.all
@@ -10,16 +10,31 @@ class PersonalsController < ApplicationController
   def users_index
     @gym = current_personal.gyms.find(session[:current_gym_id])
 
-    # Verifica se há um parâmetro de pesquisa 'query'
     if params[:query].present?
-      # Filtra os usuários da academia pelo nome que contenha a query (case insensitive)
-      @users = @gym.users.where("name ILIKE ?", "%#{params[:query]}%")
+      # Filtrar os alunos diretamente relacionados ao personal
+      @users = User.joins(:workout_protocols)
+                   .where(workout_protocols: { personal_id: current_personal.id })
+                   .where("name ILIKE ?", "%#{params[:query]}%")
+                   .distinct
     else
-      # Se não houver query, retorna todos os usuários da academia
-      @users = @gym.users
+      # Sem query, listar os alunos do personal
+      @users = User.joins(:workout_protocols)
+                   .where(workout_protocols: { personal_id: current_personal.id })
+                   .distinct
     end
   end
 
+
+  def wellness_users_index
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+
+    # Verifica se há um parâmetro de pesquisa 'query'
+    if params[:query].present?
+      @users = @gym.users.where("name ILIKE ?", "%#{params[:query]}%")
+    else
+      @users = @gym.users
+    end
+  end
 
   def gyms_index
     @gyms = current_personal.gyms
