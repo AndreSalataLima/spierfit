@@ -14,6 +14,47 @@
     </div>
   </div>
 
+<!-- Atribuir Usuário -->
+<div class="mb-6">
+  <label for="user-search" class="text-gray-400 mb-2 block">Atribuir para:</label>
+  <div class="relative">
+    <!-- Campo de Busca -->
+    <input
+      type="text"
+      id="user-search"
+      placeholder="Digite o nome do usuário..."
+      class="w-full h-12 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400"
+      data-action="input->user-search#filter"
+    />
+
+    <!-- Dropdown -->
+    <ul
+      id="user-dropdown"
+      class="absolute w-full bg-[#151515] rounded-lg shadow-lg mt-2 max-h-48 overflow-y-auto hidden"
+      data-target="user-search.list"
+    >
+      <% User.all.each do |user| %>
+        <li
+          class="p-2 text-white hover:bg-[#202020] cursor-pointer"
+          data-action="click->user-search#select"
+          data-id="<%= user.id %>"
+          data-name="<%= user.name %>"
+        >
+          <%= user.name %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <!-- Campo Oculto para Armazenar o ID do Usuário Selecionado -->
+  <input
+    type="hidden"
+    name="workout_protocol[user_id]"
+    id="selected-user-id"
+    value=""
+  />
+</div>
+
   <!-- Formulário de Novo Protocolo -->
   <div class="w-full max-w-[428px] px-4" data-controller="muscle-group">
     <%= form_with url: @user ? personal_user_workout_protocols_path(@personal, @user) : workout_protocols_personal_path(@personal), model: @workout_protocol, data: { turbo: false } do |f| %>
