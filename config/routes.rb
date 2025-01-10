@@ -11,6 +11,8 @@ Rails.application.routes.draw do
       get 'gyms_index', to: 'personals#gyms_index'
       post 'select_gym', to: 'personals#select_gym'
       get 'users_index', to: 'personals#users_index'
+      get 'wellness_users_index', to: 'personals#wellness_users_index'
+
     end
 
     # Escopo de rotas de users e workout_protocols dentro de personals
