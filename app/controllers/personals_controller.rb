@@ -24,9 +24,6 @@ class PersonalsController < ApplicationController
     end
   end
 
-
-
-
   def wellness_users_index
     @gym = current_personal.gyms.find(session[:current_gym_id])
 
@@ -107,8 +104,85 @@ class PersonalsController < ApplicationController
     end
   end
 
+  def autocomplete_protocols_and_users
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    query = params[:query].to_s.downcase
+
+    results = []
+
+    # 1) Protocolos
+    protocols = if query.present?
+                  WorkoutProtocol
+                    .joins(:user)
+                    .where(personal_id: current_personal.id, gym_id: @gym.id)
+                    .where("lower(workout_protocols.name) LIKE :q OR lower(users.name) LIKE :q", q: "%#{query}%")
+                    .distinct
+                else
+                  WorkoutProtocol.where(personal_id: current_personal.id, gym_id: @gym.id).distinct
+                end
+
+    results += protocols.map do |proto|
+      {
+        type: 'protocol',
+        id: proto.id,
+        name: proto.name,
+        user_name: proto.user&.name,
+        user_id: proto.user_id
+      }
+    end
+
+    # 2) Alunos
+    users = if query.present?
+              @gym.users.where("lower(name) LIKE ?", "%#{query}%").distinct
+            else
+              @gym.users.distinct
+            end
+
+    results += users.map do |user|
+      {
+        type: 'user',
+        id: user.id,
+        name: user.name
+      }
+    end
+
+    render json: results
+  end
+
+  def filter_protocols
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    query = params[:query].to_s.downcase
+
+    if query.present?
+      @workout_protocols = WorkoutProtocol
+        .joins(:user)
+        .where(personal_id: current_personal.id, gym_id: @gym.id)
+        .where("lower(users.name) LIKE :q OR lower(workout_protocols.name) LIKE :q", q: "%#{query}%")
+        .distinct
+    else
+      @workout_protocols = WorkoutProtocol
+        .where(personal_id: current_personal.id, gym_id: @gym.id)
+        .distinct
+    end
+
+    render partial: 'protocols_list', locals: { workout_protocols: @workout_protocols }
+  end
 
 
+  def autocomplete_users
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    query = params[:query].to_s.downcase
+
+    if query.present?
+      @users = @gym.users
+                   .where("lower(name) LIKE ?", "%#{query}%")
+                   .distinct
+    else
+      @users = @gym.users.distinct
+    end
+
+    render json: @users.select(:id, :name)
+  end
 
   private
 
