@@ -1,7 +1,9 @@
 class WorkoutProtocolsController < ApplicationController
-  before_action :set_personal_and_user
-  before_action :set_muscle_groups, only: [:new, :create, :edit, :update]
-  before_action :set_workout_protocol, only: [:show, :edit, :update, :destroy]
+  before_action :set_personal_and_user, only: [:index, :show, :edit, :update, :destroy, :show_day]
+  before_action :set_muscle_groups,     only: [:new_for_personal, :create_for_personal,
+                                               :new_for_user,     :create_for_user,
+                                               :edit, :update]
+  before_action :set_workout_protocol,  only: [:show, :edit, :update, :destroy]
 
   def index
     @workout_protocols = @user.workout_protocols
@@ -21,27 +23,48 @@ class WorkoutProtocolsController < ApplicationController
     @progress_data = progress_data
   end
 
-  def new
+  def new_for_personal
+    authenticate_personal!  # se necessário
     @workout_protocol = WorkoutProtocol.new
-    @workout_protocol.personal = @personal if @personal.present?
-    @workout_protocol.gym_id = session[:current_gym_id]
+    @workout_protocol.personal = current_personal
+    @workout_protocol.gym_id  = session[:current_gym_id]
+    # Ex: view: app/views/workout_protocols/new_for_personal.html.erb
   end
 
-  def create
-    @workout_protocol = @personal.workout_protocols.new(workout_protocol_params)
+  # POST /workout_protocols/create_for_personal
+  def create_for_personal
+    authenticate_personal!
+    @workout_protocol = current_personal.workout_protocols.new(workout_protocol_params)
     @workout_protocol.gym_id = session[:current_gym_id]
 
-    # user_id chega nos strong parameters
-    # Se quiser forçar a checagem:
-    # @workout_protocol.user_id = workout_protocol_params[:user_id] if workout_protocol_params[:user_id].present?
-
     if @workout_protocol.save
-      redirect_to prescribed_workouts_personal_path(@personal), notice: 'Protocolo criado com sucesso.'
+      redirect_to prescribed_workouts_personal_path(current_personal), notice: 'Protocolo criado com sucesso (Personal).'
     else
-      render :new, status: :unprocessable_entity
+      render :new_for_personal, status: :unprocessable_entity
     end
   end
 
+  def new_for_user
+    authenticate_user!
+    @workout_protocol = WorkoutProtocol.new
+    # @workout_protocol.gym_id = ... se o user tiver uma current_gym
+    # Ex: view: app/views/workout_protocols/new_for_user.html.erb
+  end
+
+  # POST /workout_protocols/create_for_user
+  def create_for_user
+    authenticate_user!
+    @workout_protocol = current_user.workout_protocols.new(workout_protocol_params)
+    # se o user tiver current_gym:
+    # @workout_protocol.gym_id = session[:current_gym_id] if session[:current_gym_id].present?
+
+    if @workout_protocol.save
+      redirect_to user_workout_protocols_path(current_user),
+                  notice: 'Protocolo criado com sucesso (Aluno).'
+    else
+      render :new_for_user, status: :unprocessable_entity
+    end
+  end
 
   def edit
   end

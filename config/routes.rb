@@ -13,15 +13,13 @@ Rails.application.routes.draw do
       get 'users_index', to: 'personals#users_index'
       get 'wellness_users_index', to: 'personals#wellness_users_index'
       get 'prescribed_workouts', to: 'personals#prescribed_workouts'
-      get 'new_workout_protocol', to: 'workout_protocols#new', as: 'new_workout_protocol'
-      post 'workout_protocols', to: 'workout_protocols#create', as: 'workout_protocols'
-      get 'new_workout_protocol'
-      post 'create_workout_protocol'
+      get 'autocomplete_users', to: 'personals#autocomplete_users'
+      get 'filter_protocols', to: 'personals#filter_protocols'
     end
 
-    # Escopo de rotas de users e workout_protocols dentro de personals
+    # Se você ainda quiser manter a listagem/edição de workout protocols aninhados em personals, mantenha somente:
     resources :users, only: [] do
-      resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+      resources :workout_protocols, only: [:index, :show, :edit, :update, :destroy]
     end
   end
 
@@ -39,14 +37,12 @@ Rails.application.routes.draw do
   resources :workouts do
     member do
       post 'complete', to: 'workouts#complete'
-
     end
     resources :exercise_sets, only: [:show]
   end
 
   resources :exercise_sets do
     member do
-      # post 'complete', to: 'exercise_sets#complete'
       patch 'update_weight', to: 'exercise_sets#update_weight'
       patch 'update_rest_time'
       patch 'complete', to: 'exercise_sets#complete'
@@ -64,13 +60,13 @@ Rails.application.routes.draw do
     end
     resources :workouts, only: [:index, :new, :create]
 
-    resources :workout_protocols, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+    resources :workout_protocols, only: [:index, :show, :edit, :update, :destroy] do
       member do
         get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
         post 'assign_to_user', to: 'workout_protocols#assign_to_user'
       end
     end
-    
+
     collection do
       get 'search', to: 'users#search'
     end
@@ -85,18 +81,33 @@ Rails.application.routes.draw do
 
   resources :protocol_exercises, only: [:new]
 
+  # Rotas exclusivas para criar Protocolos
+  # =>  new_for_personal / create_for_personal
+  # =>  new_for_user / create_for_user
+  resources :workout_protocols, only: [] do
+    collection do
+      # Caminho do Personal
+      get  'new_for_personal',   to: 'workout_protocols#new_for_personal'
+      post 'create_for_personal', to: 'workout_protocols#create_for_personal'
+
+      # Caminho do Aluno
+      get  'new_for_user',       to: 'workout_protocols#new_for_user'
+      post 'create_for_user',    to: 'workout_protocols#create_for_user'
+    end
+  end
+
   get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
 
   # Rotas para o ESP32
-  get 'esp32/register', to: 'esp32#register'
-  post 'esp32/register', to: 'esp32#register'
+  get 'esp32/register',   to: 'esp32#register'
+  post 'esp32/register',  to: 'esp32#register'
   post 'esp32/receive_data', to: 'esp32#receive_data'
-  get 'esp32/data_points', to: 'esp32#data_points'
+  get 'esp32/data_points',   to: 'esp32#data_points'
 
   mount ActionCable.server => '/cable'
 
   post 'arduino_cloud_data/receive_data', to: 'arduino_cloud_data#receive_data'
-  get 'arduino_cloud_data', to: 'arduino_cloud_data#index'
+  get 'arduino_cloud_data',               to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 
   root to: 'pages#welcome'

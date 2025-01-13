@@ -1,0 +1,14 @@
+<% workout_protocols.each do |protocol| %>
+  <div class="w-full bg-[#202020] rounded-[30px] px-6 py-4 mb-6 flex items-center justify-between">
+    <div>
+      <div class="text-[#d9d9d9] text-base font-medium">
+        <%= protocol.name %>
+      </div>
+      <div class="text-[#d9d9d9] text-sm">
+        <%= protocol.description %>
+      </div>
+    </div>
+    <%= link_to "Visualizar", personal_user_workout_protocol_path(current_personal, protocol.user, protocol),
+                class: "bg-[#1c8394] text-white font-semibold px-4 py-2 rounded-full" %>
+  </div>
+<% end %>

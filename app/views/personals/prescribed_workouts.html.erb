@@ -14,40 +14,39 @@
     </div>
   </div>
 
-  <!-- Barra de Busca -->
-  <div class="w-full max-w-[428px] px-4 mb-6 flex items-center space-x-2">
-    <%= form_with url: prescribed_workouts_personal_path(current_personal), method: :get, local: true, html: { class: "flex-grow" } do |f| %>
-      <%= f.text_field :query, value: params[:query], placeholder: "Buscar por nome ou protocolo...", class: "w-full h-10 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400" %>
-    <% end %>
-    <%= button_to "Buscar", prescribed_workouts_personal_path(current_personal), method: :get, params: { query: params[:query] }, class: "bg-[#1c8394] text-white font-semibold px-4 py-2 rounded-full" %>
-  </div>
+  <!-- UM ÚNICO CONTAINER COM O CONTROLLER -->
+  <div
+    class="w-full max-w-[428px] px-4 mb-6"
+    data-controller="auto-filter"
+    data-auto-filter-personal-id="<%= current_personal.id %>"
+  >
+    <!-- Campo de busca -->
+    <input
+      data-auto-filter-target="input"
+      data-action="input->auto-filter#onInput"
+      type="text"
+      placeholder="Buscar por nome ou protocolo..."
+      class="w-full h-10 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400"
+    />
 
-  <!-- Botão Criar Novo Treino -->
-  <div class="w-full max-w-[428px] px-4 mb-8">
-    <%= link_to "Novo Treino", new_workout_protocol_personal_path(current_personal), class: "bg-[#a52502] text-white font-semibold px-6 py-3 rounded-full text-center block mx-auto w-max" %>
-  </div>
+    <!-- Dropdown -->
+    <ul
+      data-auto-filter-target="dropdown"
+      class="absolute w-full bg-[#151515] rounded-lg shadow-lg mt-2 max-h-48 overflow-y-auto hidden"
+    >
+    </ul>
 
-  <!-- Lista de Protocolos -->
-  <div class="w-full max-w-[428px] px-4">
-    <% if @workout_protocols.any? %>
-      <% @workout_protocols.each do |protocol| %>
-        <div class="w-full bg-[#202020] rounded-[30px] px-6 py-4 mb-6 flex items-center justify-between">
-          <div>
-            <!-- Nome do Protocolo -->
-            <div class="text-[#d9d9d9] text-base font-medium">
-              <%= protocol.name %>
-            </div>
-            <!-- Descrição do Protocolo -->
-            <div class="text-[#d9d9d9] text-sm">
-              <%= protocol.description %>
-            </div>
-          </div>
-          <!-- Botão Visualizar -->
-          <%= link_to "Visualizar", personal_user_workout_protocol_path(current_personal, protocol.user, protocol), class: "bg-[#1c8394] text-white font-semibold px-4 py-2 rounded-full" %>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-white text-center mt-6">Nenhum treino prescrito nesta academia.</p>
-    <% end %>
+    <!-- Botão Criar Novo Treino -->
+    <div class="w-full max-w-[428px] mt-4 mb-4">
+      <%= link_to "Novo Treino", new_for_personal_workout_protocols_path,
+                  class: "bg-[#a52502] text-white font-semibold px-6 py-3 rounded-full text-center block mx-auto w-max" %>
+    </div>
+
+    <!-- Lista de Protocolos -->
+    <div
+      data-auto-filter-target="listContainer"
+    >
+      <%= render partial: 'protocols_list', locals: { workout_protocols: @workout_protocols } %>
+    </div>
   </div>
 </div>
