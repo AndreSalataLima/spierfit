@@ -1,0 +1,54 @@
+<%= content_for :title, "Treinos Prescritos" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Treinos Prescritos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botão Criar Novo Treino -->
+  <div class="w-full max-w-[428px] mt-4 mb-4">
+    <%= link_to "Novo Treino", new_for_user_workout_protocols_path,
+                class: "bg-[#a52502] text-white font-semibold px-6 py-3 rounded-full text-center block mx-auto w-max" %>
+  </div>
+
+  <!-- Lista de Protocolos -->
+  <div class="w-full max-w-[428px] px-4">
+    <% if @workout_protocols.present? %>
+      <% @workout_protocols.each do |protocol| %>
+        <div class="w-full bg-[#202020] rounded-[30px] px-6 py-4 mb-4 flex justify-between items-center shadow-lg">
+          <!-- Informações do Protocolo -->
+          <div>
+            <% if protocol.gym.present? %>
+              <div class="text-gray-400 text-sm">
+                <%= protocol.gym.name %>
+              </div>
+            <% end %>
+            <div class="text-[#d9d9d9] text-base font-medium">
+              <%= protocol.name %>
+            </div>
+            <div class="text-gray-400 text-sm mt-1">
+              Início em <%= protocol.created_at.strftime("%m/%y") %>
+            </div>
+          </div>
+
+          <!-- Link para Visualizar -->
+          <%= link_to user_workout_protocol_path(@user, protocol),
+                      class: "text-white flex items-center" do %>
+            <i class="fa fa-arrow-right text-lg"></i>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-white text-center mt-6">Nenhum protocolo de treino encontrado.</p>
+    <% end %>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :dashboard]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :dashboard, :prescribed_workouts]
 
   def index
     @users = User.all
@@ -54,6 +54,11 @@ class UsersController < ApplicationController
                  .distinct
 
     render json: @users.select(:id, :name)
+  end
+
+
+  def prescribed_workouts
+    @workout_protocols = @user.workout_protocols.order(created_at: :desc)
   end
 
   private

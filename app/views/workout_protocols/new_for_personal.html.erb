@@ -22,36 +22,26 @@
                   model: @workout_protocol,
                   data: { turbo: false } do |f| %>
 
-      <!-- Atribuir Usuário (agora DENTRO do form) -->
-      <div data-controller="user-search" class="mb-6">
+      <!-- Atribuir Usuário (DENTRO do form) -->
+      <div data-controller="user-search" class="mb-6 relative">
         <label for="user-search" class="text-gray-400 mb-2 block">Atribuir para:</label>
-        <div class="relative flex items-center">
+        <div class="relative">
           <!-- Campo de Busca -->
           <input
             type="text"
             id="user-search"
             placeholder="Digite o nome do usuário..."
             class="w-full h-12 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400"
-            data-action="input->user-search#filter"
+            data-action="input->user-search#fetchUsers"
           />
-          <!-- Botão de Busca -->
-          <button
-            type="button"
-            class="ml-2 bg-[#a52502] text-white px-4 py-2 rounded-full"
-            data-action="click->user-search#fetchUsers"
+          <!-- Dropdown -->
+          <ul
+            id="user-dropdown"
+            class="absolute w-full bg-[#151515] rounded-lg shadow-lg mt-2 max-h-48 overflow-y-auto hidden"
+            data-target="user-search.list"
           >
-            Buscar
-          </button>
+          </ul>
         </div>
-
-        <!-- Dropdown -->
-        <ul
-          id="user-dropdown"
-          class="absolute w-full bg-[#151515] rounded-lg shadow-lg mt-2 max-h-48 overflow-y-auto hidden"
-          data-target="user-search.list"
-        >
-          <!-- Lista preenchida via JavaScript -->
-        </ul>
 
         <!-- Campo Oculto para Armazenar o ID do Usuário Selecionado -->
         <input
