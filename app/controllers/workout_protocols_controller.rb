@@ -53,18 +53,18 @@ class WorkoutProtocolsController < ApplicationController
 
   # POST /workout_protocols/create_for_user
   def create_for_user
-    authenticate_user!
     @workout_protocol = current_user.workout_protocols.new(workout_protocol_params)
-    # se o user tiver current_gym:
-    # @workout_protocol.gym_id = session[:current_gym_id] if session[:current_gym_id].present?
+    @workout_protocol.gym_id = session[:current_gym_id] if session[:current_gym_id].present?
 
     if @workout_protocol.save
-      redirect_to user_workout_protocols_path(current_user),
+      redirect_to user_workout_protocol_path(current_user, @workout_protocol),
                   notice: 'Protocolo criado com sucesso (Aluno).'
     else
+      Rails.logger.info ">>> ERROS: #{@workout_protocol.errors.full_messages}"
       render :new_for_user, status: :unprocessable_entity
     end
   end
+
 
   def edit
   end
