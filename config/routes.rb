@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   resources :users do
     member do
       get 'dashboard', to: 'users#dashboard'
+      get 'prescribed_workouts', to: 'users#prescribed_workouts'
     end
     resources :workouts, only: [:index, :new, :create]
 
