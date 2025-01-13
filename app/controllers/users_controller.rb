@@ -44,6 +44,18 @@ class UsersController < ApplicationController
     @user_age = today.year - @user.date_of_birth.year - ((today.month > @user.date_of_birth.month || (today.month == @user.date_of_birth.month && today.day >= @user.date_of_birth.day)) ? 0 : 1)
   end
 
+  def search
+    query = params[:query].to_s.downcase
+    gym_id = session[:current_gym_id]
+
+    @users = User.joins(:gyms)
+                 .where("lower(users.name) LIKE ?", "%#{query}%")
+                 .where(gyms: { id: gym_id })
+                 .distinct
+
+    render json: @users.select(:id, :name)
+  end
+
   private
 
   def set_user
