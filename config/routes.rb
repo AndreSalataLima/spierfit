@@ -70,7 +70,10 @@ Rails.application.routes.draw do
         post 'assign_to_user', to: 'workout_protocols#assign_to_user'
       end
     end
-
+    
+    collection do
+      get 'search', to: 'users#search'
+    end
   end
 
   resources :gyms do

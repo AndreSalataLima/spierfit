@@ -31,8 +31,9 @@ class WorkoutProtocolsController < ApplicationController
     @workout_protocol = @personal.workout_protocols.new(workout_protocol_params)
     @workout_protocol.gym_id = session[:current_gym_id]
 
-    # Só associe o user se ele estiver presente
-    @workout_protocol.user = @user if @user.present?
+    # user_id chega nos strong parameters
+    # Se quiser forçar a checagem:
+    # @workout_protocol.user_id = workout_protocol_params[:user_id] if workout_protocol_params[:user_id].present?
 
     if @workout_protocol.save
       redirect_to prescribed_workouts_personal_path(@personal), notice: 'Protocolo criado com sucesso.'
@@ -40,6 +41,7 @@ class WorkoutProtocolsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
 
   def edit
   end
@@ -162,6 +164,7 @@ class WorkoutProtocolsController < ApplicationController
       :name,
       :description,
       :execution_goal,
+      :user_id,
       protocol_exercises_attributes: [
         :muscle_group, :exercise_id, :sets, :min_repetitions, :max_repetitions, :day, :observation
       ]
