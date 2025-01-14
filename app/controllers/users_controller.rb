@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :dashboard]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :dashboard, :prescribed_workouts]
 
   def index
     @users = User.all
@@ -42,6 +42,23 @@ class UsersController < ApplicationController
     @calories_burned_per_day = @user.workouts.group_by_day_of_week(:created_at, format: "%a").sum(:calories_burned)
     today = Date.today
     @user_age = today.year - @user.date_of_birth.year - ((today.month > @user.date_of_birth.month || (today.month == @user.date_of_birth.month && today.day >= @user.date_of_birth.day)) ? 0 : 1)
+  end
+
+  def search
+    query = params[:query].to_s.downcase
+    gym_id = session[:current_gym_id]
+
+    @users = User.joins(:gyms)
+                 .where("lower(users.name) LIKE ?", "%#{query}%")
+                 .where(gyms: { id: gym_id })
+                 .distinct
+
+    render json: @users.select(:id, :name)
+  end
+
+
+  def prescribed_workouts
+    @workout_protocols = @user.workout_protocols.order(created_at: :desc)
   end
 
   private

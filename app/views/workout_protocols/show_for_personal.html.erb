@@ -1,0 +1,74 @@
+<%= content_for :title, "#{@workout_protocol.name} - SpierFit" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation (layout azul/verde) -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#1c8394] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <!-- Botão Voltar: para listagem do personal -->
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold"><%= @workout_protocol.name %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões Editar e Prescrever (se personal é o autor)
+  <% if @workout_protocol.personal_id == current_personal.id %>
+    <div class="w-full max-w-[428px] px-4 mb-4 flex justify-end space-x-2">
+      <%= link_to "Editar",
+          edit_user_workout_protocol_path(@user, @workout_protocol),
+          class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
+
+      <%= link_to "Prescrever para Outro Aluno",
+          new_for_personal_workout_protocols_path(protocol_id: @workout_protocol.id),
+          class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
+
+    </div>
+  <% end %>
+-->
+
+  <!-- Exibe Exercícios, Dias, etc. (sem botão de Executar) -->
+  <div class="w-full max-w-[428px] px-4 mb-6 mx-auto">
+    <div class="grid grid-cols-3 gap-4">
+      <% @progress_data.each do |day, data| %>
+        <div class="flex flex-col items-center bg-[#151515] rounded-[30px] p-4">
+          <div class="w-10 h-10 bg-[#303030] rounded-full flex items-center justify-center text-white text-sm font-semibold mb-2">
+            <%= day %>
+          </div>
+          <div class="text-white text-sm mt-2">
+            <%= "#{data[:completed]}/#{data[:total]}" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Lista de Dias e Exercícios -->
+  <div class="w-full max-w-[428px] px-4">
+    <% @progress_data.each do |day, data| %>
+      <div class="bg-[#151515] rounded-[30px] p-4 mb-4">
+        <h2 class="text-white font-semibold text-lg mb-2">Treino <%= day %></h2>
+        <% @workout_protocol.protocol_exercises.where(day: day).each do |exercise| %>
+          <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-2">
+            <span class="text-white font-semibold text-lg"><%= exercise.exercise.name %></span>
+            <div class="mt-2 text-gray-400 text-sm">
+              <p>Séries: <%= exercise.sets %> | Repetições:
+                <% if exercise.min_repetitions == exercise.max_repetitions %>
+                  <%= exercise.min_repetitions %>
+                <% else %>
+                  <%= "#{exercise.min_repetitions} - #{exercise.max_repetitions}" %>
+                <% end %>
+              </p>
+              <% if exercise.observation.present? %>
+                <p>Observação: <%= exercise.observation %></p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

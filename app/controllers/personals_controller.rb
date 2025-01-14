@@ -1,7 +1,7 @@
 class PersonalsController < ApplicationController
   before_action :authenticate_personal!
-  before_action :set_personal, only: %i[show edit update destroy dashboard users_index]
-  before_action :ensure_gym_selected, only: [:users_index]
+  before_action :set_personal, only: %i[show edit update destroy dashboard users_index wellness_users_index]
+  before_action :ensure_gym_selected, only: [:users_index, :wellness_users_index]
 
   def index
     @personals = Personal.all
@@ -10,16 +10,30 @@ class PersonalsController < ApplicationController
   def users_index
     @gym = current_personal.gyms.find(session[:current_gym_id])
 
-    # Verifica se há um parâmetro de pesquisa 'query'
     if params[:query].present?
-      # Filtra os usuários da academia pelo nome que contenha a query (case insensitive)
-      @users = @gym.users.where("name ILIKE ?", "%#{params[:query]}%")
+      # Filtrar os alunos do personal na academia selecionada e com protocolos na mesma academia
+      @users = User.joins(:workout_protocols)
+                   .where(workout_protocols: { personal_id: current_personal.id, gym_id: @gym.id })
+                   .where("users.name ILIKE ?", "%#{params[:query]}%")
+                   .distinct
     else
-      # Se não houver query, retorna todos os usuários da academia
-      @users = @gym.users
+      # Listar os alunos do personal na academia selecionada e com protocolos na mesma academia
+      @users = User.joins(:workout_protocols)
+                   .where(workout_protocols: { personal_id: current_personal.id, gym_id: @gym.id })
+                   .distinct
     end
   end
 
+  def wellness_users_index
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+
+    # Verifica se há um parâmetro de pesquisa 'query'
+    if params[:query].present?
+      @users = @gym.users.where("name ILIKE ?", "%#{params[:query]}%")
+    else
+      @users = @gym.users
+    end
+  end
 
   def gyms_index
     @gyms = current_personal.gyms
@@ -29,7 +43,7 @@ class PersonalsController < ApplicationController
     gym_id = params[:gym_id]
     gym = current_personal.gyms.find(gym_id)
     session[:current_gym_id] = gym.id
-    redirect_to users_index_personal_path(current_personal), notice: "Academia selecionada: #{gym.name}"
+    redirect_to dashboard_personal_path(current_personal), notice: "Academia selecionada: #{gym.name}"
   end
 
   def show
@@ -69,6 +83,105 @@ class PersonalsController < ApplicationController
   end
 
   def dashboard
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    @users = @gym.users
+  end
+
+  def prescribed_workouts
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+
+    if params[:query].present?
+      query = "%#{params[:query]}%"
+      @workout_protocols = WorkoutProtocol
+                           .joins(:user)
+                           .where(personal_id: current_personal.id, gym_id: @gym.id)
+                           .where("users.name ILIKE ? OR workout_protocols.name ILIKE ?", query, query)
+                           .distinct
+    else
+      @workout_protocols = WorkoutProtocol
+                           .where(personal_id: current_personal.id, gym_id: @gym.id)
+                           .distinct
+    end
+  end
+
+  def autocomplete_protocols_and_users
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    query = params[:query].to_s.downcase
+
+    results = []
+
+    # 1) Protocolos
+    protocols = if query.present?
+                  WorkoutProtocol
+                    .joins(:user)
+                    .where(personal_id: current_personal.id, gym_id: @gym.id)
+                    .where("lower(workout_protocols.name) LIKE :q OR lower(users.name) LIKE :q", q: "%#{query}%")
+                    .distinct
+                else
+                  WorkoutProtocol.where(personal_id: current_personal.id, gym_id: @gym.id).distinct
+                end
+
+    results += protocols.map do |proto|
+      {
+        type: 'protocol',
+        id: proto.id,
+        name: proto.name,
+        user_name: proto.user&.name,
+        user_id: proto.user_id
+      }
+    end
+
+    # 2) Alunos
+    users = if query.present?
+              @gym.users.where("lower(name) LIKE ?", "%#{query}%").distinct
+            else
+              @gym.users.distinct
+            end
+
+    results += users.map do |user|
+      {
+        type: 'user',
+        id: user.id,
+        name: user.name
+      }
+    end
+
+    render json: results
+  end
+
+  def filter_protocols
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    query = params[:query].to_s.downcase
+
+    if query.present?
+      @workout_protocols = WorkoutProtocol
+        .joins(:user)
+        .where(personal_id: current_personal.id, gym_id: @gym.id)
+        .where("lower(users.name) LIKE :q OR lower(workout_protocols.name) LIKE :q", q: "%#{query}%")
+        .distinct
+    else
+      @workout_protocols = WorkoutProtocol
+        .where(personal_id: current_personal.id, gym_id: @gym.id)
+        .distinct
+    end
+
+    render partial: 'protocols_list', locals: { workout_protocols: @workout_protocols }
+  end
+
+
+  def autocomplete_users
+    @gym = current_personal.gyms.find(session[:current_gym_id])
+    query = params[:query].to_s.downcase
+
+    if query.present?
+      @users = @gym.users
+                   .where("lower(name) LIKE ?", "%#{query}%")
+                   .distinct
+    else
+      @users = @gym.users.distinct
+    end
+
+    render json: @users.select(:id, :name)
   end
 
   private
