@@ -81,36 +81,35 @@ export default class extends Controller {
 
 
   addExerciseCard(formData) {
-    const muscleGroup = this.selectedMuscleGroup
-    const container = document.querySelector(`#exercises-${this.parameterize(muscleGroup)} [data-exercises-container]`)
+    const muscleGroup = this.selectedMuscleGroup;
+    const container = document.querySelector(`#exercises-${this.parameterize(muscleGroup)} [data-exercises-container]`);
 
-    const exerciseId = formData.get('workout_protocol[protocol_exercises_attributes][][exercise_id]')
-    const day = formData.get('workout_protocol[protocol_exercises_attributes][][day]')
+    const exerciseId = formData.get('workout_protocol[protocol_exercises_attributes][][exercise_id]');
+    const day = formData.get('workout_protocol[protocol_exercises_attributes][][day]');
 
-    // Obter o nome do exercício
     this.getExerciseName(exerciseId).then(exerciseName => {
       // Cria o card do exercício
-      const card = document.createElement('div')
-      card.classList.add('exercise-card', 'bg-[#202020]', 'rounded-lg', 'p-4', 'mb-2', 'flex', 'justify-between', 'items-center')
+      const card = document.createElement('div');
+      card.classList.add('exercise-card', 'bg-[#202020]', 'rounded-lg', 'p-4', 'mb-2', 'flex', 'justify-between', 'items-center');
 
-      const contentDiv = document.createElement('div')
-      const nameDiv = document.createElement('div')
-      nameDiv.classList.add('text-white', 'font-semibold')
-      nameDiv.textContent = exerciseName
+      const contentDiv = document.createElement('div');
+      const nameDiv = document.createElement('div');
+      nameDiv.classList.add('text-white', 'font-semibold');
+      nameDiv.textContent = exerciseName;
 
-      const dayDiv = document.createElement('div')
-      dayDiv.classList.add('text-gray-400')
-      dayDiv.textContent = `Dia do treino: ${day}`
+      const dayDiv = document.createElement('div');
+      dayDiv.classList.add('text-gray-400');
+      dayDiv.textContent = `Dia do treino: ${day}`;
 
-      contentDiv.appendChild(nameDiv)
-      contentDiv.appendChild(dayDiv)
+      contentDiv.appendChild(nameDiv);
+      contentDiv.appendChild(dayDiv);
 
-      card.appendChild(contentDiv)
+      card.appendChild(contentDiv);
 
-      // Adiciona o card ao container
-      container.appendChild(card)
-    })
+      container.appendChild(card);
+    });
   }
+
 
   getExerciseName(exerciseId) {
     return fetch(`/exercises/${exerciseId}.json`)

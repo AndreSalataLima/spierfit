@@ -15,17 +15,32 @@
   </div>
 
   <!-- Formulário de Novo Protocolo -->
-  <div class="w-full max-w-[428px] px-4" data-controller="muscle-group">
-  <%= form_with model: [@personal, @user, @workout_protocol], data: { turbo: false } do |f| %>
+  <div class="w-full max-w-[428px] px-4"
+       data-controller="muscle-group"
+  >
+    <%= form_with url: create_for_user_workout_protocols_path,
+                  model: @workout_protocol,
+                  data: { turbo: false } do |f| %>
+
       <!-- Campos do Protocolo -->
       <div class="mb-4">
-        <%= f.label :name, 'Nome do Protocolo', class: "text-white" %>
-        <%= f.text_field :name, class: "input-field", placeholder: "Digite o nome do protocolo" %>
+        <%= f.label :name, 'Nome do Protocolo', class: "text-white mb-2 block" %>
+        <%= f.text_field :name,
+              class: "w-full h-12 px-4 text-white bg-[#202020] border-none
+                      rounded-lg placeholder-gray-400 focus:outline-none
+                      focus:ring-2 focus:ring-[#1c8394]",
+              placeholder: "Digite o nome do protocolo",
+              style: "caret-color: transparent;" %>
       </div>
 
       <div class="mb-4">
-        <%= f.label :description, 'Descrição', class: "text-white" %>
-        <%= f.text_area :description, class: "input-field h-20", placeholder: "Descreva o protocolo" %>
+        <%= f.label :description, 'Descrição', class: "text-white mb-2 block" %>
+        <%= f.text_area :description,
+              class: "w-full h-32 px-4 text-white bg-[#202020] border-none
+                      rounded-lg placeholder-gray-400 focus:outline-none
+                      focus:ring-2 focus:ring-[#1c8394] resize-none",
+              placeholder: "Descreva o protocolo",
+              style: "caret-color: transparent;" %>
       </div>
 
       <!-- Modal para Adicionar Exercício -->
@@ -37,7 +52,7 @@
         <div class="w-full max-w-md bg-[#151515] rounded-[30px] p-6">
           <h2 class="text-white text-lg font-semibold mb-4">Adicionar Exercício - <span data-muscle-group-target="modalTitle"></span></h2>
           <!-- Contêiner dos Campos do Exercício -->
-          <div data-muscle-group-target="exerciseFieldsContainer">
+          <div data-muscle-group-target="exerciseFieldsContainer" class="space-y-4">
             <!-- O partial será inserido aqui via JavaScript -->
           </div>
           <!-- Botões -->
@@ -47,9 +62,6 @@
           </div>
         </div>
       </div>
-
-
-
 
       <!-- Loop de Grupos Musculares -->
       <% @muscle_groups.each do |muscle_group| %>
@@ -109,8 +121,8 @@
 
       <!-- Meta de Execução -->
       <div class="mb-4">
-        <%= f.label :execution_goal, 'Meta de Execução', class: "text-white" %>
-        <%= f.number_field :execution_goal, class: "input-field", placeholder: "Selecione o número de treinos" %>
+        <%= f.label :execution_goal, 'Meta de Execução', class: "text-white mb-2 block" %>
+        <%= f.number_field :execution_goal, class: "w-full h-12 px-4 text-white bg-[#202020] border-none rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1c8394]", placeholder: "Selecione o número de treinos", style: "caret-color: transparent;" %>
       </div>
 
       <!-- Botão de Submissão -->

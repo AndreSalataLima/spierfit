@@ -1,3 +1,100 @@
-<h1>Dashboard do Personal Trainer</h1>
-<p>Bem-vindo, <%= @personal.user.name %>!</p>
-<!-- Adicione aqui o conteúdo específico do dashboard do personal -->
+<div class="w-full min-h-screen flex flex-col items-center justify-center bg-[#0e0e0e]">
+  <!-- Container for Profile Section and Cards with Padding -->
+  <div class="w-full max-w-[450px] p-3 space-y-6">
+    <!-- Profile Section -->
+    <div class="w-full flex items-center mt-4 mb-4">
+      <div class="w-[60px] h-[60px] bg-[#393939] rounded-full"></div>
+      <div class="ml-4">
+        <div class="text-white text-lg font-semibold"><%= @personal.name %></div>
+        <!-- Logout Button -->
+        <div>
+          <%= button_to destroy_personal_session_path, method: :delete, class: "text-[#ff8137] text-sm hover:text-white transition" do %>
+            <i class="fa fa-sign-out-alt"></i> Logout
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centralized Section -->
+    <div class="w-full flex flex-col items-center space-y-2">
+      <div class="text-white text-lg font-semibold flex items-center">
+        Você está na <%= @gym.name %>
+        <%= button_to gyms_index_personal_path, method: :get, class: "ml-4 text-[#ff8137] text-sm hover:text-white transition" do %>
+          <i class="fa fa-exchange-alt"></i>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Card: Meus Alunos -->
+    <div
+        data-controller="training-card"
+        data-action="click->training-card#goToTraining"
+        data-training-card-url-value="<%= users_index_personal_path %>"
+        class="w-full bg-gradient-to-b from-[#1c8394] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
+        data-turbo="false">
+      <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-[30px]"></div>
+      <div class="relative">
+        <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
+          <div class="text-white text-xs font-medium">{{NÚMERO_DE_ALUNOS}}</div>
+        </div>
+        <div class="text-white text-lg font-semibold">Meus Alunos</div>
+        <div class="text-white text-xs">ver todos</div>
+      </div>
+    </div>
+
+    <!-- Card: Alunos Wellness -->
+    <div
+        data-controller="training-card"
+        data-action="click->training-card#goToTraining"
+        data-training-card-url-value="<%= wellness_users_index_personal_path %>"
+        class="w-full bg-gradient-to-b from-[#1c8394] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
+        data-turbo="false">
+      <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-[30px]"></div>
+      <div class="relative">
+        <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
+          <div class="text-white text-xs font-medium">{{NÚMERO_DE_ALUNOS}}</div>
+        </div>
+        <div class="text-white text-lg font-semibold">Alunos Wellness</div>
+        <div class="text-white text-xs">ver todos</div>
+      </div>
+    </div>
+
+
+    <!-- Card: Personal Trainer -->
+    <div
+        data-controller="training-card"
+        data-action="click->training-card#goToTraining"
+        data-training-card-url-value="<%= users_index_personal_path %>"
+        class="w-full bg-gradient-to-b from-[#1c8394] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
+        data-turbo="false">
+      <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-[30px]"></div>
+      <div class="relative">
+        <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
+          <div class="text-white text-xs font-medium">{{NÚMERO_DE_FICHAS}}</div>
+        </div>
+        <div class="text-white text-lg font-semibold">Personal Trainer</div>
+        <div class="text-white text-xs">buscar</div>
+      </div>
+    </div>
+
+    <!-- Card: Treinos Prescritos -->
+  <div
+      data-controller="training-card"
+      data-action="click->training-card#goToTraining"
+      data-training-card-url-value="<%= prescribed_workouts_personal_path(current_personal) %>"
+      class="w-full bg-gradient-to-b from-[#1c8394] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
+      data-turbo="false">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-[30px]"></div>
+    <div class="relative">
+      <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
+        <div class="text-white text-xs font-medium">
+          <div class="text-white text-xs font-medium">{{NÚMERO_DE_PROTOCOLOS}}</div>
+        </div>
+      </div>
+      <div class="text-white text-lg font-semibold">Treinos Prescritos</div>
+      <div class="text-white text-xs">ver todos</div>
+    </div>
+  </div>
+
+  </div>
+</div>

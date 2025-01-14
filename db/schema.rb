@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_08_124837) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_13_224434) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -209,9 +209,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_08_124837) do
     t.text "description"
     t.integer "execution_goal"
     t.bigint "user_id", null: false
-    t.bigint "personal_id", null: false
+    t.bigint "personal_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "gym_id"
+    t.index ["gym_id"], name: "index_workout_protocols_on_gym_id"
     t.index ["personal_id"], name: "index_workout_protocols_on_personal_id"
     t.index ["user_id"], name: "index_workout_protocols_on_user_id"
   end
@@ -252,6 +254,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_08_124837) do
   add_foreign_key "protocol_exercises", "workout_protocols"
   add_foreign_key "users", "gyms"
   add_foreign_key "weight_changes", "exercise_sets"
+  add_foreign_key "workout_protocols", "gyms"
   add_foreign_key "workout_protocols", "personals"
   add_foreign_key "workout_protocols", "users"
   add_foreign_key "workouts", "gyms"
