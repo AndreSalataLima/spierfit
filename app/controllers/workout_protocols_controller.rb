@@ -24,11 +24,23 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def new_for_personal
-    authenticate_personal!  # se necessário
-    @workout_protocol = WorkoutProtocol.new
-    @workout_protocol.personal = current_personal
-    @workout_protocol.gym_id  = session[:current_gym_id]
-    # Ex: view: app/views/workout_protocols/new_for_personal.html.erb
+    authenticate_personal!
+    @muscle_groups ||= [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
+
+    if params[:protocol_id].present?
+      existing_protocol = WorkoutProtocol.find(params[:protocol_id])
+      @workout_protocol = existing_protocol.dup
+      @workout_protocol.name = "#{existing_protocol.name} (Cópia)"
+
+      # Copia os exercises com muscle_group, day, etc.
+      @workout_protocol.protocol_exercises = existing_protocol.protocol_exercises.map(&:dup)
+    else
+      @workout_protocol = WorkoutProtocol.new
+    end
   end
 
   # POST /workout_protocols/create_for_personal
@@ -67,13 +79,19 @@ class WorkoutProtocolsController < ApplicationController
 
 
   def edit
+    @muscle_groups ||= [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
   end
+
 
   def update
     if @workout_protocol.update(workout_protocol_params)
       redirect_to [@user, @workout_protocol], notice: 'Protocolo de treino atualizado com sucesso.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -143,38 +161,74 @@ class WorkoutProtocolsController < ApplicationController
     @workout_protocol = WorkoutProtocol.find(params[:id])
     @user = User.find(params[:user_id])
 
-    # Verificar se o usuário está na academia atual
-    if @user.gyms.exists?(id: @workout_protocol.gym_id)
-      # Criar uma cópia ou associação do protocolo ao usuário
-      new_protocol = @workout_protocol.dup
-      new_protocol.user = @user
-      new_protocol.personal = current_personal
-      if new_protocol.save
-        redirect_to prescribed_workouts_personal_path(current_personal), notice: 'Protocolo prescrito com sucesso.'
-      else
-        redirect_to prescribed_workouts_personal_path(current_personal), alert: 'Erro ao prescrever o protocolo.'
-      end
+    # Duplica o protocolo e atribui ao novo aluno
+    new_protocol = @workout_protocol.dup
+    new_protocol.user = @user
+    new_protocol.personal = current_personal
+    if new_protocol.save
+      redirect_to prescribed_workouts_personal_path(current_personal), notice: 'Protocolo prescrito com sucesso.'
     else
-      redirect_to prescribed_workouts_personal_path(current_personal), alert: 'O aluno não pertence à academia atual.'
+      redirect_to prescribed_workouts_personal_path(current_personal), alert: 'Erro ao prescrever o protocolo.'
     end
+  end
+
+
+
+  def show_for_user
+    # Carrega o user e o protocolo
+    @user = User.find(params[:user_id])
+    @workout_protocol = @user.workout_protocols.find(params[:id])
+
+    # Lógica de progresso (seja qual for)
+    progress_data = {}
+    days = @workout_protocol.protocol_exercises.pluck(:day).uniq
+    days.each do |day|
+      total_sets = @workout_protocol.protocol_exercises.where(day: day).sum(:sets)
+      progress_data[day] = { completed: 0, total: total_sets }
+    end
+    @progress_data = progress_data
+
+    render :show_for_user
+  end
+
+  def show_for_personal
+    # Carrega personal, user e o protocolo
+    @personal = Personal.find(params[:personal_id])
+    @user = User.find(params[:user_id])
+    @workout_protocol = @user.workout_protocols.find(params[:id])
+
+    # Mesmo cálculo de progresso
+    progress_data = {}
+    days = @workout_protocol.protocol_exercises.pluck(:day).uniq
+    days.each do |day|
+      total_sets = @workout_protocol.protocol_exercises.where(day: day).sum(:sets)
+      progress_data[day] = { completed: 0, total: total_sets }
+    end
+    @progress_data = progress_data
+
+    render :show_for_personal
   end
 
   private
 
   def set_personal_and_user
-    # Se não existir personal_id, use id (caso seja a rota member do personal)
-    personal_id_param = params[:personal_id] || params[:id]
-    @personal = Personal.find_by(id: personal_id_param) if personal_id_param
-    @user = params[:user_id] ? User.find_by(id: params[:user_id]) : nil
+    # Ex.: se a rota for /personals/:personal_id/users/:user_id/workout_protocols
+    if params[:personal_id].present?
+      @personal = Personal.find(params[:personal_id])
+    end
+
+    # Se a rota for /users/:user_id/workout_protocols
+    if params[:user_id].present?
+      @user = User.find(params[:user_id])
+    end
   end
-
-
 
 
   def set_muscle_groups
     @muscle_groups = [
-      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio', 'Tríceps', 'Bíceps',
-      'Antebraço', 'Coxas', 'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
     ]
   end
 
@@ -189,10 +243,17 @@ class WorkoutProtocolsController < ApplicationController
       :execution_goal,
       :user_id,
       protocol_exercises_attributes: [
-        :muscle_group, :exercise_id, :sets, :min_repetitions, :max_repetitions, :day, :observation
+        :id,
+        :muscle_group,
+        :exercise_id,
+        :sets,
+        :day,
+        :min_repetitions,
+        :max_repetitions,
+        :observation,
+        :_destroy
       ]
     )
   end
-
 
 end
