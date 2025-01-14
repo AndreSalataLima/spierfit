@@ -19,7 +19,12 @@ Rails.application.routes.draw do
 
     # Se você ainda quiser manter a listagem/edição de workout protocols aninhados em personals, mantenha somente:
     resources :users, only: [] do
-      resources :workout_protocols, only: [:index, :show, :edit, :update, :destroy]
+      resources :workout_protocols, only: [] do
+        member do
+          get :show_for_personal  # Nova action
+          post :assign_to_user    # já existe se você quiser neste escopo
+        end
+      end
     end
   end
 
@@ -63,6 +68,7 @@ Rails.application.routes.draw do
 
     resources :workout_protocols, only: [:index, :show, :edit, :update, :destroy] do
       member do
+        get :show_for_user
         get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
         post 'assign_to_user', to: 'workout_protocols#assign_to_user'
       end

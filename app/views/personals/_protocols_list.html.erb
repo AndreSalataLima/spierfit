@@ -8,7 +8,7 @@
         <%= protocol.description %>
       </div>
     </div>
-    <%= link_to "Visualizar", personal_user_workout_protocol_path(current_personal, protocol.user, protocol),
+    <%= link_to "Visualizar", show_for_personal_personal_user_workout_protocol_path(current_personal, protocol.user, protocol),
                 class: "bg-[#1c8394] text-white font-semibold px-4 py-2 rounded-full" %>
   </div>
 <% end %>
