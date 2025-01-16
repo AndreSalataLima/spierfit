@@ -18,29 +18,29 @@
   <div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] px-6 py-6 mb-4">
     <div class="text-[#d9d9d9] text-base font-medium mb-4">Detalhes do Aluno</div>
 
-    <div class="text-white mb-4">
-      <strong>Telefone:</strong> <%= @user.phone || "N/A" %>
-    </div>
+  <div class="text-white mb-4">
+    <strong>Telefone:</strong> <%= @user.phone.presence || "-" %>
+  </div>
 
-    <div class="text-white mb-4">
-      <strong>Endereço:</strong> <%= @user.address || "N/A" %>
-    </div>
+  <div class="text-white mb-4">
+    <strong>Endereço:</strong> <%= @user.address.presence || "-" %>
+  </div>
 
-    <div class="text-white mb-4">
-      <strong>Status:</strong> <%= @user.status || "N/A" %>
-    </div>
+  <div class="text-white mb-4">
+    <strong>Status:</strong> <%= @user.status.presence || "-" %>
+  </div>
 
-    <div class="text-white mb-4">
-      <strong>Data de Nascimento:</strong> <%= @user.date_of_birth || "N/A" %>
-    </div>
+  <div class="text-white mb-4">
+    <strong>Data de Nascimento:</strong> <%= @user.date_of_birth ? @user.date_of_birth.strftime("%d/%m/%Y") : "-" %>
+  </div>
 
-    <div class="text-white mb-4">
-      <strong>Altura:</strong> <%= @user.height ? "#{@user.height} cm" : "N/A" %>
-    </div>
+  <div class="text-white mb-4">
+    <strong>Altura:</strong> <%= @user.height ? "#{@user.height} cm" : "-" %>
+  </div>
 
-    <div class="text-white mb-4">
-      <strong>Peso:</strong> <%= @user.weight ? "#{@user.weight} kg" : "N/A" %>
-    </div>
+  <div class="text-white mb-4">
+    <strong>Peso:</strong> <%= @user.weight ? "#{@user.weight} kg" : "-" %>
+  </div>
 
     <div class="text-white mb-4">
       <strong>Academias:</strong>

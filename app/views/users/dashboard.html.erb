@@ -6,7 +6,14 @@
       <div class="w-[60px] h-[60px] bg-[#393939] rounded-full"></div>
       <div class="ml-4">
         <div class="text-white text-lg font-semibold"><%= @user.name %></div>
-        <div class="text-[#6a6a6a] text-xs"><%= @user_age %> anos - <%= @user.weight %> kg - <%= @user.height / 100.0 %> m</div>
+        <div class="text-[#6a6a6a] text-xs">
+          <% if @user.date_of_birth && @user.height && @user.weight %>
+            <%= @user_age %> anos - <%= @user.weight %> kg - <%= @user.height / 100.0 %> m
+          <% else %>
+            <%= link_to "Concluir dados de cadastro", edit_user_path(@user), class: "text-[#ff8137] hover:underline" %>
+          <% end %>
+        </div>
+
       <!-- Logout Button -->
       <div>
         <%= button_to destroy_user_session_path, method: :delete, class: "text-[#ff8137] text-sm hover:text-white transition" do %>
@@ -85,7 +92,10 @@
                 class: "text-white" do %>
       <i class="fa fa-calendar-alt"></i>
     <% end %>
-    <div class="text-white"><i class="fa fa-user"></i></div>
+    <%= link_to user_path(current_user),
+                class: "text-white" do %>
+      <i class="fa fa-user"></i>
+    <% end %>
   </div>
 
 </div>
