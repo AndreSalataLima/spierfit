@@ -26,12 +26,21 @@ class UsersController < ApplicationController
   end
 
   def update
+    if user_params[:password].blank?
+      flash[:alert] = "A senha é necessária para confirmar as alterações."
+      redirect_to edit_user_path(@user) and return
+    end
+
     if @user.update(user_params)
-      redirect_to @user, notice: 'User was successfully updated.'
+      bypass_sign_in(@user)
+      redirect_to @user, notice: "Perfil atualizado com sucesso."
     else
-      render :edit
+      flash[:alert] = @user.errors.full_messages.to_sentence
+      render :edit, status: :unprocessable_entity
     end
   end
+
+
 
   def destroy
     @user.destroy
@@ -40,9 +49,15 @@ class UsersController < ApplicationController
 
   def dashboard
     @calories_burned_per_day = @user.workouts.group_by_day_of_week(:created_at, format: "%a").sum(:calories_burned)
-    today = Date.today
-    @user_age = today.year - @user.date_of_birth.year - ((today.month > @user.date_of_birth.month || (today.month == @user.date_of_birth.month && today.day >= @user.date_of_birth.day)) ? 0 : 1)
+
+    if @user.date_of_birth.nil?
+      @incomplete_profile = true
+    else
+      today = Date.today
+      @user_age = today.year - @user.date_of_birth.year - ((today.month > @user.date_of_birth.month || (today.month == @user.date_of_birth.month && today.day >= @user.date_of_birth.day)) ? 0 : 1)
+    end
   end
+
 
   def search
     query = params[:query].to_s.downcase
@@ -68,6 +83,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :phone, :address, :status, :date_of_birth, :height, :weight, gym_ids: [])
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :phone, :address, :status, :date_of_birth, :height, :weight, gym_ids: [])
   end
 end
