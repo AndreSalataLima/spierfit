@@ -22,6 +22,11 @@
           <a href="<%= new_user_password_path %>" class="text-white text-lg">Esqueceu a Senha?</a>
         </div>
       <% end %>
+      
+<p class="text-center text-white mt-3 mb-0">
+  Não tem uma conta?
+  <%= link_to "Cadastre-se", new_user_registration_path, class: "text-blue-500" %>
+</p>
 
       <div class="w-full bg-[#a52502] rounded-[100px] flex justify-center items-center gap-6 py-4">
         <%= form.submit "Entrar", class: "text-center text-white text-lg font-bold font-['Manrope']" %>
