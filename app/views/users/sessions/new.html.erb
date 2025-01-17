@@ -6,12 +6,12 @@
 
       <div class="w-full bg-[#303030] rounded-[100px] px-6 py-4 flex items-center gap-4">
         <div class="w-32 text-center text-white text-lg font-medium font-['Manrope']">Login</div>
-        <%= form.email_field :email, autofocus: true, autocomplete: "off", class: "bg-transparent border-none text-white flex-1 text-lg focus:outline-none focus:ring-0 focus:border-transparent" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "off", class: "bg-transparent border-none text-white flex-1 text-lg focus:outline-none focus:ring-0 focus:border-transparent", style: "caret-color: transparent;" %>
       </div>
 
       <div class="w-full bg-[#303030] rounded-[100px] px-6 py-4 flex items-center gap-4">
         <div class="w-32 text-center text-white text-lg font-medium font-['Manrope']">Senha</div>
-        <%= form.password_field :password, autocomplete: "off", class: "bg-transparent border-none text-white flex-1 text-lg focus:outline-none focus:ring-0 focus:border-transparent" %>
+        <%= form.password_field :password, autocomplete: "off", class: "bg-transparent border-none text-white flex-1 text-lg focus:outline-none focus:ring-0 focus:border-transparent", style: "caret-color: transparent;" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
@@ -22,7 +22,7 @@
           <a href="<%= new_user_password_path %>" class="text-white text-lg">Esqueceu a Senha?</a>
         </div>
       <% end %>
-      
+
 <p class="text-center text-white mt-3 mb-0">
   Não tem uma conta?
   <%= link_to "Cadastre-se", new_user_registration_path, class: "text-blue-500" %>
