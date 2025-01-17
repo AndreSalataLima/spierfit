@@ -1,87 +1,45 @@
-<%= form_with(model: personal) do |form| %>
-  <% if personal.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(personal.errors.count, "error") %> prohibited this personal from being saved:</h2>
+  <!-- New Personal Form -->
+  <div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] px-6 py-6 mb-4">
+    <%= form_with(model: @personal, url: personals_path(gym_id: @gym_id), local: true) do |form| %>
+      <% if @personal.errors.any? %>
+        <div id="error_explanation" class="mb-4 text-red-500">
+          <h2 class="font-semibold"><%= pluralize(@personal.errors.count, "erro") %> impediram o salvamento:</h2>
+          <ul class="list-disc list-inside">
+            <% @personal.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-      <ul>
-        <% personal.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+      <div class="space-y-4">
+        <div class="field">
+          <%= form.label :name, "Nome Completo", class: "text-white text-sm font-medium" %>
+          <%= form.text_field :name, class: "w-full bg-[#303030] text-white border-none rounded-md px-4 py-2" %>
+        </div>
+
+        <div class="field">
+          <%= form.label :email, "E-mail", class: "text-white text-sm font-medium" %>
+          <%= form.email_field :email, class: "w-full bg-[#303030] text-white border-none rounded-md px-4 py-2" %>
+        </div>
+
+        <div class="field">
+          <%= form.label :password, "Senha (apenas para novos personais)", class: "text-white text-sm font-medium" %>
+          <%= form.password_field :password, autocomplete: "new-password", class: "w-full bg-[#303030] text-white border-none rounded-md px-4 py-2" %>
+        </div>
+
+        <% if flash[:alert] %>
+          <div class="w-full bg-[#ff4d4d] border border-[#ff1a1a] text-white text-sm font-bold rounded-md px-4 py-2 mb-4 shadow-md flex items-center">
+            <i class="fa fa-exclamation-circle mr-2"></i>
+            <span><%= flash[:alert] %></span>
+          </div>
         <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
+        <div class="actions flex justify-between mt-4">
+          <%= form.submit "Salvar", class: "bg-[#a52502] text-white font-semibold px-6 py-2 rounded-full" %>
+          <%= link_to 'Cancelar', dashboard_gym_path(@gym_id), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
+        </div>
 
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.email_field :email %>
+      </div>
+    <% end %>
   </div>
-
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
-
-  <div class="field">
-    <%= form.label :specialization %>
-    <%= form.text_field :specialization %>
-  </div>
-
-  <div class="field">
-    <%= form.label :availability %>
-    <%= form.text_area :availability %>
-  </div>
-
-  <div class="field">
-    <%= form.label :bio %>
-    <%= form.text_area :bio %>
-  </div>
-
-  <div class="field">
-    <%= form.label :rating %>
-    <%= form.text_field :rating %>
-  </div>
-
-  <div class="field">
-    <%= form.label :languages %>
-    <%= form.text_field :languages %>
-  </div>
-
-  <div class="field">
-    <%= form.label :emergency_contact %>
-    <%= form.text_field :emergency_contact %>
-  </div>
-
-  <div class="field">
-    <%= form.label :current_clients %>
-    <%= form.number_field :current_clients %>
-  </div>
-
-  <div class="field">
-    <%= form.label :certifications %>
-    <%= form.text_area :certifications %>
-  </div>
-
-  <div class="field">
-    <%= form.label :photos %>
-    <%= form.text_area :photos %>
-  </div>
-
-  <div class="field">
-    <%= form.label :plans %>
-    <%= form.text_area :plans %>
-  </div>
-
-  <div class="field">
-    <%= form.label :achievements %>
-    <%= form.text_area :achievements %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>

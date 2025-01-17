@@ -1,10 +1,14 @@
 class PersonalsController < ApplicationController
-  before_action :authenticate_personal!
+  before_action :authenticate_gym!, only: [:new, :create]
+
   before_action :set_personal, only: %i[show edit update destroy dashboard users_index wellness_users_index]
   before_action :ensure_gym_selected, only: [:users_index, :wellness_users_index]
+  before_action :set_gym, only: [:new, :create]
 
   def index
-    @personals = Personal.all
+    @gym = Gym.find(params[:gym_id])
+
+    @personals = @gym.personals
   end
 
   def users_index
@@ -51,20 +55,35 @@ class PersonalsController < ApplicationController
 
   def new
     @personal = Personal.new
+    @gym_id = params[:gym_id] if params[:gym_id].present?
   end
 
   def edit
   end
 
   def create
-    @personal = Personal.new(personal_params)
+    gym_id = params[:gym_id]
+    @gym = Gym.find(gym_id)
 
-    if @personal.save
-      redirect_to @personal, notice: 'Personal was successfully created.'
+    existing_personal = Personal.find_by(email: personal_params[:email])
+    if existing_personal
+      if existing_personal.gyms.include?(@gym)
+        redirect_to gym_personals_path(@gym), notice: "Personal já está vinculado."
+      else
+        existing_personal.gyms << @gym
+        redirect_to gym_personals_path(@gym), notice: "Personal existente vinculado."
+      end
     else
-      render :new
+      @personal = Personal.new(personal_params)
+      if @personal.save
+        @personal.gyms << @gym
+        redirect_to gym_personals_path(@gym), notice: "Novo personal criado e vinculado com sucesso."
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
+
 
   def update
     if @personal.update(personal_params)
@@ -184,6 +203,22 @@ class PersonalsController < ApplicationController
     render json: @users.select(:id, :name)
   end
 
+  def remove_from_gym
+    @personal = Personal.find(params[:id])
+    @gym = Gym.find(params[:gym_id])
+
+    # Remove apenas o vínculo na tabela de junção
+    @personal.gyms.delete(@gym)
+
+    redirect_to gym_personals_path(@gym), notice: "Vínculo removido com sucesso!"
+  end
+
+  def search
+    query = params[:query]
+    @personals = Personal.where("name ILIKE :query OR email ILIKE :query", query: "%#{query}%")
+    render json: @personals.select(:id, :name, :email)
+  end
+
   private
 
   def set_personal
@@ -196,12 +231,24 @@ class PersonalsController < ApplicationController
   end
 
   def personal_params
-    params.require(:personal).permit(:user_id, :specialization, :availability, :bio, :rating, :languages, :emergency_contact, :current_clients, :certifications, :photos, :plans, :achievements)
+    params.require(:personal).permit(
+      :name, :email, :password,
+      :specialization, :availability, :bio, :rating,
+      :languages, :emergency_contact, :current_clients,
+      :certifications, :photos, :plans, :achievements
+    )
   end
 
   def ensure_gym_selected
     unless session[:current_gym_id]
       redirect_to gyms_index_personal_path(current_personal), alert: 'Por favor, selecione uma academia.'
+    end
+  end
+
+  def set_gym
+    @gym = Gym.find_by(id: params[:gym_id])
+    unless @gym
+      redirect_to gyms_path, alert: "Academia não encontrada."
     end
   end
 
