@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
   devise_for :gyms, controllers: { registrations: 'registrations', sessions: 'gyms/sessions' }
   devise_for :users, controllers: { registrations: 'registrations' }
-  devise_for :personals, controllers: { registrations: 'registrations' }
-
+  devise_for :personals, skip: [:registrations], controllers: {
+    sessions: 'personals/sessions',    # se você quiser as sessions
+    passwords: 'personals/passwords'   # se quiser as senhas
+  }
   resources :exercises
 
-  resources :personals, only: [:index, :show, :create, :update, :destroy] do
+  resources :personals, only: [:index, :show, :new, :create, :update, :destroy] do
     member do
       get 'dashboard', to: 'personals#dashboard'
       get 'gyms_index', to: 'personals#gyms_index'
@@ -15,6 +17,11 @@ Rails.application.routes.draw do
       get 'prescribed_workouts', to: 'personals#prescribed_workouts'
       get 'autocomplete_users', to: 'personals#autocomplete_users'
       get 'filter_protocols', to: 'personals#filter_protocols'
+      delete 'remove_from_gym/:gym_id', to: 'personals#remove_from_gym', as: 'remove_from_gym'
+    end
+
+    collection do
+      get :search
     end
 
     # Se você ainda quiser manter a listagem/edição de workout protocols aninhados em personals, mantenha somente:
@@ -82,8 +89,13 @@ Rails.application.routes.draw do
   resources :gyms do
     member do
       get 'dashboard', to: 'gyms#dashboard'
+      get 'personals_index', to: 'gyms#personals_index'
     end
     resources :machines, only: [:index, :new, :create]
+    resources :personals, only: [:index] do
+      post :link, on: :member, to: 'gyms#link' # Corrigido para apontar ao GymsController
+    end
+
   end
 
   resources :protocol_exercises, only: [:new]

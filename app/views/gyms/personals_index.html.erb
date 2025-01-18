@@ -1,0 +1,15 @@
+<h1>Personais vinculados à <%= @gym.name %></h1>
+
+<% @personals.each do |personal| %>
+  <div style="margin-bottom: 1rem;">
+    <strong><%= personal.name %></strong> - <%= personal.email %>
+
+    <!-- Botão para remover o vínculo deste personal com a academia -->
+    <%= link_to "Remover vínculo",
+                remove_from_gym_personal_path(personal, gym_id: @gym.id),
+                method: :delete,
+                data: { confirm: "Deseja realmente remover o vínculo com este personal?" } %>
+  </div>
+<% end %>
+
+<%= link_to "Voltar para Dashboard", dashboard_gym_path(@gym) %>

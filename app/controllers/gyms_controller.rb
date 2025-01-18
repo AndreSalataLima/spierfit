@@ -41,6 +41,20 @@ class GymsController < ApplicationController
     end
   end
 
+  def link
+    @gym = Gym.find(params[:gym_id])
+    @personal = Personal.find(params[:id])
+
+    if @gym.personals.exists?(@personal.id)
+      render json: { message: "Personal já está vinculado a esta academia." }, status: :unprocessable_entity
+    else
+      @gym.personals << @personal
+      render json: { message: "Personal vinculado com sucesso!" }, status: :ok
+    end
+  end
+
+
+
   def dashboard
     # @gym já está definido pelo before_action :set_gym
     # Adicione aqui a lógica específica para carregar os dados do dashboard da academia
