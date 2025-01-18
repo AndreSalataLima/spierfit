@@ -1,3 +1,57 @@
-<h1>New Personal</h1>
-<%= render 'form', personal: @personal %>
-<%= link_to 'Back', personals_path %>
+<%= content_for :title, "Novo Personal" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#1c8394] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Novo Personal</div>
+      </div>
+    </div>
+  </div>
+
+<div
+  class="w-full max-w-[428px] px-4 mb-6"
+  data-controller="gym-personal-filter"
+  data-gym-personal-filter-search-url="<%= search_personals_path %>"
+  data-gym-personal-filter-gym-id="<%= @gym.id %>"
+>
+  <!-- Campo de busca -->
+  <input
+    data-gym-personal-filter-target="input"
+    data-action="input->gym-personal-filter#onInput"
+    type="text"
+    placeholder="Buscar personal por nome ou e-mail..."
+    class="w-full h-10 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400"
+  />
+
+  <!-- Dropdown de resultados -->
+  <ul
+    data-gym-personal-filter-target="dropdown"
+    class="absolute w-full bg-[#151515] rounded-lg shadow-lg mt-2 max-h-48 overflow-y-auto hidden"
+  ></ul>
+</div>
+
+
+  <!-- New Personal Form -->
+  <%= render 'form', personal: @personal %>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full max-w-[428px] bg-[#0e0e0e] rounded-t-[30px] p-3 mt-auto flex justify-around items-center">
+    <div class="text-white text-sm"><i class="fa fa-home"></i></div>
+    <div class="text-white text-sm"><i class="fa-solid fa-chart-column"></i></div>
+    <%= link_to new_machine_path, class: "bg-[#a52502] rounded-full p-4 flex justify-center items-center" do %>
+      <i class="fa fa-dumbbell text-white"></i>
+    <% end %>
+    <div class="text-white text-sm"><i class="fa fa-calendar-alt"></i></div>
+    <%= link_to dashboard_gym_path(@gym), class: "text-white text-sm" do %>
+      <i class="fa fa-user"></i>
+    <% end %>
+
+  </div>
+</div>

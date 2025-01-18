@@ -1,6 +1,6 @@
 <div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e]">
   <!-- Container for Profile Section and Cards with Padding -->
-  <div class="w-full max-w-[450px] p-3 space-y-6"> <!-- Aumentei o espaço entre os elementos -->
+  <div class="w-full max-w-[450px] p-3 space-y-6">
     <!-- Profile Section -->
     <div class="w-full flex items-center mt-4 mb-4">
       <div class="w-[60px] h-[60px] bg-[#393939] rounded-full"></div>
@@ -47,12 +47,7 @@
     </div>
 
     <!-- Training Card -->
-    <div
-        data-controller="training-card"
-        data-action="click->training-card#goToTraining"
-        data-training-card-url-value="<%= select_equipment_machines_path %>"
-        class="w-full bg-gradient-to-b from-[#a52502] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer"
-        data-turbo="false">
+    <%= link_to select_equipment_machines_path, class: "w-full bg-gradient-to-b from-[#a52502] to-[#390d02] rounded-[30px] px-4 py-6 relative cursor-pointer block", data: { turbo: false } do %>
       <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-[30px]"></div>
       <div class="relative">
         <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
@@ -61,23 +56,19 @@
         <div class="text-white text-lg font-semibold">Iniciar Treino</div>
         <div class="text-white text-xs">Treino focado em alta intensidade</div>
       </div>
-    </div>
-
+    <% end %>
 
     <!-- History Card -->
-    <div data-controller="history-card"
-        data-action="click->history-card#goToHistory"
-        data-history-card-url-value="<%= user_workouts_path(current_user.id) %>"
-        class="w-full bg-gradient-to-b from-[#1c8394] to-[#154b52] rounded-[30px] px-4 py-6 relative cursor-pointer">
+    <%= link_to user_workouts_path(current_user.id), class: "w-full bg-gradient-to-b from-[#1c8394] to-[#154b52] rounded-[30px] px-4 py-6 relative cursor-pointer block" do %>
       <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-[30px]"></div>
       <div class="relative">
         <div class="bg-[#0e0e0e]/10 rounded-full px-4 py-2 inline-block mb-4">
           <div class="text-white text-xs font-medium">Iniciante</div>
         </div>
         <div class="text-white text-lg font-semibold">Histórico de Treino</div>
-        <div class="text-white text-xs">Acompanhe sua progressão</div> <!-- Modificação -->
+        <div class="text-white text-xs">Acompanhe sua progressão</div>
       </div>
-    </div>
+    <% end %>
 
   <!-- Bottom Navigation -->
   <div class="w-full max-w-[450px] bg-[#0e0e0e] rounded-t-[30px] p-4 flex justify-around items-center mt-auto">
