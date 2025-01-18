@@ -62,22 +62,20 @@ class PersonalsController < ApplicationController
   end
 
   def create
-    @gym = Gym.find_by(id: params[:gym_id]) # Define @gym
-    @gym_id = @gym&.id # Garante que @gym_id esteja definido
+    @gym = Gym.find_by(id: params[:gym_id])
+    @gym_id = @gym&.id
 
     existing_personal = Personal.find_by(email: personal_params[:email])
     if existing_personal
-      if existing_personal.gyms.include?(@gym)
-        @personal = Personal.new # Adiciona uma instância vazia para evitar o erro
-        flash[:alert] = "Este e-mail já está vinculado a essa academia."
-        render :new, status: :unprocessable_entity
-      else
-        existing_personal.gyms << @gym
-        redirect_to gym_personals_path(@gym), notice: "Personal existente vinculado com sucesso."
-      end
+      # LÓGICA: Bloqueia completamente, pois e-mail já está em uso no banco
+      @personal = Personal.new  # evita erro ao renderizar o form
+      flash[:alert] = "Este e-mail já está em uso. Indisponível para cadastro."
+      render :new, status: :unprocessable_entity
     else
+      # E-mail não existe => cria o personal
       @personal = Personal.new(personal_params)
       if @personal.save
+        # Vínculo
         @personal.gyms << @gym
         redirect_to gym_personals_path(@gym), notice: "Novo personal criado e vinculado com sucesso."
       else
@@ -85,7 +83,6 @@ class PersonalsController < ApplicationController
       end
     end
   end
-
 
 
 
