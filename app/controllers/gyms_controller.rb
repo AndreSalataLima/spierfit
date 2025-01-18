@@ -41,17 +41,18 @@ class GymsController < ApplicationController
     end
   end
 
-  def link_personal
+  def link
     @gym = Gym.find(params[:gym_id])
     @personal = Personal.find(params[:id])
 
-    unless @gym.personals.include?(@personal)
-      @gym.personals << @personal
-      render plain: "Personal vinculado com sucesso.", status: :ok
+    if @gym.personals.exists?(@personal.id)
+      render json: { message: "Personal já está vinculado a esta academia." }, status: :unprocessable_entity
     else
-      render plain: "Personal já está vinculado a esta academia.", status: :unprocessable_entity
+      @gym.personals << @personal
+      render json: { message: "Personal vinculado com sucesso!" }, status: :ok
     end
   end
+
 
 
   def dashboard

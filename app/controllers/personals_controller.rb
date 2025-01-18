@@ -62,16 +62,18 @@ class PersonalsController < ApplicationController
   end
 
   def create
-    gym_id = params[:gym_id]
-    @gym = Gym.find(gym_id)
+    @gym = Gym.find_by(id: params[:gym_id]) # Define @gym
+    @gym_id = @gym&.id # Garante que @gym_id esteja definido
 
     existing_personal = Personal.find_by(email: personal_params[:email])
     if existing_personal
       if existing_personal.gyms.include?(@gym)
-        redirect_to gym_personals_path(@gym), notice: "Personal já está vinculado."
+        @personal = Personal.new # Adiciona uma instância vazia para evitar o erro
+        flash[:alert] = "Este e-mail já está vinculado a essa academia."
+        render :new, status: :unprocessable_entity
       else
         existing_personal.gyms << @gym
-        redirect_to gym_personals_path(@gym), notice: "Personal existente vinculado."
+        redirect_to gym_personals_path(@gym), notice: "Personal existente vinculado com sucesso."
       end
     else
       @personal = Personal.new(personal_params)
@@ -83,6 +85,8 @@ class PersonalsController < ApplicationController
       end
     end
   end
+
+
 
 
   def update
@@ -213,11 +217,18 @@ class PersonalsController < ApplicationController
     redirect_to gym_personals_path(@gym), notice: "Vínculo removido com sucesso!"
   end
 
-  def search
-    query = params[:query]
-    @personals = Personal.where("name ILIKE :query OR email ILIKE :query", query: "%#{query}%")
-    render json: @personals.select(:id, :name, :email)
-  end
+def search
+  query = params[:query]
+  gym_id = params[:gym_id]
+
+  # Excluindo personais já vinculados à academia
+  @personals = Personal
+               .where("name ILIKE :query OR email ILIKE :query", query: "%#{query}%")
+               .where.not(id: Gym.find(gym_id).personals.pluck(:id)) # Exclui vinculados
+
+  render json: @personals.select(:id, :name, :email)
+end
+
 
   private
 

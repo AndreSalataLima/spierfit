@@ -93,7 +93,7 @@ Rails.application.routes.draw do
     end
     resources :machines, only: [:index, :new, :create]
     resources :personals, only: [:index] do
-      post :link, on: :member
+      post :link, on: :member, to: 'gyms#link' # Corrigido para apontar ao GymsController
     end
 
   end
