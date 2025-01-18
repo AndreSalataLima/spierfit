@@ -23,11 +23,6 @@
           <%= form.email_field :email, class: "w-full bg-[#303030] text-white border-none rounded-md px-4 py-2" %>
         </div>
 
-        <div class="field">
-          <%= form.label :password, "Senha (apenas para novos personais)", class: "text-white text-sm font-medium" %>
-          <%= form.password_field :password, autocomplete: "new-password", class: "w-full bg-[#303030] text-white border-none rounded-md px-4 py-2" %>
-        </div>
-
         <% if flash[:alert] %>
           <div class="w-full bg-[#ff4d4d] border border-[#ff1a1a] text-white text-sm font-bold rounded-md px-4 py-2 mb-4 shadow-md flex items-center">
             <i class="fa fa-exclamation-circle mr-2"></i>
@@ -35,9 +30,15 @@
           </div>
         <% end %>
 
+        <div class="field">
+          <%= form.label :password, "Senha (apenas para novos personais)", class: "text-white text-sm font-medium" %>
+          <%= form.password_field :password, autocomplete: "new-password", class: "w-full bg-[#303030] text-white border-none rounded-md px-4 py-2" %>
+        </div>
+
+
         <div class="actions flex justify-between mt-4">
           <%= form.submit "Salvar", class: "bg-[#a52502] text-white font-semibold px-6 py-2 rounded-full" %>
-          <%= link_to 'Cancelar', dashboard_gym_path(@gym_id), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
+          <%= link_to 'Cancelar', dashboard_gym_path(@gym), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
         </div>
 
       </div>

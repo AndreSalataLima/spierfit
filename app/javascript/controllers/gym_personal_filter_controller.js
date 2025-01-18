@@ -21,7 +21,7 @@ export default class extends Controller {
     const searchUrl = this.element.dataset.gymPersonalFilterSearchUrl; // Nome correto
     const gymId = this.element.dataset.gymPersonalFilterGymId;
 
-    fetch(`${searchUrl}?query=${encodeURIComponent(query)}`, {
+    fetch(`${searchUrl}?query=${encodeURIComponent(query)}&gym_id=${gymId}`, {
       headers: { Accept: "application/json" },
     })
       .then((r) => r.json())
@@ -59,35 +59,38 @@ export default class extends Controller {
   }
 
   onSelectPersonal(personal) {
-    // Pergunta se quer vincular
     if (!confirm(`Vincular o personal "${personal.name}" à academia?`)) {
-      return
+      return;
     }
-    this.hideDropdown()
 
-    const gymId = this.element.dataset.gymId
-    const url = `/gyms/${gymId}/personals/${personal.id}/link`
-    console.log("POST:", url)
+    const gymId = this.element.dataset.gymPersonalFilterGymId;
+    const url = `/gyms/${gymId}/personals/${personal.id}/link`;
 
     fetch(url, {
       method: "POST",
       headers: {
-        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
-      }
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+        "Content-Type": "application/json",
+      },
     })
-      .then(r => {
-        if (!r.ok) {
-          throw new Error(`Erro: ${r.statusText}`)
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((data) => {
+            throw new Error(data.message || "Erro ao vincular personal.");
+          });
         }
-        return r.text()
+        return response.json();
       })
-      .then(text => {
-        console.log("Resposta de vinculação:", text)
-        // Você pode exibir um alert, recarregar a lista de Personals, etc.
-        alert("Personal vinculado com sucesso!")
+      .then((data) => {
+        alert(data.message);
+        window.location.href = `/gyms/${gymId}/personals`;
       })
-      .catch(err => console.error("Erro ao vincular personal:", err))
+      .catch((err) => {
+        console.error(err);
+        alert(err.message);
+      });
   }
+
 
   showDropdown() {
     this.dropdownTarget.classList.remove("hidden")
