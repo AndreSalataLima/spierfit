@@ -1,10 +1,8 @@
 Rails.application.routes.draw do
   devise_for :gyms, controllers: { registrations: 'registrations', sessions: 'gyms/sessions' }
   devise_for :users, controllers: { registrations: 'registrations' }
-  devise_for :personals, skip: [:registrations], controllers: {
-    sessions: 'personals/sessions',    # se você quiser as sessions
-    passwords: 'personals/passwords'   # se quiser as senhas
-  }
+  devise_for :personals, skip: [:registrations]
+
   resources :exercises
 
   resources :personals, only: [:index, :show, :new, :create, :update, :destroy] do
@@ -26,7 +24,7 @@ Rails.application.routes.draw do
 
     # Se você ainda quiser manter a listagem/edição de workout protocols aninhados em personals, mantenha somente:
     resources :users, only: [] do
-      resources :workout_protocols, only: [] do
+      resources :workout_protocols, only: [:index] do
         member do
           get :show_for_personal  # Nova action
           post :assign_to_user    # já existe se você quiser neste escopo
