@@ -43,23 +43,14 @@ class MachinesController < ApplicationController
 
   def update
     if @machine.update(machine_params)
-      # Em caso de sucesso, respondemos com Turbo Stream
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flash_messages", locals: { notice: "Distâncias salvas com sucesso." })
-        end
-        format.html { redirect_to exercises_machine_path(@machine), notice: 'Distâncias salvas com sucesso.' }
-      end
+      flash[:notice] = "Máquina atualizada com sucesso."
+      redirect_to machine_path(@machine)
     else
-      # Em caso de erro, também podemos atualizar a área de flash.
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("flash-messages", partial: "shared/flash_messages", locals: { alert: "Erro ao salvar distâncias." })
-        end
-        format.html { render :exercises, status: :unprocessable_entity }
-      end
+      flash.now[:alert] = "Não foi possível atualizar a máquina. Verifique os erros abaixo."
+      render :edit, status: :unprocessable_entity
     end
   end
+
 
 
 
@@ -139,6 +130,21 @@ class MachinesController < ApplicationController
       redirect_to new_user_session_path
     end
   end
+
+  def toggle_status
+    @machine = current_gym.machines.find(params[:id])
+    new_status = @machine.status == "ativo" ? "inativo" : "ativo"
+
+    if @machine.update(status: new_status)
+      flash[:notice] = "Status da máquina atualizado para #{new_status.capitalize}."
+    else
+      flash[:alert] = "Não foi possível atualizar o status da máquina."
+    end
+
+    redirect_to edit_machine_path(@machine)
+  end
+
+
 
   private
 

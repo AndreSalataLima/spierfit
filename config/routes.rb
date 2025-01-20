@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     member do
       get 'exercises', to: 'machines#exercises', as: 'machine_exercises'
       get 'start_exercise_set/:exercise_id', to: 'machines#start_exercise_set', as: 'start_exercise_set'
+      patch :toggle_status
     end
     collection do
       get 'user_index', to: 'machines#user_index'

@@ -1,40 +1,43 @@
-<div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e] p-4">
-  <div class="w-full max-w-[450px] space-y-6">
-    <!-- Título e botão "Nova Máquina" -->
-    <div class="flex justify-between items-center w-full">
-      <h2 class="text-2xl font-bold text-white">Máquinas</h2>
-      <%= link_to 'Nova Máquina', new_machine_path, class: "bg-gradient-to-b from-[#a52502] to-[#390d02] text-white rounded-full py-2 px-4 text-sm font-bold" %>
-    </div>
+<%= content_for :title, "Máquinas" %>
 
-    <!-- Tabela de Máquinas -->
-    <div class="w-full overflow-x-auto">
-      <table class="min-w-full bg-[#202020] rounded-[30px] text-white">
-        <thead>
-          <tr class="bg-[#303030]">
-            <th class="py-3 px-4 text-left">Nome</th>
-            <th class="py-3 px-4 text-left">Descrição</th>
-            <th class="py-3 px-4 text-left">Exercícios Compatíveis</th>
-            <th class="py-3 px-4 text-left">Status</th>
-            <th class="py-3 px-4 text-center" colspan="2">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @machines.each do |machine| %>
-            <tr class="border-b border-[#393939]">
-              <td class="py-3 px-4"><%= machine.name %></td>
-              <td class="py-3 px-4"><%= machine.description %></td>
-              <td class="py-3 px-4"><%= machine.compatible_exercises.reject(&:blank?).join(', ') %></td>
-              <td class="py-3 px-4"><%= machine.status.capitalize %></td>
-              <td class="py-3 px-4 text-center">
-                <%= link_to 'Ver', machine_path(machine), class: "text-blue-500 underline" %>
-              </td>
-              <td class="py-3 px-4 text-center">
-                <%= link_to 'Editar', edit_machine_path(machine), class: "text-blue-500 underline" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#1c8394] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Máquinas</div>
+      </div>
     </div>
   </div>
+
+  <!-- Lista de Máquinas -->
+  <% @machines.each do |machine| %>
+    <div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] px-6 py-4 mb-4 flex justify-between items-center">
+      <!-- Nome da Máquina com Bolinha de Status -->
+      <div class="flex items-center space-x-2">
+        <% if machine.status == "ativo" %>
+          <!-- Bolinha verde -->
+          <span
+            class="w-3 h-3 bg-green-500 rounded-full"
+          ></span>
+        <% elsif machine.status == "inativo" %>
+          <!-- Bolinha vermelha -->
+          <span
+            class="w-3 h-3 bg-red-500 rounded-full"
+          ></span>
+        <% end %>
+        <span class="text-[#d9d9d9] text-base font-medium"><%= machine.name %></span>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="flex space-x-2">
+        <%= link_to '>', machine_path(machine), class: "bg-[#1c8394] text-white px-4 py-2 rounded-full font-semibold text-sm" %>
+      </div>
+    </div>
+  <% end %>
 </div>
