@@ -1,13 +1,10 @@
-<div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e] p-4">
-  <div class="w-full max-w-[450px] space-y-8">
-    <!-- Título -->
-    <h2 class="text-2xl font-bold text-white text-center"><%= @machine.new_record? ? 'Adicionar Aparelho' : 'Editar Aparelho' %></h2>
-
-    <!-- Exibição de erros, se houver -->
+<!-- Formulário de Criação/Edição de Máquina -->
+<div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] px-6 py-6 mb-4">
+  <%= form_with(model: @machine, local: true) do |form| %>
     <% if @machine.errors.any? %>
-      <div class="bg-red-500 text-white rounded-lg p-4">
+      <div class="bg-red-500 text-white rounded-lg p-4 mb-4">
         <h3 class="font-semibold">Por favor, corrija os seguintes erros:</h3>
-        <ul>
+        <ul class="list-disc list-inside">
           <% @machine.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
@@ -15,47 +12,86 @@
       </div>
     <% end %>
 
-    <!-- Formulário de Criação/Edição de Máquina -->
-    <%= form_with(model: @machine, local: true, class: "space-y-6 w-full") do |form| %>
+    <div class="space-y-4">
+      <!-- Campo para buscar e selecionar equipamento -->
+      <div
+        class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col relative"
+        data-controller="equipment-filter"
+      >
+      <%= form.label :name, "Nome do Aparelho", class: "text-white text-sm font-medium mb-2" %>
+      <input
+        data-equipment-filter-target="input"
+        data-action="input->equipment-filter#filter"
+        type="text"
+        placeholder="Buscar equipamento..."
+        class="bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg mb-2"
+        autocomplete="off"
+        name="<%= form.object_name %>[name]"
+        value="<%= @machine.name %>"
+      />
 
-      <!-- Nome do Aparelho -->
-      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
-        <%= form.label :name, class: "text-white text-sm font-medium mb-2" %>
-        <%= form.select :name, options_for_select(@equipment_list, @machine.name), { prompt: 'Selecione o Equipamento' }, class: "bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg" %>
+        <ul
+          data-equipment-filter-target="suggestions"
+          class="absolute bg-[#202020] text-white rounded-md shadow-lg max-h-48 overflow-y-auto w-full hidden"
+          style="top: calc(100% + 4px); left: 0; z-index: 50;"
+        >
+          <% @equipment_list.sort.each do |equipment| %>
+            <li
+              data-equipment-filter-target="suggestion"
+              data-equipment-filter-name-value="<%= equipment.downcase %>"
+              class="p-2 cursor-pointer hover:bg-[#303030]"
+              data-action="click->equipment-filter#selectSuggestion"
+            >
+              <%= equipment %>
+            </li>
+          <% end %>
+        </ul>
       </div>
 
-      <!-- MAC Address -->
+      <!-- Endereço MAC -->
       <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
-        <%= form.label :mac_address, class: "text-white text-sm font-medium mb-2" %>
-        <%= form.text_field :mac_address, class: "bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg", placeholder: "Ex: AA:BB:CC:DD:EE:FF" %>
+        <%= form.label :mac_address, "Endereço MAC", class: "text-white text-sm font-medium mb-2" %>
+        <%= form.text_field :mac_address, placeholder: "Ex: AA:BB:CC:DD:EE:FF", class: "bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg" %>
       </div>
 
       <!-- Descrição do Aparelho -->
       <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
-        <%= form.label :description, class: "text-white text-sm font-medium mb-2" %>
-        <%= form.text_area :description, class: "bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg" %>
+        <%= form.label :description, "Descrição do Aparelho", class: "text-white text-sm font-medium mb-2" %>
+        <%= form.text_area :description, class: "bg-[#202020] text-white border-none rounded-md px-4 py-2 text-lg" %>
       </div>
 
-      <!-- Lista de Exercícios -->
-      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
-        <%= form.label :exercises, class: "text-white text-sm font-medium mb-2" %>
-        <%= form.collection_check_boxes :exercise_ids, Exercise.all, :id, :name do |b| %>
-          <div class="flex items-center">
-            <%= b.check_box(class: "mr-2") %>
-            <%= b.label(class: "text-white text-sm") %>
-          </div>
-        <% end %>
+      <!-- Campo para buscar e selecionar exercícios -->
+      <div
+        class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col"
+        data-controller="exercise-filter"
+      >
+        <%= form.label :exercises, "Exercícios Compatíveis", class: "text-white text-sm font-medium mb-2" %>
+        <input
+          data-exercise-filter-target="searchInput"
+          data-action="input->exercise-filter#filter"
+          type="text"
+          placeholder="Buscar exercício..."
+          class="bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg mb-4"
+        />
+        <div data-exercise-filter-target="exerciseList">
+          <%= form.collection_check_boxes :exercise_ids, Exercise.order(:name), :id, :name do |b| %>
+            <div
+              class="flex items-center mb-2"
+              data-exercise-filter-target="exerciseItem"
+              data-exercise-filter-name-value="<%= b.text.downcase %>"
+            >
+              <%= b.check_box(class: "mr-2") %>
+              <%= b.label(class: "text-white text-sm") %>
+            </div>
+          <% end %>
+        </div>
       </div>
 
-      <!-- Botão de Submissão -->
-      <div class="w-full bg-gradient-to-b from-[#a52502] to-[#390d02] rounded-[30px] flex justify-center items-center py-3">
-        <%= form.submit @machine.new_record? ? "Salvar Aparelho" : "Atualizar Aparelho", class: "text-center text-white text-lg font-bold" %>
+      <!-- Botões -->
+      <div class="actions flex justify-between mt-4">
+        <%= form.submit "Salvar Aparelho", class: "bg-[#a52502] text-white font-semibold px-6 py-2 rounded-full" %>
+        <%= link_to 'Cancelar', gym_machines_path(current_gym), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
       </div>
-    <% end %>
-
-    <!-- Botão de Voltar -->
-    <div class="w-full text-center mt-3">
-      <%= link_to 'Voltar', gym_machines_path(current_gym), class: "text-blue-500 underline" %>
     </div>
-  </div>
+  <% end %>
 </div>

@@ -1,3 +1,21 @@
-<h1>New Machine</h1>
-<%= render 'form', machine: @machine %>
-<%= link_to 'Back', gym_machines_path(current_gym) %>
+<%= content_for :title, "Adicionar Aparelho" %>
+
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#1c8394] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold">Adicionar Aparelho</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Machine Form -->
+  <%= render 'form', machine: @machine %>
+
+
+</div>
