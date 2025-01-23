@@ -109,7 +109,7 @@
             <!-- Lista de Exercícios Adicionados -->
             <div data-exercises-container>
               <!-- AQUI exibe os exercises duplicados se muscle_group == pe_form.object.muscle_group -->
-              <% f.fields_for :protocol_exercises do |pe_form| %>
+              <%= f.fields_for :protocol_exercises do |pe_form| %>
                 <% if pe_form.object.muscle_group == muscle_group %>
                   <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-2 flex justify-between items-center">
                     <div>
