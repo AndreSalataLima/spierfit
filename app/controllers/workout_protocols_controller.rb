@@ -24,24 +24,29 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def new_for_personal
-    authenticate_personal!
-    @muscle_groups ||= [
-      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
-      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
-      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
-    ]
+    puts ">>> Entrou em NEW_FOR_PERSONAL, params: #{params.inspect}"
 
     if params[:protocol_id].present?
       existing_protocol = WorkoutProtocol.find(params[:protocol_id])
       @workout_protocol = existing_protocol.dup
       @workout_protocol.name = "#{existing_protocol.name} (Cópia)"
 
-      # Copia os exercises com muscle_group, day, etc.
-      @workout_protocol.protocol_exercises = existing_protocol.protocol_exercises.map(&:dup)
+      existing_protocol.protocol_exercises.each do |pe|
+        new_pe = pe.dup
+        # Exemplo de debug
+        puts ">>> Duplicando exercise ID=#{pe.id} muscle=#{pe.muscle_group}"
+        @workout_protocol.protocol_exercises << new_pe
+        puts ">>> @workout_protocol.protocol_exercises.count = #{@workout_protocol.protocol_exercises.size}"
+          @workout_protocol.protocol_exercises.each do |pe|
+            puts "   => PE muscle=#{pe.muscle_group} day=#{pe.day}"
+          end
+      end
     else
       @workout_protocol = WorkoutProtocol.new
     end
   end
+
+
 
   # POST /workout_protocols/create_for_personal
   def create_for_personal
@@ -244,16 +249,17 @@ class WorkoutProtocolsController < ApplicationController
       :user_id,
       protocol_exercises_attributes: [
         :id,
-        :muscle_group,
         :exercise_id,
+        :muscle_group,
         :sets,
-        :day,
         :min_repetitions,
         :max_repetitions,
         :observation,
+        :day,
         :_destroy
       ]
     )
   end
+
 
 end
