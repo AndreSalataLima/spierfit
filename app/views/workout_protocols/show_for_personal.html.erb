@@ -15,8 +15,6 @@
     </div>
   </div>
 
-  <!-- Botões Editar e Prescrever (se personal é o autor)
-  <% if @workout_protocol.personal_id == current_personal.id %>
     <div class="w-full max-w-[428px] px-4 mb-4 flex justify-end space-x-2">
       <%= link_to "Editar",
           edit_user_workout_protocol_path(@user, @workout_protocol),
@@ -27,13 +25,6 @@
           class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
 
     </div>
-  <% end %>
--->
-
-
-  <%= link_to "Copiar para outro aluno",
-      new_for_personal_workout_protocols_path(protocol_id: @workout_protocol.id),
-        class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
 
   <!-- Exibe Exercícios, Dias, etc. (sem botão de Executar) -->
   <div class="w-full max-w-[428px] px-4 mb-6 mx-auto">

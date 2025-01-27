@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         member do
           get :show_for_personal  # Nova action
           post :assign_to_user    # já existe se você quiser neste escopo
+          patch :update_for_personal
         end
       end
     end
@@ -97,7 +98,7 @@ Rails.application.routes.draw do
 
   end
 
-  resources :protocol_exercises, only: [:new]
+  resources :protocol_exercises, only: [:new, :create]
 
   # Rotas exclusivas para criar Protocolos
   # =>  new_for_personal / create_for_personal

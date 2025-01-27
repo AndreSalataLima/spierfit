@@ -50,6 +50,8 @@ class WorkoutProtocolsController < ApplicationController
 
   # POST /workout_protocols/create_for_personal
   def create_for_personal
+    Rails.logger.debug ">>> Parâmetros recebidos: #{params.inspect}"
+
     authenticate_personal!
     @workout_protocol = current_personal.workout_protocols.new(workout_protocol_params)
     @workout_protocol.gym_id = session[:current_gym_id]
@@ -94,12 +96,22 @@ class WorkoutProtocolsController < ApplicationController
 
   def update
     if @workout_protocol.update(workout_protocol_params)
-      redirect_to [@user, @workout_protocol], notice: 'Protocolo de treino atualizado com sucesso.'
+      redirect_to show_for_user_user_workout_protocol_path(@user, @workout_protocol)
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
+
+  def update_for_personal
+    # localiza @workout_protocol
+    if @workout_protocol.update(workout_protocol_params)
+      redirect_to show_for_personal_personal_user_workout_protocol_path(@personal, @user, @workout_protocol)
+    else
+      render :edit_for_personal
+    end
+  end
+  
   def destroy
     @workout_protocol.destroy
     redirect_to user_workout_protocols_path(@user), notice: 'Protocolo de treino excluído com sucesso.'
