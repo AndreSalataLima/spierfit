@@ -9,46 +9,40 @@ class ProtocolExercisesController < ApplicationController
   def create
     @workout_protocol = WorkoutProtocol.find(params[:workout_protocol_id])
 
-    # 1. Permitimos os nested attributes:
+    # Permitir nested attributes
     permitted = params.require(:workout_protocol).permit(
       protocol_exercises_attributes: [
-        :muscle_group,
-        :exercise_id,
-        :sets,
-        :min_repetitions,
-        :max_repetitions,
-        :day,
-        :observation
+        :muscle_group, :exercise_id, :sets, :min_repetitions,
+        :max_repetitions, :day, :observation
       ]
     )
 
-    # 2. O Rails pode armazenar em Hash se há somente 1 item,
-    #    ou Array se houver vários. Pegamos o "primeiro" deles:
+    # Extrair dados do exercício
     protocol_exercises_attrs = permitted[:protocol_exercises_attributes]
-    if protocol_exercises_attrs.is_a?(Hash)
-      # => se for um Hash com chave "0", "1", etc.
-      new_exercise_data = protocol_exercises_attrs.values.first
-    elsif protocol_exercises_attrs.is_a?(Array)
-      # => se por algum motivo vier em array
-      new_exercise_data = protocol_exercises_attrs.first
-    end
+    new_exercise_data = protocol_exercises_attrs.is_a?(Hash) ? protocol_exercises_attrs.values.first : protocol_exercises_attrs.first
 
-    # 3. Construímos o novo ProtocolExercise
+    # Criar o novo exercício
     @protocol_exercise = @workout_protocol.protocol_exercises.new(new_exercise_data || {})
 
     if @protocol_exercise.save
-      render json: {
-        redirect_url: edit_user_workout_protocol_path(
-          @workout_protocol.user,
-          @workout_protocol
-        )
-      }, status: :ok
+      # Determinar a URL de redirecionamento com base no tipo de usuário
+      redirect_path = if personal_signed_in?
+                        edit_for_personal_personal_user_workout_protocol_path(
+                          current_personal, @workout_protocol.user, @workout_protocol
+                        )
+                      elsif user_signed_in?
+                        edit_for_user_user_workout_protocol_path(@workout_protocol.user, @workout_protocol)
+                      else
+                        render json: { errors: ['Usuário não autenticado'] }, status: :unauthorized and return
+                      end
+
+      render json: { redirect_url: redirect_path }, status: :ok
     else
-      render json: {
-        errors: @protocol_exercise.errors.full_messages
-      }, status: :unprocessable_entity
+      render json: { errors: @protocol_exercise.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
+
 
   private
 

@@ -17,7 +17,7 @@
 
   <div class="w-full max-w-[428px] px-4 mb-4 flex justify-end space-x-2">
     <%= link_to "Editar",
-        edit_user_workout_protocol_path(@user, @workout_protocol),
+        edit_for_personal_personal_user_workout_protocol_path(@personal, @user, @workout_protocol),
         class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
 
     <!-- Botão para abrir o modal de prescrição -->
@@ -109,42 +109,30 @@
 
 
 <script>
-  function openPrescriptionModal() {
-    document.getElementById('prescriptionModal').classList.remove('hidden');
-  }
-
-  function closePrescriptionModal() {
-    document.getElementById('prescriptionModal').classList.add('hidden');
-  }
-
   function prescribeWorkout() {
     const userId = document.getElementById('selected-user-id').value;
-    const protocolId = <%= @workout_protocol.id %>; // ID do protocolo atual
+    const protocolId = <%= @workout_protocol.id %>;
+    // Usa personalId definido no <script> acima
 
-    if (userId) {
-      // Envia uma requisição para criar uma cópia do protocolo
-      fetch(`/workout_protocols/copy_protocol?protocol_id=${protocolId}&user_id=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Redireciona para a página de edição do novo protocolo
-          window.location.href = `/users/${userId}/workout_protocols/${data.new_protocol_id}/edit`;
-        } else {
-          alert('Erro ao prescrever o protocolo.');
-        }
-      })
-      .catch(error => {
-        console.error('Erro:', error);
+    fetch(`/workout_protocols/copy_protocol?protocol_id=${protocolId}&user_id=${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Redirecionar para rota do personal
+        window.location.href = `/personals/${personalId}/users/${userId}/workout_protocols/${data.new_protocol_id}/edit_for_personal`;
+      } else {
         alert('Erro ao prescrever o protocolo.');
-      });
-    } else {
-      alert('Por favor, selecione um aluno.');
-    }
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Erro ao prescrever o protocolo.');
+    });
   }
 </script>
