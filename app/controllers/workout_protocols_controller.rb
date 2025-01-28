@@ -111,7 +111,7 @@ class WorkoutProtocolsController < ApplicationController
       render :edit_for_personal
     end
   end
-  
+
   def destroy
     @workout_protocol.destroy
     redirect_to user_workout_protocols_path(@user), notice: 'Protocolo de treino excluído com sucesso.'
@@ -224,6 +224,45 @@ class WorkoutProtocolsController < ApplicationController
     @progress_data = progress_data
 
     render :show_for_personal
+  end
+
+  def edit_for_personal
+    @personal = Personal.find(params[:personal_id])
+    @user = User.find(params[:user_id])
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+
+    # Certifique-se de que os protocol_exercises estão sendo carregados corretamente
+    @workout_protocol.protocol_exercises.build if @workout_protocol.protocol_exercises.empty?
+
+    @muscle_groups ||= [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
+  end
+
+  def copy_protocol
+    original_protocol = WorkoutProtocol.find(params[:protocol_id])
+    user = User.find(params[:user_id])
+
+    # Cria uma cópia do protocolo
+    new_protocol = original_protocol.dup
+    new_protocol.user_id = user.id
+    new_protocol.personal_id = current_personal.id
+    new_protocol.name = "#{original_protocol.name} (Cópia)"
+
+    if new_protocol.save
+      # Cria cópias dos protocol_exercises
+      original_protocol.protocol_exercises.each do |pe|
+        new_pe = pe.dup
+        new_pe.workout_protocol_id = new_protocol.id
+        new_pe.save
+      end
+
+      render json: { success: true, new_protocol_id: new_protocol.id }
+    else
+      render json: { success: false, errors: new_protocol.errors.full_messages }
+    end
   end
 
   private

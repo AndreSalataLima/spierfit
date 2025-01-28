@@ -26,8 +26,9 @@ Rails.application.routes.draw do
     resources :users, only: [] do
       resources :workout_protocols, only: [:index] do
         member do
-          get :show_for_personal  # Nova action
-          post :assign_to_user    # já existe se você quiser neste escopo
+          get :show_for_personal
+          get :edit_for_personal
+          post :assign_to_user
           patch :update_for_personal
         end
       end
@@ -108,6 +109,8 @@ Rails.application.routes.draw do
       # Caminho do Personal
       get  'new_for_personal',   to: 'workout_protocols#new_for_personal'
       post 'create_for_personal', to: 'workout_protocols#create_for_personal'
+
+      post 'copy_protocol', to: 'workout_protocols#copy_protocol'
 
       # Caminho do Aluno
       get  'new_for_user',       to: 'workout_protocols#new_for_user'
