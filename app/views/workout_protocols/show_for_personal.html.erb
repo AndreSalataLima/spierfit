@@ -15,16 +15,54 @@
     </div>
   </div>
 
-    <div class="w-full max-w-[428px] px-4 mb-4 flex justify-end space-x-2">
-      <%= link_to "Editar",
-          edit_user_workout_protocol_path(@user, @workout_protocol),
-          class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
+  <div class="w-full max-w-[428px] px-4 mb-4 flex justify-end space-x-2">
+    <%= link_to "Editar",
+        edit_user_workout_protocol_path(@user, @workout_protocol),
+        class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
 
-      <%= link_to "Prescrever para Outro Aluno",
-          new_for_personal_workout_protocols_path(protocol_id: @workout_protocol.id),
-          class: "px-4 py-2 bg-[#1c8394] text-white rounded-full" %>
+    <!-- Botão para abrir o modal de prescrição -->
+    <button onclick="openPrescriptionModal()" class="px-4 py-2 bg-[#1c8394] text-white rounded-full">
+      Prescrever para Outro Aluno
+    </button>
+  </div>
 
+  <!-- Modal de Prescrição -->
+  <div id="prescriptionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+    <div class="w-full max-w-md bg-[#151515] rounded-[30px] p-6">
+      <h2 class="text-white text-lg font-semibold mb-4">Prescrever para Outro Aluno</h2>
+      <div data-controller="user-search" class="mb-6 relative">
+        <label for="user-search" class="text-gray-400 mb-2 block">Atribuir para:</label>
+        <div class="relative">
+          <!-- Campo de Busca -->
+          <input
+            type="text"
+            id="user-search"
+            placeholder="Digite o nome do usuário..."
+            class="w-full h-12 px-4 rounded-full bg-[#202020] text-white focus:outline-none placeholder-gray-400"
+            data-action="input->user-search#fetchUsers"
+          />
+          <!-- Dropdown -->
+          <ul
+            id="user-dropdown"
+            class="absolute w-full bg-[#151515] rounded-lg shadow-lg mt-2 max-h-48 overflow-y-auto hidden"
+            data-target="user-search.list"
+          >
+          </ul>
+        </div>
+        <!-- Campo Oculto para Armazenar o ID do Usuário Selecionado -->
+        <input
+          type="hidden"
+          name="workout_protocol[user_id]"
+          id="selected-user-id"
+          value=""
+        />
+      </div>
+      <div class="flex justify-end space-x-2 mt-4">
+        <button onclick="closePrescriptionModal()" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-full">Cancelar</button>
+        <button onclick="prescribeWorkout()" class="bg-[#1c8394] text-white font-bold py-2 px-4 rounded-full">Prescrever</button>
+      </div>
     </div>
+  </div>
 
   <!-- Exibe Exercícios, Dias, etc. (sem botão de Executar) -->
   <div class="w-full max-w-[428px] px-4 mb-6 mx-auto">
@@ -68,3 +106,45 @@
     <% end %>
   </div>
 </div>
+
+
+<script>
+  function openPrescriptionModal() {
+    document.getElementById('prescriptionModal').classList.remove('hidden');
+  }
+
+  function closePrescriptionModal() {
+    document.getElementById('prescriptionModal').classList.add('hidden');
+  }
+
+  function prescribeWorkout() {
+    const userId = document.getElementById('selected-user-id').value;
+    const protocolId = <%= @workout_protocol.id %>; // ID do protocolo atual
+
+    if (userId) {
+      // Envia uma requisição para criar uma cópia do protocolo
+      fetch(`/workout_protocols/copy_protocol?protocol_id=${protocolId}&user_id=${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Redireciona para a página de edição do novo protocolo
+          window.location.href = `/users/${userId}/workout_protocols/${data.new_protocol_id}/edit`;
+        } else {
+          alert('Erro ao prescrever o protocolo.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao prescrever o protocolo.');
+      });
+    } else {
+      alert('Por favor, selecione um aluno.');
+    }
+  }
+</script>

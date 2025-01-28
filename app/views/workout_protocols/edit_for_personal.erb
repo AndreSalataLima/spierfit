@@ -57,124 +57,117 @@
 
   <!-- Formulário principal -->
   <div class="w-full max-w-[428px] px-4">
-  <%= form_with(url: update_for_personal_personal_user_workout_protocol_path(@personal, @user, @workout_protocol),
-              method: :patch) do |f| %>
+  <%= form_with(url: update_for_personal_personal_user_workout_protocol_path(@personal, @user, @workout_protocol), method: :patch) do |f| %>
+    <!-- Campos do protocolo: nome, descrição, etc. -->
+    <div class="mb-4">
+      <%= f.label :name, 'Nome do Protocolo', class: "text-white mb-2 block" %>
+      <%= f.text_field :name, class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :description, 'Descrição', class: "text-white mb-2 block" %>
+      <%= f.text_area :description, class: "w-full h-32 px-4 bg-[#202020] text-white rounded-lg resize-none" %>
+    </div>
 
-      <!-- Campos do protocolo: nome, descrição, etc. -->
-      <div class="mb-4">
-        <%= f.label :name, 'Nome do Protocolo', class: "text-white mb-2 block" %>
-        <%= f.text_field :name, class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
-      </div>
-      <div class="mb-4">
-        <%= f.label :description, 'Descrição', class: "text-white mb-2 block" %>
-        <%= f.text_area :description, class: "w-full h-32 px-4 bg-[#202020] text-white rounded-lg resize-none" %>
-      </div>
+    <!-- Loop de Grupos Musculares -->
+    <% @muscle_groups.each do |muscle_group| %>
+      <div class="muscle-group-section mb-4 w-full bg-[#151515] rounded-[30px]">
+        <div class="muscle-group-header flex justify-between items-center p-4">
+          <h2 class="text-white font-semibold text-lg"><%= muscle_group %></h2>
+          <button type="button"
+                  data-action="click->edit-workout-protocol#toggle"
+                  data-muscle-group="<%= muscle_group.parameterize %>"
+                  class="text-white text-2xl focus:outline-none">
+            +
+          </button>
+        </div>
 
-      <!-- Loop de Grupos Musculares -->
-      <% @muscle_groups.each do |muscle_group| %>
-        <div class="muscle-group-section mb-4 w-full bg-[#151515] rounded-[30px]">
-          <div class="muscle-group-header flex justify-between items-center p-4">
-            <h2 class="text-white font-semibold text-lg"><%= muscle_group %></h2>
-            <!-- Botão + para expandir/retrair -->
-            <button type="button"
-                    data-action="click->edit-workout-protocol#toggle"
-                    data-muscle-group="<%= muscle_group.parameterize %>"
-                    class="text-white text-2xl focus:outline-none">
-              +
-            </button>
-          </div>
+        <!-- Container de Exercícios -->
+        <div id="exercises-<%= muscle_group.parameterize %>"
+            class="exercises-container hidden px-4 pb-4">
+          <!-- fields_for de exercises já existentes -->
+          <%= f.fields_for :protocol_exercises do |pe_form| %>
+            <% if pe_form.object.muscle_group == muscle_group %>
+              <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-2 flex flex-col">
+                <!-- Select do Exercício -->
+                <div class="mb-2">
+                  <%= pe_form.label :exercise_id, 'Exercício', class: "text-gray-400 mb-2 block" %>
+                  <%= pe_form.select :exercise_id,
+                        Exercise.where(muscle_group: muscle_group).pluck(:name, :id),
+                        {},
+                        class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
+                </div>
 
-          <!-- Container de Exercícios -->
-          <div id="exercises-<%= muscle_group.parameterize %>"
-               class="exercises-container hidden px-4 pb-4"
-          >
-            <!-- fields_for de exercises já existentes -->
-            <%= f.fields_for :protocol_exercises do |pe_form| %>
-              <% if pe_form.object.muscle_group == muscle_group %>
-                <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-2 flex flex-col">
-                  <!-- Select do Exercício -->
-                  <div class="mb-2">
-                    <%= pe_form.label :exercise_id, 'Exercício', class: "text-gray-400 mb-2 block" %>
-                    <%= pe_form.select :exercise_id,
-                          Exercise.where(muscle_group: muscle_group).pluck(:name, :id),
-                          {},
+                <!-- Dia / Séries -->
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                  <div>
+                    <%= pe_form.label :day, 'Dia', class: "text-gray-400 mb-2 block" %>
+                    <%= pe_form.select :day,
+                          options_for_select(('A'..'G').to_a, selected: pe_form.object.day),
+                          { prompt: "Selecione o dia" },
                           class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
                   </div>
-
-                  <!-- Dia / Séries -->
-                  <div class="grid grid-cols-2 gap-2 mb-2">
-                    <div>
-                      <%= pe_form.label :day, 'Dia', class: "text-gray-400 mb-2 block" %>
-                      <%= pe_form.select :day,
-                            options_for_select(('A'..'G').to_a, selected: pe_form.object.day),
-                            { prompt: "Selecione o dia" },
-                            class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
-                    </div>
-                    <div>
-                      <%= pe_form.label :sets, 'Séries', class: "text-gray-400 mb-2 block" %>
-                      <%= pe_form.number_field :sets,
-                            placeholder: "Séries",
-                            class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
-                    </div>
-                  </div>
-
-                  <!-- Rep Min e Max -->
-                  <div class="grid grid-cols-2 gap-2 mb-2">
-                    <div>
-                      <%= pe_form.label :min_repetitions, 'Mín Rep', class: "text-gray-400 mb-2 block" %>
-                      <%= pe_form.number_field :min_repetitions,
-                            placeholder: "Mín",
-                            class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
-                    </div>
-                    <div>
-                      <%= pe_form.label :max_repetitions, 'Máx Rep', class: "text-gray-400 mb-2 block" %>
-                      <%= pe_form.number_field :max_repetitions,
-                            placeholder: "Máx",
-                            class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
-                    </div>
-                  </div>
-
-                  <!-- Observação -->
-                  <div class="mb-2">
-                    <%= pe_form.label :observation, 'Observação', class: "text-gray-400 mb-2 block" %>
-                    <%= pe_form.text_area :observation,
-                          class: "w-full h-20 px-4 bg-[#202020] text-white rounded-lg resize-none",
-                          placeholder: "Observação" %>
-                  </div>
-
-                  <!-- Checkbox para remover -->
-                  <div class="mt-2">
-                  <%= pe_form.check_box :_destroy, class: "mr-1" %>
-                  <%= pe_form.label :_destroy,
-                        "Remover Exercício",
-                        class: "text-red-500 font-bold" %>
+                  <div>
+                    <%= pe_form.label :sets, 'Séries', class: "text-gray-400 mb-2 block" %>
+                    <%= pe_form.number_field :sets,
+                          placeholder: "Séries",
+                          class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
                   </div>
                 </div>
-              <% end %>
+
+                <!-- Rep Min e Max -->
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                  <div>
+                    <%= pe_form.label :min_repetitions, 'Mín Rep', class: "text-gray-400 mb-2 block" %>
+                    <%= pe_form.number_field :min_repetitions,
+                          placeholder: "Mín",
+                          class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
+                  </div>
+                  <div>
+                    <%= pe_form.label :max_repetitions, 'Máx Rep', class: "text-gray-400 mb-2 block" %>
+                    <%= pe_form.number_field :max_repetitions,
+                          placeholder: "Máx",
+                          class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
+                  </div>
+                </div>
+
+                <!-- Observação -->
+                <div class="mb-2">
+                  <%= pe_form.label :observation, 'Observação', class: "text-gray-400 mb-2 block" %>
+                  <%= pe_form.text_area :observation,
+                        class: "w-full h-20 px-4 bg-[#202020] text-white rounded-lg resize-none",
+                        placeholder: "Observação" %>
+                </div>
+
+                <!-- Checkbox para remover -->
+                <div class="mt-2">
+                  <%= pe_form.check_box :_destroy, class: "mr-1" %>
+                  <%= pe_form.label :_destroy, "Remover Exercício", class: "text-red-500 font-bold" %>
+                </div>
+              </div>
             <% end %>
+          <% end %>
 
-            <!-- Botão "Adicionar Exercício" -->
-            <button type="button"
-                    data-action="click->edit-workout-protocol#openModal"
-                    data-muscle-group="<%= muscle_group %>"
-                    class="bg-[#1c8394] text-white font-semibold h-10 rounded-full w-full mt-2"
-            >
-              Adicionar Exercício
-            </button>
-          </div>
+          <!-- Botão "Adicionar Exercício" -->
+          <button type="button"
+                  data-action="click->edit-workout-protocol#openModal"
+                  data-muscle-group="<%= muscle_group %>"
+                  class="bg-[#1c8394] text-white font-semibold h-10 rounded-full w-full mt-2">
+            Adicionar Exercício
+          </button>
         </div>
-      <% end %>
-
-      <!-- Meta de Execução -->
-      <div class="mb-4">
-        <%= f.label :execution_goal, 'Meta de Execução', class: "text-white mb-2 block" %>
-        <%= f.number_field :execution_goal,
-              class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg",
-              placeholder: "Número de treinos" %>
       </div>
-
-      <%= f.submit 'Salvar Alterações', class: "w-full bg-[#1c8394] text-white font-bold h-10 rounded-full" %>
     <% end %>
+
+    <!-- Meta de Execução -->
+    <div class="mb-4">
+      <%= f.label :execution_goal, 'Meta de Execução', class: "text-white mb-2 block" %>
+      <%= f.number_field :execution_goal,
+            class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg",
+            placeholder: "Número de treinos" %>
+    </div>
+
+    <%= f.submit 'Salvar Alterações', class: "w-full bg-[#1c8394] text-white font-bold h-10 rounded-full" %>
+  <% end %>
   </div>
 
 </div>
