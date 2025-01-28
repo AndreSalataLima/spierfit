@@ -74,11 +74,13 @@ Rails.application.routes.draw do
     end
     resources :workouts, only: [:index, :new, :create]
 
-    resources :workout_protocols, only: [:index, :show, :edit, :update, :destroy] do
+    resources :workout_protocols, only: [:index, :show, :destroy] do
       member do
         get :show_for_user
         get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
         post 'assign_to_user', to: 'workout_protocols#assign_to_user'
+        get 'edit_for_user'
+        patch 'update_for_user'
       end
     end
 

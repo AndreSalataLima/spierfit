@@ -20,7 +20,7 @@
   <% if @workout_protocol.user_id == @user.id %>
     <div class="w-full max-w-[428px] mt-4 mb-4">
       <%= link_to "Editar",
-          edit_user_workout_protocol_path(@user, @workout_protocol),
+          edit_for_user_user_workout_protocol_path(@user, @workout_protocol),
           class: "bg-[#a52502] text-white font-semibold px-6 py-3 rounded-full text-center block mx-auto w-max" %>
     </div>
   <% end %>

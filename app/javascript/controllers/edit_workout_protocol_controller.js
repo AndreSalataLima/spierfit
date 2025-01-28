@@ -73,35 +73,37 @@ export default class extends Controller {
    *  D) Salvar exercício via AJAX
    * ----------------------------------------------- */
   saveExercise(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     // Coleta os campos do modal
-    const inputs = this.protocolExerciseFieldsContainerTarget.querySelectorAll("input, select, textarea")
-    const formData = new FormData()
+    const inputs = this.protocolExerciseFieldsContainerTarget.querySelectorAll("input, select, textarea");
+    const formData = new FormData();
 
     inputs.forEach(input => {
-      formData.append(input.name, input.value)
-    })
+      formData.append(input.name, input.value);
+    });
 
     // POST para criar o novo ProtocolExercise
     fetch(`/protocol_exercises?workout_protocol_id=${this.workoutProtocolId}`, {
       method: "POST",
       headers: {
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
       },
-      body: formData
+      body: formData,
     })
       .then(response => response.json())
       .then(data => {
         if (data.redirect_url) {
+          console.log("Redirecionando para:", data.redirect_url);
           // Se deu certo, redireciona à página de edição do protocolo
-          window.location.href = data.redirect_url
+          window.location.href = data.redirect_url;
         } else if (data.errors) {
-          alert("Erro ao salvar: " + data.errors.join(", "))
+          alert("Erro ao salvar: " + data.errors.join(", "));
         }
       })
       .catch(error => {
-        console.error("Erro ao salvar o exercício:", error)
-      })
+        console.error("Erro ao salvar o exercício:", error);
+      });
   }
+
 }

@@ -1,9 +1,10 @@
 class WorkoutProtocolsController < ApplicationController
-  before_action :set_personal_and_user, only: [:index, :show, :edit, :update, :destroy, :show_day]
-  before_action :set_muscle_groups,     only: [:new_for_personal, :create_for_personal,
-                                               :new_for_user,     :create_for_user,
-                                               :edit, :update]
-  before_action :set_workout_protocol,  only: [:show, :edit, :update, :destroy]
+  before_action :set_personal_and_user, only: [:edit_for_user, :update_for_user,
+    :edit_for_personal, :update_for_personal]
+  before_action :set_muscle_groups, only: [:edit_for_user, :update_for_user,
+    :edit_for_personal, :update_for_personal]
+  before_action :set_workout_protocol, only: [:edit_for_user, :update_for_user,
+    :edit_for_personal, :update_for_personal]
 
   def index
     @workout_protocols = @user.workout_protocols
@@ -85,7 +86,7 @@ class WorkoutProtocolsController < ApplicationController
   end
 
 
-  def edit
+  def edit_for_user
     @muscle_groups ||= [
       'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
       'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
@@ -94,14 +95,30 @@ class WorkoutProtocolsController < ApplicationController
   end
 
 
-  def update
+  def update_for_user
     if @workout_protocol.update(workout_protocol_params)
       redirect_to show_for_user_user_workout_protocol_path(@user, @workout_protocol)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit_for_user, status: :unprocessable_entity
     end
   end
 
+  def edit_for_personal
+    @personal = Personal.find(params[:personal_id])
+    @user = User.find(params[:user_id])
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+
+    # Certifique-se de que os protocol_exercises estão sendo carregados corretamente
+    @workout_protocol = @user.workout_protocols
+    .includes(:protocol_exercises)  # se quiser eager load
+    .find(params[:id])
+    
+    @muscle_groups ||= [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
+  end
 
   def update_for_personal
     # localiza @workout_protocol
@@ -226,20 +243,7 @@ class WorkoutProtocolsController < ApplicationController
     render :show_for_personal
   end
 
-  def edit_for_personal
-    @personal = Personal.find(params[:personal_id])
-    @user = User.find(params[:user_id])
-    @workout_protocol = WorkoutProtocol.find(params[:id])
 
-    # Certifique-se de que os protocol_exercises estão sendo carregados corretamente
-    @workout_protocol.protocol_exercises.build if @workout_protocol.protocol_exercises.empty?
-
-    @muscle_groups ||= [
-      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
-      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
-      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
-    ]
-  end
 
   def copy_protocol
     original_protocol = WorkoutProtocol.find(params[:protocol_id])
