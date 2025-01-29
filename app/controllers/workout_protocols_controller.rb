@@ -112,7 +112,7 @@ class WorkoutProtocolsController < ApplicationController
     @workout_protocol = @user.workout_protocols
     .includes(:protocol_exercises)  # se quiser eager load
     .find(params[:id])
-    
+
     @muscle_groups ||= [
       'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
       'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
@@ -135,13 +135,16 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def show_day
-    @day = params[:day]  # "A", "B", etc.
+    @day = params[:day]
     @workout_protocol = WorkoutProtocol.find(params[:id])
 
-    # Exercícios do dia
     @protocol_exercises_for_day = @workout_protocol.protocol_exercises
                                                    .includes(:exercise)
                                                    .where(day: @day)
+
+    # Pegamos a gym associada a este protocolo (ou user) para puxar as máquinas
+    gym_id = @workout_protocol.gym_id || @workout_protocol.user.gym_id  # ou algo assim
+    @machines_for_gym = Gym.find(gym_id).machines.includes(:exercises) if gym_id
 
     # 1. Verificar se há QUALQUER workout aberto para esse user
     other_workout = current_user.workouts.find_by(completed: false)

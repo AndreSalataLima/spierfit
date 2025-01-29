@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   resources :workouts do
     member do
       post 'complete', to: 'workouts#complete'
+      post 'manual_exercise_set', to: 'exercise_sets#create_manual'
     end
     resources :exercise_sets, only: [:show]
   end

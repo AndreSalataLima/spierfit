@@ -113,6 +113,88 @@ end
     render json: { status: 'processed' }
   end
 
+  def create_manual
+    # Definição do protocolo e do dia do treino
+    workout_protocol_id = params[:workout_protocol_id] || Workout.find(params[:id]).workout_protocol_id
+    day = params[:day] || Workout.find(params[:id]).protocol_day
+
+    # Verifica se já existe um workout aberto para esse usuário
+    @workout = current_user.workouts.find_by(completed: false)
+
+    if @workout
+      same_protocol = (@workout.workout_protocol_id == workout_protocol_id)
+      same_day = (@workout.protocol_day == day)
+
+      unless same_protocol && same_day
+        if @workout.workout_protocol_id.nil?
+          # Se for um treino livre, converte para o treino do dia
+          @workout.update!(
+            workout_protocol_id: workout_protocol_id,
+            protocol_day: day
+          )
+        else
+          # Fecha o treino aberto e cria um novo
+          @workout.update!(completed: true)
+          @workout = nil
+        end
+      end
+    end
+
+    # Se não existe um workout aberto, criamos um novo para o dia
+    unless @workout
+      @workout = current_user.workouts.create!(
+        workout_protocol_id: workout_protocol_id,
+        protocol_day: day,
+        completed: false
+      )
+    end
+
+    # A partir daqui, garantimos que temos um @workout correto para o dia/protocolo
+    exercise_id = params[:exercise_id]
+
+    # Obtém as séries passadas no formulário
+    series_params = params.dig(:manual, :series)&.to_unsafe_h
+
+    # Criar um novo ExerciseSet associado ao workout aberto
+    @exercise_set = ExerciseSet.new(
+      workout_id: @workout.id,
+      exercise_id: exercise_id,
+      completed: true
+    )
+
+    # Monta reps_per_series baseado nas séries passadas
+    reps_per_series = {}
+    if series_params.present?
+      series_params.each_with_index do |(_, serie_data), idx|
+        serie_num = idx + 1
+        reps_per_series[serie_num.to_s] = {
+          "reps" => serie_data["reps"],
+          "weight" => serie_data["weight"],
+          "rest_time" => 0
+        }
+      end
+    end
+
+    @exercise_set.reps_per_series = reps_per_series
+    @exercise_set.sets = reps_per_series.size
+    @exercise_set.reps = reps_per_series.values.last.try(:[], "reps").to_i
+    @exercise_set.weight = reps_per_series.values.last.try(:[], "weight").to_i
+
+    if @exercise_set.save
+      Rails.logger.info ">>> Salvo com sucesso: #{@exercise_set.inspect}"
+
+      redirect_to day_user_workout_protocol_path(
+        current_user.id,
+        @workout.workout_protocol_id,
+        @workout.protocol_day
+      ), notice: 'Exercício registrado manualmente com sucesso.'
+    else
+      Rails.logger.info ">>> Erros: #{@exercise_set.errors.full_messages}"
+      flash[:alert] = 'Houve um erro ao salvar o exercício manual.'
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
   private
 
   def set_exercise_set

@@ -16,7 +16,6 @@
   </div>
 
   <!-- Botão Editar (se for dono) -->
-
   <% if @workout_protocol.user_id == @user.id %>
     <div class="w-full max-w-[428px] mt-4 mb-4">
       <%= link_to "Editar",
@@ -26,16 +25,13 @@
   <% end %>
 
   <!-- Indicadores de Progresso -->
-  <!-- (igual ao seu show.html.erb) -->
   <div class="w-full max-w-[428px] px-4 mb-6 mx-auto">
-    <!-- Exemplo de grid com @progress_data -->
     <div class="grid grid-cols-3 gap-4">
       <% @progress_data.each do |day, data| %>
         <div class="flex flex-col items-center bg-[#151515] rounded-[30px] p-4">
           <div class="w-10 h-10 bg-[#303030] rounded-full flex items-center justify-center text-white text-sm font-semibold mb-2">
             <%= day %>
           </div>
-          <!-- Poderia exibir alguma barra de progresso ou sets -->
           <div class="text-white text-sm mt-2">
             <%= "#{data[:completed]}/#{data[:total]}" %>
           </div>
@@ -46,7 +42,8 @@
 
   <!-- Lista de Dias e Exercícios -->
   <div class="w-full max-w-[428px] px-4">
-    <% @progress_data.each do |day, data| %>
+    <% @progress_data.keys.sort.each do |day| %>
+      <% data = @progress_data[day] %>
       <div class="bg-[#151515] rounded-[30px] p-4 mb-4">
         <h2 class="text-white font-semibold text-lg mb-2">Treino <%= day %></h2>
         <% @workout_protocol.protocol_exercises.where(day: day).each do |exercise| %>
@@ -67,7 +64,7 @@
           </div>
         <% end %>
 
-        <!-- Link para DIA X (caso queira show_day) -->
+        <!-- Link para DIA X -->
         <div class="mt-2">
           <%= link_to "Abrir Ficha do Treino #{day}",
               day_user_workout_protocol_path(@user, @workout_protocol, day: day),
