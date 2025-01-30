@@ -22,7 +22,7 @@
         <div class="text-[#d9d9d9] text-base font-medium">
           <%= protocol.name %>
         </div>
-      <%= link_to (@personal.present? ? personal_user_workout_protocol_path(@personal, @user, protocol) : user_workout_protocol_path(@user, protocol)), class: "text-white flex items-center" do %>
+      <%= link_to (@personal.present? ? show_for_personal_personal_user_workout_protocol_path(@personal, @user, protocol) : user_workout_protocol_path(@user, protocol)), class: "text-white flex items-center" do %>
         <i class="fa fa-arrow-right text-lg"></i>
       <% end %>
 

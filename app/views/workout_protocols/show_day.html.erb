@@ -14,19 +14,28 @@
     </div>
   </div>
 
-  <!-- Exercícios do Treino -->
-  <div class="w-full max-w-[428px] px-4">
+  <!-- Envolvendo exercícios e modal com o Stimulus Controller -->
+  <div class="w-full max-w-[428px] px-4" data-controller="manual-exercise">
+
     <% @protocol_exercises_for_day.each do |protocol_exercise| %>
-      <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-4 shadow-lg">
-        <!-- Nome do Exercício -->
+      <% exercise = protocol_exercise.exercise %>
+
+      <!-- Verificar se já foi "concluído" -->
+      <% already_done = @workout.exercise_sets.where(exercise_id: exercise.id).exists? %>
+
+      <!-- Verificar se há pelo menos uma máquina associada ao exercício -->
+      <% has_machine = @machines_for_gym.any? { |m| m.exercises.exists?(id: exercise.id) } if @machines_for_gym.present? %>
+
+      <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-4 shadow-lg relative">
         <div class="flex justify-between items-center">
-          <span class="text-white font-semibold text-lg"><%= protocol_exercise.exercise.name %></span>
-          <% if @workout.exercise_sets.where(exercise_id: protocol_exercise.exercise_id).exists? %>
-            <i class="fa fa-check-circle text-[#ff8137] text-xl"></i>
-          <% end %>
+          <span class="text-white font-semibold text-lg"><%= exercise.name %></span>
+          <div class="flex items-center space-x-2">
+            <% if already_done %>
+              <i class="fa fa-check-circle text-[#ff8137] text-xl"></i>
+            <% end %>
+          </div>
         </div>
 
-        <!-- Detalhes do Exercício -->
         <div class="mt-2 text-gray-400 text-sm">
           <p>Séries: <%= protocol_exercise.sets %> | Repetições:
             <% if protocol_exercise.min_repetitions == protocol_exercise.max_repetitions %>
@@ -40,18 +49,82 @@
           <% end %>
         </div>
 
-        <!-- Botão para Executar Exercício -->
-        <div class="mt-4">
-          <%= link_to "Executar Exercício",
-              select_equipment_machines_path(
-                workout_id: @workout.id,
-                exercise_id: protocol_exercise.exercise_id
-              ),
-              class: "block w-full text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition",
-              data: { turbo: false } %>
-        </div>
+        <!-- Opção de executar exercício -->
+        <div class="mt-4 flex justify-between items-center">
+          <!-- Botão principal -->
+          <button
+            class="block text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition flex-1"
+            data-action="click->manual-exercise#openModal"
+            data-manual-exercise-exercise-id-value="<%= exercise.id %>"
+          >
+            Executar Exercício
+          </button>
 
+          <!-- Ícone de QR Code, apenas para visualização -->
+          <% if has_machine %>
+            <i class="fa fa-qrcode text-white text-2xl ml-4"></i>
+          <% end %>
+        </div>
       </div>
     <% end %>
-  </div>
+
+    <!-- Modal de Exercício Manual -->
+    <div
+      id="manualExerciseModal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden"
+      data-manual-exercise-target="modal"
+    >
+      <div class="bg-[#151c1c] w-[90%] max-w-md p-6 rounded-lg relative text-center">
+        <h2 class="text-white text-lg font-semibold mb-3">Exercício Manual</h2>
+        <p class="text-gray-400 text-sm mb-4">
+          Preencha as séries abaixo (repetições e peso).
+        </p>
+
+        <%= form_with url: manual_exercise_set_workout_path(@workout), method: :post, local: true, data: { turbo: false } do |f| %>
+          <%= hidden_field_tag :exercise_id, "", id: "manual_exercise_exercise_id" %>
+
+          <!-- Container das séries -->
+          <div id="series-container" data-manual-exercise-target="seriesContainer" class="space-y-3 mb-4">
+            <!-- Série 1 (exemplo inicial) -->
+            <div class="flex items-center space-x-2 justify-center">
+              <span class="text-white font-semibold w-5 text-right">1.</span>
+              <input type="number" name="manual[series][0][reps]" placeholder="Reps"
+                class="w-20 bg-[#202020] rounded p-2 text-white text-center placeholder-gray-400" />
+              <input type="number" name="manual[series][0][weight]" placeholder="kg"
+                class="w-20 bg-[#202020] rounded p-2 text-white text-center placeholder-gray-400" />
+            </div>
+          </div>
+
+          <!-- Botão para adicionar séries -->
+          <div class="flex justify-center mb-4">
+            <button
+              type="button"
+              class="bg-gray-600 rounded-full px-4 py-2 text-sm text-white"
+              data-action="click->manual-exercise#addSerie"
+            >
+              + Adicionar Série
+            </button>
+          </div>
+
+          <!-- Botões de ação -->
+          <div class="flex justify-center space-x-4">
+            <button
+              type="button"
+              class="bg-gray-500 text-white rounded-full px-4 py-2"
+              data-action="click->manual-exercise#closeModal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-[#a52502] text-white rounded-full px-4 py-2"
+            >
+              Salvar
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  </div> <!-- Fim do container do Stimulus -->
 </div>

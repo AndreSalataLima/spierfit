@@ -1,0 +1,69 @@
+<!-- Formulário de Edição de Máquina -->
+<div class="w-full max-w-[428px] bg-[#202020] rounded-[30px] px-6 py-6 mb-4">
+  <%= form_with(model: @machine, local: true) do |form| %>
+    <% if @machine.errors.any? %>
+      <div class="bg-red-500 text-white rounded-lg p-4 mb-4">
+        <h3 class="font-semibold">Por favor, corrija os seguintes erros:</h3>
+        <ul class="list-disc list-inside">
+          <% @machine.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="space-y-4">
+      <!-- Nome do Aparelho (somente leitura) -->
+      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
+        <%= form.label :name, "Nome do Aparelho", class: "text-white text-sm font-medium mb-2" %>
+        <input
+          type="text"
+          value="<%= @machine.name %>"
+          class="bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg mb-2"
+          readonly
+        />
+      </div>
+
+      <!-- Endereço MAC -->
+      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
+        <%= form.label :mac_address, "Endereço MAC", class: "text-white text-sm font-medium mb-2" %>
+        <%= form.text_field :mac_address, placeholder: "Ex: AA:BB:CC:DD:EE:FF", class: "bg-[#202020] text-white border-none rounded-md py-2 px-3 text-lg" %>
+      </div>
+
+      <!-- Descrição do Aparelho -->
+      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
+        <%= form.label :description, "Descrição do Aparelho", class: "text-white text-sm font-medium mb-2" %>
+        <%= form.text_area :description, class: "bg-[#202020] text-white border-none rounded-md px-4 py-2 text-lg" %>
+      </div>
+
+      <!-- Exercícios Compatíveis -->
+      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col">
+        <%= form.label :exercises, "Exercícios Compatíveis", class: "text-white text-sm font-medium mb-2" %>
+        <div>
+          <%= form.collection_check_boxes :exercise_ids, Exercise.order(:name), :id, :name do |b| %>
+            <div class="flex items-center mb-2">
+              <%= b.check_box(class: "mr-2") %>
+              <%= b.label(class: "text-white text-sm") %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Botão de Ativar/Desativar -->
+      <div class="w-full bg-[#303030] rounded-[30px] px-4 py-4 flex flex-col items-center">
+        <label class="text-white text-sm font-medium mb-2">Status da Máquina</label>
+        <%= link_to @machine.status == "ativo" ? "Desativar" : "Ativar",
+                    toggle_status_machine_path(@machine),
+                    method: :patch,
+                    class: @machine.status == "ativo" ? "bg-red-500 text-white font-semibold px-6 py-2 rounded-full" : "bg-green-500 text-white font-semibold px-6 py-2 rounded-full",
+                    data: { turbo_method: :patch } %>
+      </div>
+
+      <!-- Botões -->
+      <div class="actions flex justify-between mt-4">
+        <%= form.submit "Salvar Alterações", class: "bg-[#a52502] text-white font-semibold px-6 py-2 rounded-full" %>
+        <%= link_to 'Cancelar', machine_path(@machine), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
+      </div>
+    </div>
+  <% end %>
+</div>
