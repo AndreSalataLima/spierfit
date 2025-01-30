@@ -26,8 +26,10 @@ Rails.application.routes.draw do
     resources :users, only: [] do
       resources :workout_protocols, only: [:index] do
         member do
-          get :show_for_personal  # Nova action
-          post :assign_to_user    # já existe se você quiser neste escopo
+          get :show_for_personal
+          get :edit_for_personal
+          post :assign_to_user
+          patch :update_for_personal
         end
       end
     end
@@ -37,6 +39,7 @@ Rails.application.routes.draw do
     member do
       get 'exercises', to: 'machines#exercises', as: 'machine_exercises'
       get 'start_exercise_set/:exercise_id', to: 'machines#start_exercise_set', as: 'start_exercise_set'
+      patch :toggle_status
     end
     collection do
       get 'user_index', to: 'machines#user_index'
@@ -47,6 +50,7 @@ Rails.application.routes.draw do
   resources :workouts do
     member do
       post 'complete', to: 'workouts#complete'
+      post 'manual_exercise_set', to: 'exercise_sets#create_manual'
     end
     resources :exercise_sets, only: [:show]
   end
@@ -71,11 +75,13 @@ Rails.application.routes.draw do
     end
     resources :workouts, only: [:index, :new, :create]
 
-    resources :workout_protocols, only: [:index, :show, :edit, :update, :destroy] do
+    resources :workout_protocols, only: [:index, :show, :destroy] do
       member do
         get :show_for_user
         get 'day/:day', to: 'workout_protocols#show_day', as: 'day'
         post 'assign_to_user', to: 'workout_protocols#assign_to_user'
+        get 'edit_for_user'
+        patch 'update_for_user'
       end
     end
 
@@ -96,7 +102,7 @@ Rails.application.routes.draw do
 
   end
 
-  resources :protocol_exercises, only: [:new]
+  resources :protocol_exercises, only: [:new, :create]
 
   # Rotas exclusivas para criar Protocolos
   # =>  new_for_personal / create_for_personal
@@ -106,6 +112,8 @@ Rails.application.routes.draw do
       # Caminho do Personal
       get  'new_for_personal',   to: 'workout_protocols#new_for_personal'
       post 'create_for_personal', to: 'workout_protocols#create_for_personal'
+
+      post 'copy_protocol', to: 'workout_protocols#copy_protocol'
 
       # Caminho do Aluno
       get  'new_for_user',       to: 'workout_protocols#new_for_user'

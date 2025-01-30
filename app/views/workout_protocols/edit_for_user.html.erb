@@ -1,49 +1,66 @@
+<!-- app/views/workout_protocols/edit.html.erb -->
+
 <%= content_for :title, "Editar Protocolo - #{@workout_protocol.name}" %>
 
 <div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden"
-     data-controller="muscle-group"
+     data-controller="edit-workout-protocol"
+     data-workout-protocol-id="<%= @workout_protocol.id %>"
 >
   <!-- Navegação Superior -->
-  <div class="w-full max-w-[428px] h-[70px] bg-[#1c8394] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
-    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+  <div class="w-full max-w-[428px] h-[70px] bg-[#a52502] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#ff8137] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
     <div class="absolute inset-0 flex items-center justify-between px-4">
+      <!-- Botão Voltar -->
       <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
         <i class="fa fa-arrow-left text-white text-sm"></i>
       <% end %>
       <div class="flex-1 text-center">
-        <div class="text-white text-base font-semibold">Editar Protocolo</div>
+        <div class="text-white text-base font-semibold"><%= @workout_protocol.name %></div>
       </div>
     </div>
   </div>
 
-  <!-- Modal para Adicionar Exercício (igual new_for_personal) -->
+
+  <!-- Modal para Adicionar Exercício -->
   <div
     id="exerciseModal"
     class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
-    data-muscle-group-target="modal"
+    data-edit-workout-protocol-target="protocolModal"
   >
     <div class="w-full max-w-md bg-[#151515] rounded-[30px] p-6">
-      <h2 class="text-white text-lg font-semibold mb-4">
-        Adicionar Exercício - <span data-muscle-group-target="modalTitle"></span>
-      </h2>
-      <div data-muscle-group-target="exerciseFieldsContainer" class="space-y-4">
-        <!-- partial loaded by fetch() -->
+      <h2 class="text-white text-lg font-semibold mb-4">Adicionar Exercício</h2>
+      <div
+        data-edit-workout-protocol-target="protocolExerciseFieldsContainer"
+        class="space-y-4"
+      >
+        <!-- Partial do exercício vai entrar aqui via fetch -->
       </div>
       <div class="flex justify-end space-x-2 mt-4">
-        <button type="button" data-action="click->muscle-group#closeModal"
-                class="bg-gray-500 text-white font-bold py-2 px-4 rounded-full">Cancelar</button>
-        <button type="button" data-action="click->muscle-group#saveExercise"
-                class="bg-[#1c8394] text-white font-bold py-2 px-4 rounded-full">Salvar</button>
+        <button
+          type="button"
+          data-action="click->edit-workout-protocol#closeModal"
+          class="bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          data-action="click->edit-workout-protocol#saveExercise"
+          class="bg-[#a52502] text-white font-bold py-2 px-4 rounded-full"
+        >
+          Salvar
+        </button>
       </div>
     </div>
   </div>
+  <!-- Fim do Modal -->
 
+  <!-- Formulário principal -->
   <div class="w-full max-w-[428px] px-4">
-    <%= form_with url: create_for_personal_workout_protocols_path,
-              model: @workout_protocol,
-              data: { turbo: false } do |f| %>
+  <%= form_with(model: [@user, @workout_protocol], method: :patch) do |f| %>
 
-      <!-- Nome e Descrição -->
+
+      <!-- Campos do protocolo: nome, descrição, etc. -->
       <div class="mb-4">
         <%= f.label :name, 'Nome do Protocolo', class: "text-white mb-2 block" %>
         <%= f.text_field :name, class: "w-full h-12 px-4 bg-[#202020] text-white rounded-lg" %>
@@ -58,20 +75,21 @@
         <div class="muscle-group-section mb-4 w-full bg-[#151515] rounded-[30px]">
           <div class="muscle-group-header flex justify-between items-center p-4">
             <h2 class="text-white font-semibold text-lg"><%= muscle_group %></h2>
+            <!-- Botão + para expandir/retrair -->
             <button type="button"
-                    data-action="click->muscle-group#toggle"
+                    data-action="click->edit-workout-protocol#toggle"
                     data-muscle-group="<%= muscle_group.parameterize %>"
                     class="text-white text-2xl focus:outline-none">
               +
             </button>
           </div>
 
+          <!-- Container de Exercícios -->
           <div id="exercises-<%= muscle_group.parameterize %>"
-               data-muscle-group-target="container"
                class="exercises-container hidden px-4 pb-4"
           >
-            <!-- fields_for de exercises -->
-            <% f.fields_for :protocol_exercises do |pe_form| %>
+            <!-- fields_for de exercises já existentes -->
+            <%= f.fields_for :protocol_exercises do |pe_form| %>
               <% if pe_form.object.muscle_group == muscle_group %>
                 <div class="exercise-card bg-[#202020] rounded-lg p-4 mb-2 flex flex-col">
                   <!-- Select do Exercício -->
@@ -124,10 +142,13 @@
                           placeholder: "Observação" %>
                   </div>
 
-                  <!-- Checkbox remover -->
+                  <!-- Checkbox para remover -->
                   <div class="mt-2">
-                    <%= pe_form.check_box :_destroy, class: "mr-1" %>
-                    <%= pe_form.label :_destroy, "Remover Exercício", class: "text-red-400" %>
+                  <%= pe_form.check_box :_destroy, class: "mr-1" %>
+                  <%= pe_form.label :_destroy,
+                        "Remover Exercício",
+                        class: "text-red-500 font-bold" %>
+
                   </div>
                 </div>
               <% end %>
@@ -135,9 +156,9 @@
 
             <!-- Botão "Adicionar Exercício" -->
             <button type="button"
-                    data-action="click->muscle-group#openModal"
+                    data-action="click->edit-workout-protocol#openModal"
                     data-muscle-group="<%= muscle_group %>"
-                    class="bg-[#1c8394] text-white font-semibold h-10 rounded-full w-full mt-2"
+                    class="bg-[#a52502] text-white font-semibold h-10 rounded-full w-full mt-2"
             >
               Adicionar Exercício
             </button>
@@ -145,7 +166,7 @@
         </div>
       <% end %>
 
-      <!-- Meta de Execução (Abaixo de tudo) -->
+      <!-- Meta de Execução -->
       <div class="mb-4">
         <%= f.label :execution_goal, 'Meta de Execução', class: "text-white mb-2 block" %>
         <%= f.number_field :execution_goal,
@@ -153,8 +174,8 @@
               placeholder: "Número de treinos" %>
       </div>
 
-      <%= f.submit 'Salvar Alterações', class: "w-full bg-[#1c8394] text-white font-bold h-10 rounded-full" %>
+      <%= f.submit 'Salvar Alterações', class: "w-full bg-[#a52502] text-white font-bold h-10 rounded-full" %>
     <% end %>
-
   </div>
+
 </div>

@@ -1,13 +1,25 @@
-<div class="w-full min-h-screen flex flex-col items-center bg-[#0e0e0e] p-4">
-  <div class="w-full max-w-[450px] space-y-6">
-    <!-- Título com o nome da máquina -->
-    <h2 class="text-2xl font-bold text-white text-center"><%= @machine.name %></h2>
+<%= content_for :title, @machine.name %>
 
+<div class="w-full min-h-screen bg-[#030a08] flex flex-col items-center p-0 overflow-x-hidden">
+
+  <!-- Top Navigation -->
+  <div class="w-full max-w-[428px] h-[70px] bg-[#1c8394] rounded-bl-[30px] rounded-br-[30px] relative mb-4">
+    <div class="absolute inset-0 bg-[#1c8394] opacity-20 rounded-bl-[30px] rounded-br-[30px]"></div>
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <%= link_to 'javascript:history.back()', class: "w-8 h-8 bg-[#0e0e0e]/10 rounded-full border backdrop-blur-sm flex items-center justify-center" do %>
+        <i class="fa fa-arrow-left text-white text-sm"></i>
+      <% end %>
+      <div class="flex-1 text-center">
+        <div class="text-white text-base font-semibold"><%= @machine.name %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full max-w-[428px] space-y-6 px-4">
     <!-- Descrição -->
     <div class="w-full bg-[#303030] rounded-[30px] px-6 py-4">
       <p class="text-white text-sm font-medium">
-        <strong>Descrição:</strong>
-        <%= @machine.description %>
+        <strong>Descrição:</strong> <%= @machine.description.presence || "Não informada" %>
       </p>
     </div>
 
@@ -15,27 +27,32 @@
     <div class="w-full bg-[#303030] rounded-[30px] px-6 py-4">
       <p class="text-white text-sm font-medium">
         <strong>Exercícios Compatíveis:</strong>
-        <%= @machine.compatible_exercises.reject(&:blank?).join(', ') %>
       </p>
+      <% if @machine.exercises.any? %>
+        <ul class="list-disc list-inside mt-2 text-white text-sm">
+          <% @machine.exercises.each do |exercise| %>
+            <li><%= exercise.name %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-white text-sm mt-2">Não informado</p>
+      <% end %>
     </div>
 
-    <!-- Status da Máquina -->
+
+    <!-- Status -->
     <div class="w-full bg-[#303030] rounded-[30px] px-6 py-4">
       <p class="text-white text-sm font-medium">
-        <strong>Status:</strong>
-        <%= @machine.status.capitalize %>
+        <strong>Status:</strong> <%= @machine.status.capitalize %>
       </p>
     </div>
 
+
     <!-- Botões de Ação -->
-    <div class="w-full flex justify-between">
-      <%= link_to 'Editar', edit_machine_path(@machine), class: "bg-[#a52502] text-white rounded-[30px] px-4 py-2 text-center text-sm font-bold" %>
-      <%= link_to 'Voltar', dashboard_gym_path(@machine.gym_id), class: "bg-[#202020] text-white rounded-[30px] px-4 py-2 text-center text-sm" %>
+    <div class="w-full flex justify-center">
+      <%= link_to 'Editar', edit_machine_path(@machine), class: "bg-[#a52502] text-white font-semibold px-6 py-2 rounded-full" %>
     </div>
 
-    <!-- Botão "Exercícios" com estilização mínima -->
-    <div class="w-full mt-4">
-      <%= link_to 'Exercícios', machine_exercises_machine_path(@machine), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center w-full block" %>
-    </div>
+
   </div>
 </div>

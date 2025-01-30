@@ -1,9 +1,10 @@
 class WorkoutProtocolsController < ApplicationController
-  before_action :set_personal_and_user, only: [:index, :show, :edit, :update, :destroy, :show_day]
-  before_action :set_muscle_groups,     only: [:new_for_personal, :create_for_personal,
-                                               :new_for_user,     :create_for_user,
-                                               :edit, :update]
-  before_action :set_workout_protocol,  only: [:show, :edit, :update, :destroy]
+  before_action :set_personal_and_user, only: [:edit_for_user, :update_for_user,
+    :edit_for_personal, :update_for_personal]
+  before_action :set_muscle_groups, only: [:edit_for_user, :update_for_user,
+    :edit_for_personal, :update_for_personal]
+  before_action :set_workout_protocol, only: [:edit_for_user, :update_for_user,
+    :edit_for_personal, :update_for_personal]
 
   def index
     @workout_protocols = @user.workout_protocols
@@ -24,27 +25,34 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def new_for_personal
-    authenticate_personal!
-    @muscle_groups ||= [
-      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
-      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
-      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
-    ]
+    puts ">>> Entrou em NEW_FOR_PERSONAL, params: #{params.inspect}"
 
     if params[:protocol_id].present?
       existing_protocol = WorkoutProtocol.find(params[:protocol_id])
       @workout_protocol = existing_protocol.dup
       @workout_protocol.name = "#{existing_protocol.name} (Cópia)"
 
-      # Copia os exercises com muscle_group, day, etc.
-      @workout_protocol.protocol_exercises = existing_protocol.protocol_exercises.map(&:dup)
+      existing_protocol.protocol_exercises.each do |pe|
+        new_pe = pe.dup
+        # Exemplo de debug
+        puts ">>> Duplicando exercise ID=#{pe.id} muscle=#{pe.muscle_group}"
+        @workout_protocol.protocol_exercises << new_pe
+        puts ">>> @workout_protocol.protocol_exercises.count = #{@workout_protocol.protocol_exercises.size}"
+          @workout_protocol.protocol_exercises.each do |pe|
+            puts "   => PE muscle=#{pe.muscle_group} day=#{pe.day}"
+          end
+      end
     else
       @workout_protocol = WorkoutProtocol.new
     end
   end
 
+
+
   # POST /workout_protocols/create_for_personal
   def create_for_personal
+    Rails.logger.debug ">>> Parâmetros recebidos: #{params.inspect}"
+
     authenticate_personal!
     @workout_protocol = current_personal.workout_protocols.new(workout_protocol_params)
     @workout_protocol.gym_id = session[:current_gym_id]
@@ -78,7 +86,7 @@ class WorkoutProtocolsController < ApplicationController
   end
 
 
-  def edit
+  def edit_for_user
     @muscle_groups ||= [
       'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
       'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
@@ -87,11 +95,37 @@ class WorkoutProtocolsController < ApplicationController
   end
 
 
-  def update
+  def update_for_user
     if @workout_protocol.update(workout_protocol_params)
-      redirect_to [@user, @workout_protocol], notice: 'Protocolo de treino atualizado com sucesso.'
+      redirect_to show_for_user_user_workout_protocol_path(@user, @workout_protocol)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit_for_user, status: :unprocessable_entity
+    end
+  end
+
+  def edit_for_personal
+    @personal = Personal.find(params[:personal_id])
+    @user = User.find(params[:user_id])
+    @workout_protocol = WorkoutProtocol.find(params[:id])
+
+    # Certifique-se de que os protocol_exercises estão sendo carregados corretamente
+    @workout_protocol = @user.workout_protocols
+    .includes(:protocol_exercises)  # se quiser eager load
+    .find(params[:id])
+
+    @muscle_groups ||= [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
+  end
+
+  def update_for_personal
+    # localiza @workout_protocol
+    if @workout_protocol.update(workout_protocol_params)
+      redirect_to show_for_personal_personal_user_workout_protocol_path(@personal, @user, @workout_protocol)
+    else
+      render :edit_for_personal
     end
   end
 
@@ -101,13 +135,16 @@ class WorkoutProtocolsController < ApplicationController
   end
 
   def show_day
-    @day = params[:day]  # "A", "B", etc.
+    @day = params[:day]
     @workout_protocol = WorkoutProtocol.find(params[:id])
 
-    # Exercícios do dia
     @protocol_exercises_for_day = @workout_protocol.protocol_exercises
                                                    .includes(:exercise)
                                                    .where(day: @day)
+
+    # Pegamos a gym associada a este protocolo (ou user) para puxar as máquinas
+    gym_id = @workout_protocol.gym_id || @workout_protocol.user.gym_id  # ou algo assim
+    @machines_for_gym = Gym.find(gym_id).machines.includes(:exercises) if gym_id
 
     # 1. Verificar se há QUALQUER workout aberto para esse user
     other_workout = current_user.workouts.find_by(completed: false)
@@ -209,6 +246,32 @@ class WorkoutProtocolsController < ApplicationController
     render :show_for_personal
   end
 
+
+
+  def copy_protocol
+    original_protocol = WorkoutProtocol.find(params[:protocol_id])
+    user = User.find(params[:user_id])
+
+    # Cria uma cópia do protocolo
+    new_protocol = original_protocol.dup
+    new_protocol.user_id = user.id
+    new_protocol.personal_id = current_personal.id
+    new_protocol.name = "#{original_protocol.name} (Cópia)"
+
+    if new_protocol.save
+      # Cria cópias dos protocol_exercises
+      original_protocol.protocol_exercises.each do |pe|
+        new_pe = pe.dup
+        new_pe.workout_protocol_id = new_protocol.id
+        new_pe.save
+      end
+
+      render json: { success: true, new_protocol_id: new_protocol.id }
+    else
+      render json: { success: false, errors: new_protocol.errors.full_messages }
+    end
+  end
+
   private
 
   def set_personal_and_user
@@ -244,16 +307,17 @@ class WorkoutProtocolsController < ApplicationController
       :user_id,
       protocol_exercises_attributes: [
         :id,
-        :muscle_group,
         :exercise_id,
+        :muscle_group,
         :sets,
-        :day,
         :min_repetitions,
         :max_repetitions,
         :observation,
+        :day,
         :_destroy
       ]
     )
   end
+
 
 end

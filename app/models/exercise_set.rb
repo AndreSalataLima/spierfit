@@ -1,7 +1,7 @@
 class ExerciseSet < ApplicationRecord
   belongs_to :workout
   belongs_to :exercise
-  belongs_to :machine
+  belongs_to :machine, optional: true
   # has_many :arduino_data, class_name: 'ArduinoDatum'
   has_many :data_points
 
