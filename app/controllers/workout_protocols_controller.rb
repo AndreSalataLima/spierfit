@@ -45,6 +45,13 @@ class WorkoutProtocolsController < ApplicationController
     else
       @workout_protocol = WorkoutProtocol.new
     end
+
+    @muscle_groups = [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
+
   end
 
 
@@ -67,8 +74,13 @@ class WorkoutProtocolsController < ApplicationController
   def new_for_user
     authenticate_user!
     @workout_protocol = WorkoutProtocol.new
-    # @workout_protocol.gym_id = ... se o user tiver uma current_gym
-    # Ex: view: app/views/workout_protocols/new_for_user.html.erb
+
+    @muscle_groups = [
+      'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+      'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+      'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+    ]
+    
   end
 
   # POST /workout_protocols/create_for_user
