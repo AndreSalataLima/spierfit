@@ -22,7 +22,7 @@
 
     <!-- Botão para abrir o modal de prescrição -->
     <button onclick="openPrescriptionModal()" class="px-4 py-2 bg-[#1c8394] text-white rounded-full">
-      Prescrever para Outro Aluno
+      Prescrever para outro aluno
     </button>
   </div>
 
@@ -109,30 +109,46 @@
 
 
 <script>
+  function openPrescriptionModal() {
+    document.getElementById('prescriptionModal').classList.remove('hidden');
+  }
+
+  function closePrescriptionModal() {
+    document.getElementById('prescriptionModal').classList.add('hidden');
+  }
+
   function prescribeWorkout() {
     const userId = document.getElementById('selected-user-id').value;
-    const protocolId = <%= @workout_protocol.id %>;
-    // Usa personalId definido no <script> acima
+    const protocolId = <%= @workout_protocol.id %>; // ID do protocolo atual
+    const personalId = <%= @personal.id %>; // ID do personal logado
 
-    fetch(`/workout_protocols/copy_protocol?protocol_id=${protocolId}&user_id=${userId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Redirecionar para rota do personal
-        window.location.href = `/personals/${personalId}/users/${userId}/workout_protocols/${data.new_protocol_id}/edit_for_personal`;
-      } else {
+    if (userId) {
+      // Envia uma requisição para criar uma cópia do protocolo
+      fetch(`/workout_protocols/copy_protocol?protocol_id=${protocolId}&user_id=${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log("Redirecionando para edição do protocolo:", data.new_protocol_id);
+
+          // Redireciona para a edição como PERSONAL, não como USER
+          window.location.href = `/personals/${personalId}/users/${userId}/workout_protocols/${data.new_protocol_id}/edit_for_personal`;
+        } else {
+          alert('Erro ao prescrever o protocolo.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
         alert('Erro ao prescrever o protocolo.');
-      }
-    })
-    .catch(error => {
-      console.error(error);
-      alert('Erro ao prescrever o protocolo.');
-    });
+      });
+    } else {
+      alert('Por favor, selecione um aluno.');
+    }
   }
 </script>
+
