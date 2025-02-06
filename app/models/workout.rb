@@ -6,11 +6,11 @@ class Workout < ApplicationRecord
   has_many :exercises, through: :exercise_sets
 
   def total_distance
-    exercise_sets.joins(:arduino_data).sum('arduino_data.value')
+    exercise_sets.joins(:data_points).sum('data_points.value')
   end
 
   def total_duration
     exercise_sets.sum(:duration)
   end
-  
+
 end

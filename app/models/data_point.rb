@@ -1,6 +1,9 @@
 class DataPoint < ApplicationRecord
   belongs_to :exercise_set, optional: true
 
+  validates :value, presence: true
+  validates :mac_address, presence: true
+
   after_create_commit :broadcast_data_point
 
   private
