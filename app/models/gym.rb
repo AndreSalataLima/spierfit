@@ -6,4 +6,7 @@ class Gym < ApplicationRecord
   has_and_belongs_to_many :personals
   has_many :machines
   has_many :workouts, through: :machines
+
+  validates :name, presence: true
+
 end

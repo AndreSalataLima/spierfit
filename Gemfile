@@ -28,6 +28,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails'    # Use RSpec for testing
+  gem 'bullet'
+  gem 'shoulda-matchers'
 end
 
 group :development do
