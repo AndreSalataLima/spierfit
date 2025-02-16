@@ -37,7 +37,7 @@ class MachinesController < ApplicationController
       redirect_to machine_path(@machine), notice: 'Machine was successfully created.'
     else
       @equipment_list = EQUIPMENT_LIST
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

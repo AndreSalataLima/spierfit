@@ -1,16 +1,18 @@
 class WorkoutProtocolsController < ApplicationController
   before_action :set_personal_and_user, only: [:edit_for_user, :update_for_user,
-    :edit_for_personal, :update_for_personal]
+    :edit_for_personal, :update_for_personal, :destroy]
   before_action :set_muscle_groups, only: [:edit_for_user, :update_for_user,
-    :edit_for_personal, :update_for_personal]
+    :edit_for_personal, :update_for_personal, :destroy]
   before_action :set_workout_protocol, only: [:edit_for_user, :update_for_user,
-    :edit_for_personal, :update_for_personal]
+    :edit_for_personal, :update_for_personal, :destroy]
 
   def index
+    @user = User.find(params[:user_id])
     @workout_protocols = @user.workout_protocols
   end
 
   def show
+    @user = User.find(params[:user_id])
     @workout_protocol = WorkoutProtocol.find(params[:id])
 
     # Agrupa os exercícios por dia e calcula o progresso de cada dia
@@ -67,6 +69,11 @@ class WorkoutProtocolsController < ApplicationController
     if @workout_protocol.save
       redirect_to prescribed_workouts_personal_path(current_personal), notice: 'Protocolo criado com sucesso (Personal).'
     else
+      @muscle_groups = [
+        'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+        'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+        'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+      ]
       render :new_for_personal, status: :unprocessable_entity
     end
   end
@@ -80,7 +87,7 @@ class WorkoutProtocolsController < ApplicationController
       'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
       'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
     ]
-    
+
   end
 
   # POST /workout_protocols/create_for_user
@@ -92,7 +99,11 @@ class WorkoutProtocolsController < ApplicationController
       redirect_to user_workout_protocol_path(current_user, @workout_protocol),
                   notice: 'Protocolo criado com sucesso (Aluno).'
     else
-      Rails.logger.info ">>> ERROS: #{@workout_protocol.errors.full_messages}"
+      @muscle_groups = [
+        'Peitoral', 'Dorsais', 'Deltóides', 'Trapézio',
+        'Tríceps', 'Bíceps', 'Antebraço', 'Coxas',
+        'Glúteos', 'Panturrilhas', 'Abdômen e Lombar'
+      ]
       render :new_for_user, status: :unprocessable_entity
     end
   end

@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
   devise_for :gyms, controllers: { registrations: 'registrations', sessions: 'gyms/sessions' }
-  devise_for :users, controllers: { registrations: 'registrations' }
+  devise_for :users, path: 'auth', controllers: { registrations: 'registrations' }
   devise_for :personals, skip: [:registrations]
 
   resources :exercises
 
-  resources :personals, only: [:index, :show, :new, :create, :update, :destroy] do
+  resources :personals, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     member do
       get 'dashboard', to: 'personals#dashboard'
       get 'gyms_index', to: 'personals#gyms_index'
@@ -66,8 +66,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :arduino_cloud_data, only: [:index]
-
   resources :users do
     member do
       get 'dashboard', to: 'users#dashboard'
@@ -96,7 +94,7 @@ Rails.application.routes.draw do
       get 'personals_index', to: 'gyms#personals_index'
     end
     resources :machines, only: [:index, :new, :create]
-    resources :personals, only: [:index] do
+    resources :personals, only: [:index, :new, :create] do
       post :link, on: :member, to: 'gyms#link' # Corrigido para apontar ao GymsController
     end
 
@@ -131,8 +129,6 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
-  post 'arduino_cloud_data/receive_data', to: 'arduino_cloud_data#receive_data'
-  get 'arduino_cloud_data',               to: 'arduino_cloud_data#index'
   get "up" => "rails/health#show", as: :rails_health_check
 
   root to: 'pages#welcome'

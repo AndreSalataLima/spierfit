@@ -30,6 +30,7 @@ group :development, :test do
   gem 'rspec-rails'    # Use RSpec for testing
   gem 'bullet'
   gem 'shoulda-matchers'
+  gem 'simplecov', require: false
 end
 
 group :development do
