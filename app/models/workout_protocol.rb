@@ -4,6 +4,7 @@ class WorkoutProtocol < ApplicationRecord
   belongs_to :gym
 
   has_many :protocol_exercises, dependent: :destroy
+  has_many :workouts, dependent: :nullify
 
   accepts_nested_attributes_for :protocol_exercises, allow_destroy: true#, reject_if: proc { |attributes| attributes['exercise_id'].blank? }
 

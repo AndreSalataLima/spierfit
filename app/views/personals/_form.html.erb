@@ -38,7 +38,8 @@
 
         <div class="actions flex justify-between mt-4">
           <%= form.submit "Salvar", class: "bg-[#a52502] text-white font-semibold px-6 py-2 rounded-full" %>
-          <%= link_to 'Cancelar', dashboard_gym_path(@gym), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
+          <%#= link_to 'Cancelar', dashboard_gym_path(@gym), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
+          <%= link_to 'Cancelar', @gym ? dashboard_gym_path(@gym) : dashboard_personal_path(current_personal), class: "bg-[#303030] text-white font-semibold px-6 py-2 rounded-full flex items-center justify-center" %>
         </div>
 
       </div>

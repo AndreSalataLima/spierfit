@@ -52,6 +52,8 @@ end
 
   # Método para atualizar o conjunto de exercícios
   def update
+    @data_points = @exercise_set.data_points.order(:created_at)
+
     if @exercise_set.update(exercise_set_params)
       broadcast_exercise_set_data
       redirect_to edit_exercise_set_path(@exercise_set), notice: 'Exercise set was successfully updated.'
@@ -193,6 +195,11 @@ end
       flash[:alert] = 'Houve um erro ao salvar o exercício manual.'
       redirect_back(fallback_location: root_path)
     end
+  end
+
+  def destroy
+    @exercise_set.destroy
+    redirect_to workouts_path, notice: 'Exercise set was successfully destroyed.'
   end
 
   private

@@ -1,6 +1,6 @@
 class PersonalsController < ApplicationController
   before_action :authenticate_gym!, only: [:new, :create]
-
+  # before_action :authenticate_personal!, only: [:show, :edit, :update, :destroy, :dashboard]
   before_action :set_personal, only: %i[show edit update destroy dashboard users_index wellness_users_index]
   before_action :ensure_gym_selected, only: [:users_index, :wellness_users_index]
   before_action :set_gym, only: [:new, :create]
@@ -51,6 +51,8 @@ class PersonalsController < ApplicationController
   end
 
   def show
+    @personal = Personal.find(params[:id])
+
   end
 
   def new
@@ -84,13 +86,11 @@ class PersonalsController < ApplicationController
     end
   end
 
-
-
   def update
     if @personal.update(personal_params)
       redirect_to @personal, notice: 'Personal was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -231,11 +231,14 @@ end
 
   def set_personal
     @personal = Personal.find(params[:id])
+    redirect_to(new_personal_session_path) and return unless current_personal
 
     # Verificação adicional
     unless @personal.gyms.present? && session[:current_gym_id]
       redirect_to gyms_index_personal_path(current_personal), alert: 'Por favor, selecione uma academia.'
     end
+    @gym = Gym.find(session[:current_gym_id]) if session[:current_gym_id]
+
   end
 
   def personal_params

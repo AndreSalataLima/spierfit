@@ -29,7 +29,7 @@ class GymsController < ApplicationController
     if @gym.update(gym_params)
       redirect_to @gym, notice: 'Gym was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

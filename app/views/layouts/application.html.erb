@@ -12,6 +12,16 @@
 </head>
 
 <body class="bg-[#0e0e0e] min-h-screen flex flex-col">
+
+    <!-- Flash messages -->
+    <% if notice %>
+      <p class="alert alert-success"><%= notice %></p>
+    <% end %>
+    <% if alert %>
+      <p class="alert alert-danger"><%= alert %></p>
+    <% end %>
+
+
   <% if current_page?(root_path) %>
     <header class="p-4 bg-gray-900 w-full flex justify-between items-center">
       <!-- Logo -->
@@ -30,6 +40,8 @@
           <% end %>
         </nav>
       <% end %>
+
+
     </header>
   <% else %>
     <!-- Outro conteúdo de cabeçalho para páginas não-raiz pode ser colocado aqui -->
