@@ -14,4 +14,6 @@ class Workout < ApplicationRecord
     exercise_sets.sum(:duration)
   end
 
+  validates :workout_protocol_id, presence: true
+
 end

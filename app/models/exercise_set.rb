@@ -5,10 +5,10 @@ class ExerciseSet < ApplicationRecord
   has_many :data_points
 
 
-  validates :reps, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :sets, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :reps, numericality: { only_integer: true, greater_than: 0 }
+  validates :sets, numericality: { only_integer: true, greater_than: 0 }
 
-  
+
   before_create :initialize_reps_per_series
 
   private
