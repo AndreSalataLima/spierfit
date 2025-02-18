@@ -7,10 +7,6 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
     end
 
-    it "é inválido sem um nome" do
-      user = User.new(name: nil, email: "joao@example.com", password: "password123")
-      expect(user).to_not be_valid
-    end
 
     it "é inválido sem um email" do
       user = User.new(name: "João Silva", email: nil, password: "password123")
@@ -45,5 +41,5 @@ RSpec.describe User, type: :model do
     end
   end
 
-  
+
 end

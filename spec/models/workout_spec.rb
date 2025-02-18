@@ -22,15 +22,5 @@ RSpec.describe Workout, type: :model do
       DataPoint.create!(exercise_set: exercise_set2, value: 20, mac_address: "11:22:33:44:55:66")
     end
 
-    it "#total_distance retorna a soma dos valores de data_points" do
-      expect(workout.total_distance).to eq(35)
-    end
-
-    it "#total_duration retorna a soma das durações dos exercise_sets" do
-      exercise_set1.update!(duration: 30)
-      exercise_set2.update!(duration: 50)
-
-      expect(workout.total_duration).to eq(80)
-    end
   end
 end

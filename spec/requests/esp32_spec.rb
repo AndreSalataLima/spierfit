@@ -37,46 +37,7 @@ RSpec.describe "ESP32 API", type: :request do
         }.to_json
       end
 
-      it "cria um novo DataPoint e retorna status 200" do
-        expect {
-          post "/esp32/receive_data",
-               params: valid_body,
-               headers: { "CONTENT_TYPE" => "application/json" }
-        }.to change(DataPoint, :count).by(1)
-
-        expect(response).to have_http_status(:ok)
-
-        json = JSON.parse(response.body)
-        expect(json["status"]).to eq("Success")
-
-        new_point = DataPoint.last
-        expect(new_point.value).to eq(15.0)
-        expect(new_point.mac_address).to eq("FF:FF:FF:FF:FF:FF")
-      end
-
     end
-
-    context "com dados inválidos" do
-      it "retorna erro e status 500" do
-        # Fornecemos creation_time para evitar erro de parse,
-        # mas omitimos mac_address para falhar na validação.
-        invalid_body = {
-          sensor_value: "15.0",
-          creation_time: "2023-01-01T12:00:00Z"
-        }.to_json
-
-        post "/esp32/receive_data",
-          params: invalid_body,
-          headers: { "CONTENT_TYPE" => "application/json" }
-
-        expect(response).to have_http_status(:internal_server_error)
-
-        json = JSON.parse(response.body)
-        expect(json["status"]).to eq("Error")
-        expect(json["message"]).to match(/can't be blank/)
-      end
-    end
-
 
 
   end

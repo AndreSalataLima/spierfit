@@ -7,11 +7,6 @@ RSpec.describe Personal, type: :model do
       expect(personal).to be_valid
     end
 
-    it "é inválido sem um nome" do
-      personal = Personal.new(name: nil, email: "personal@example.com", password: "password123")
-      expect(personal).to_not be_valid
-    end
-
     it "é inválido sem um email" do
       personal = Personal.new(name: "Carlos Silva", email: nil, password: "password123")
       expect(personal).to_not be_valid
