@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "data_points", force: :cascade do |t|
@@ -27,6 +28,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
   create_table "exercise_sets", force: :cascade do |t|
     t.bigint "workout_id"
     t.bigint "exercise_id"
+    t.integer "average_force"
+    t.integer "energy_consumed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "completed", default: false
+    t.bigint "machine_id"
+    t.jsonb "reps_per_series", default: {}
+    t.float "power_in_watts"
     t.integer "reps"
     t.integer "sets"
     t.integer "weight"
@@ -35,20 +44,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
     t.string "intensity"
     t.text "feedback"
     t.integer "max_reps"
-    t.integer "average_force"
     t.string "effort_level"
-    t.integer "energy_consumed"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "completed", default: false
-    t.bigint "machine_id"
     t.integer "current_series", default: 1
-    t.jsonb "reps_per_series", default: {}
     t.boolean "series_completed", default: false
-    t.float "power_in_watts"
     t.integer "last_processed_data_id"
-    t.json "weight_changes", default: []
-    t.boolean "in_series", default: false
+    t.json "weight_changes"
+    t.boolean "in_series"
     t.index ["exercise_id"], name: "index_exercise_sets_on_exercise_id"
     t.index ["machine_id"], name: "index_exercise_sets_on_machine_id"
     t.index ["workout_id"], name: "index_exercise_sets_on_workout_id"
@@ -195,6 +196,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "weight_changes", force: :cascade do |t|
+    t.bigint "exercise_set_id", null: false
+    t.float "weight"
+    t.datetime "changed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_set_id"], name: "index_weight_changes_on_exercise_set_id"
+  end
+
   create_table "workout_protocols", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -228,7 +238,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
     t.datetime "updated_at", null: false
     t.boolean "completed", default: false
     t.string "protocol_day"
-    t.bigint "workout_protocol_id", null: false
+    t.bigint "workout_protocol_id"
     t.index ["gym_id"], name: "index_workouts_on_gym_id"
     t.index ["personal_id"], name: "index_workouts_on_personal_id"
     t.index ["user_id"], name: "index_workouts_on_user_id"
@@ -244,6 +254,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
   add_foreign_key "protocol_exercises", "exercises"
   add_foreign_key "protocol_exercises", "workout_protocols"
   add_foreign_key "users", "gyms"
+  add_foreign_key "weight_changes", "exercise_sets"
   add_foreign_key "workout_protocols", "gyms"
   add_foreign_key "workout_protocols", "personals"
   add_foreign_key "workout_protocols", "users"

@@ -51,18 +51,20 @@
 
         <!-- Opção de executar exercício -->
         <div class="mt-4 flex justify-between items-center">
-          <!-- Botão principal -->
-          <button
-            class="block text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition flex-1"
-            data-action="click->manual-exercise#openModal"
-            data-manual-exercise-exercise-id-value="<%= exercise.id %>"
-          >
-            Executar Exercício
-          </button>
-
-          <!-- Ícone de QR Code, apenas para visualização -->
+          <!-- Se houver máquina, redireciona para seleção de equipamento -->
           <% if has_machine %>
+            <%= link_to "Executar Exercício", select_equipment_machines_path(exercise_id: exercise.id),
+              class: "block text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition flex-1" %>
             <i class="fa fa-qrcode text-white text-2xl ml-4"></i>
+          <% else %>
+            <!-- Se não houver máquina, abre o modal para registro manual -->
+            <button
+              class="block text-center py-2 bg-[#a52502] text-white rounded-md hover:bg-[#ff8137] transition flex-1"
+              data-action="click->manual-exercise#openModal"
+              data-manual-exercise-exercise-id-value="<%= exercise.id %>"
+            >
+              Executar Exercício
+            </button>
           <% end %>
         </div>
       </div>
@@ -85,7 +87,6 @@
 
           <!-- Container das séries -->
           <div id="series-container" data-manual-exercise-target="seriesContainer" class="space-y-3 mb-4">
-            <!-- Série 1 (exemplo inicial) -->
             <div class="flex items-center space-x-2 justify-center">
               <span class="text-white font-semibold w-5 text-right">1.</span>
               <input type="number" name="manual[series][0][reps]" placeholder="Reps"
