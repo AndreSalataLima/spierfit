@@ -5,6 +5,7 @@ class Esp32Controller < ApplicationController
 
   def data_points
     @data_points = DataPoint.all # Certifique-se de que você está definindo @data_points
+    render json: @data_points
   end
 
   def receive_data

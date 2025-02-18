@@ -4,7 +4,6 @@ class WorkoutsController < ApplicationController
 
   def index
     params[:period] ||= 'week'
-
     @workouts = current_user.workouts
 
     if params[:day].present? && params[:month].present? && params[:year].present?
@@ -22,6 +21,28 @@ class WorkoutsController < ApplicationController
     @calories_burned_per_day = @workouts.group_by { |workout| workout.created_at.strftime('%a') }
                                          .transform_values { |workouts| workouts.sum(&:calories_burned) }
   end
+
+
+  def index
+    params[:period] ||= 'week'
+    @workouts = current_user.workouts
+
+    if params[:day].present? && params[:month].present? && params[:year].present?
+      date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+      @workouts = @workouts.where(created_at: date.beginning_of_day..date.end_of_day)
+    elsif params[:month].present? && params[:year].present?
+      date = Date.new(params[:year].to_i, params[:month].to_i)
+      @workouts = @workouts.where(created_at: date.beginning_of_month..date.end_of_month)
+    elsif params[:year].present?
+      date = Date.new(params[:year].to_i)
+      @workouts = @workouts.where(created_at: date.beginning_of_year..date.end_of_year)
+    end
+
+    @calories_burned_per_day = @workouts.group_by { |workout| workout.created_at.strftime('%a') }
+                                         .transform_values { |workouts| workouts.sum { |w| w.calories_burned.to_i } }
+  end
+
+
 
   def show
     @user = @workout.user
@@ -42,7 +63,7 @@ class WorkoutsController < ApplicationController
     if @workout.save
       redirect_to @workout, notice: 'Workout was successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -90,6 +111,11 @@ class WorkoutsController < ApplicationController
   end
 
   def workout_params
-    params.require(:workout).permit(:user_id, :personal_id, :gym_id, :workout_type, :goal, :duration, :calories_burned, :intensity, :feedback, :modifications, :intensity_general, :difficulty_perceived, :performance_score, :auto_adjustments)
+    params.require(:workout).permit(
+      :user_id, :personal_id, :gym_id, :workout_type, :goal, :duration,
+      :calories_burned, :intensity, :feedback, :modifications, :intensity_general,
+      :difficulty_perceived, :performance_score, :auto_adjustments,
+      :workout_protocol_id
+    )
   end
 end

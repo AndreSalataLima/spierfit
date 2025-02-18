@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_13_224434) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_14_201526) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "data_points", force: :cascade do |t|
@@ -236,12 +237,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_13_224434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "completed", default: false
-    t.integer "workout_protocol_id"
-    t.string "day"
     t.string "protocol_day"
+    t.bigint "workout_protocol_id"
     t.index ["gym_id"], name: "index_workouts_on_gym_id"
     t.index ["personal_id"], name: "index_workouts_on_personal_id"
     t.index ["user_id"], name: "index_workouts_on_user_id"
+    t.index ["workout_protocol_id"], name: "index_workouts_on_workout_protocol_id"
   end
 
   add_foreign_key "data_points", "exercise_sets"
@@ -260,4 +261,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_13_224434) do
   add_foreign_key "workouts", "gyms"
   add_foreign_key "workouts", "personals"
   add_foreign_key "workouts", "users"
+  add_foreign_key "workouts", "workout_protocols"
 end

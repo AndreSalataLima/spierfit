@@ -15,10 +15,11 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      flash[:notice] = "User created successfully!"
+      flash[:notice] = "User criado com sucesso!"
       redirect_to users_path
     else
-      render :new
+      puts @user.errors.full_messages
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -44,7 +45,7 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    redirect_to users_url, notice: 'User was successfully destroyed.'
+    redirect_to users_url, notice: 'User excluído com sucesso!'
   end
 
   def dashboard
@@ -61,11 +62,12 @@ class UsersController < ApplicationController
 
   def search
     query = params[:query].to_s.downcase
-    gym_id = session[:current_gym_id]
+    #gym_id = session[:current_gym_id]
+    gym_ids = current_user.gyms.pluck(:id)
 
     @users = User.joins(:gyms)
                  .where("lower(users.name) LIKE ?", "%#{query}%")
-                 .where(gyms: { id: gym_id })
+                 .where(gyms: { id: gym_ids })
                  .distinct
 
     render json: @users.select(:id, :name)

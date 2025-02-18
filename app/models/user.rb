@@ -6,9 +6,9 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :gyms
   has_many :personals, through: :gyms
-  has_many :workouts
+  has_many :workouts, dependent: :destroy
   has_many :exercise_sets, through: :workouts
-  has_many :workout_protocols
-
+  has_many :workout_protocols, dependent: :destroy
+  
 
 end
