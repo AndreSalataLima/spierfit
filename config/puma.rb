@@ -29,8 +29,8 @@ plugin :tmp_restart
 # Apenas ativar SSL no ambiente de desenvolvimento.
 if ENV["RAILS_ENV"] == "development"
   ssl_bind '127.0.0.1', '3000', {
-    key: 'config/myserver.key',
-    cert: 'config/myserver.crt',
+    key: 'config/newmyserver.key',
+    cert: 'config/newmyserver.crt',
     verify_mode: 'none'
   }
 end
