@@ -9,7 +9,9 @@ servers:
 
 proxy:
   ssl: true
-  host: spierfit.com
+  host:
+    - spierfit.com
+    - www.spierfit.com
   app_port: 3000
 
 registry:
