@@ -41,7 +41,7 @@ volumes:
 
 accessories:
   db:
-    image: postgres:15
+    image: postgres:16
     host: 138.201.152.48
     port: 5432
     env:
