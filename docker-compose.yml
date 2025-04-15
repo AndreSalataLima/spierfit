@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: spierfit-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: spierfit
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: spierfit-web
+    depends_on:
+      - db
+      - api
+      - redis
+    environment:
+      REDIS_URL: redis://redis:6379/1
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:password@db:5432/spierfit
+      SECRET_KEY_BASE: 7de22d118465a3d12f22d235cbf0e1de713f4c54e91be32a257ecb648664163faff1c1a51bb457c56706d8e22cdb39e959a464f682c35a3b625bdaddf8ed1176
+    ports:
+      - "3000:3000"
+
+  api:
+    build:
+      context: ../fastapi_app_esp32_data_processor
+    container_name: fastapi-api
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+
+  redis:
+    image: redis:7
+    container_name: spierfit-redis
+    ports:
+      - "6379:6379"
+      
+
+volumes:
+  db_data:

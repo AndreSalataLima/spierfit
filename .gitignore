@@ -11,7 +11,7 @@
 /.env*
 !/.env*.erb
 
-# Ignore all logfiles and tempfiles.git 
+# Ignore all logfiles and tempfiles.git
 /log/*
 /tmp/*
 !/log/.keep
@@ -40,3 +40,5 @@
 *.key
 
 /config/newmyserver.key
+
+.kamal/secrets

@@ -1,67 +1,6 @@
 {
   "RSpec": {
     "coverage": {
-      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/gym.rb": {
-        "lines": [
-          1,
-          1,
-          null,
-          null,
-          1,
-          1,
-          1,
-          1,
-          null,
-          1,
-          null,
-          null
-        ]
-      },
-      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/application_record.rb": {
-        "lines": [
-          1,
-          1,
-          null
-        ]
-      },
-      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/user.rb": {
-        "lines": [
-          1,
-          null,
-          null,
-          1,
-          null,
-          null,
-          1,
-          1,
-          1,
-          1,
-          1,
-          null,
-          null,
-          null
-        ]
-      },
-      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/personal.rb": {
-        "lines": [
-          1,
-          1,
-          null,
-          null,
-          null,
-          1,
-          1,
-          1,
-          1,
-          null,
-          null,
-          1,
-          0,
-          null,
-          null,
-          null
-        ]
-      },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/helpers/application_helper.rb": {
         "lines": [
           1,
@@ -196,8 +135,31 @@
           null
         ]
       },
+      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/application_record.rb": {
+        "lines": [
+          1,
+          1,
+          null
+        ]
+      },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/exercise.rb": {
         "lines": [
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          null
+        ]
+      },
+      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/gym.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          null,
           1,
           1,
           1,
@@ -232,6 +194,26 @@
           null
         ]
       },
+      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/personal.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          null
+        ]
+      },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/protocol_exercise.rb": {
         "lines": [
           1,
@@ -241,6 +223,24 @@
           1,
           1,
           1,
+          null
+        ]
+      },
+      "/home/andresalatalima/code/AndreSalataLima/spierfit/app/models/user.rb": {
+        "lines": [
+          1,
+          null,
+          null,
+          1,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
           null
         ]
       },
@@ -1673,8 +1673,7 @@
           0,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/channels/device_data_channel.rb": {
         "lines": [
@@ -1733,8 +1732,7 @@
           0,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/channels/exercise_sets_channel.rb": {
         "lines": [
@@ -1753,8 +1751,7 @@
           0,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/controllers/exercise_sets_controller.rb": {
         "lines": [
@@ -2171,8 +2168,7 @@
           null,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/controllers/gyms/sessions_controller.rb": {
         "lines": [
@@ -2200,8 +2196,7 @@
           0,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/controllers/pages_controller.rb": {
         "lines": [
@@ -2213,8 +2208,7 @@
           null,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/jobs/application_job.rb": {
         "lines": [
@@ -2226,8 +2220,7 @@
           null,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       },
       "/home/andresalatalima/code/AndreSalataLima/spierfit/app/jobs/update_exercise_set_job.rb": {
         "lines": [
@@ -2264,10 +2257,9 @@
           0,
           0
         ],
-        "branches": {
-        }
+        "branches": {}
       }
     },
-    "timestamp": 1739900423
+    "timestamp": 1744621944
   }
 }

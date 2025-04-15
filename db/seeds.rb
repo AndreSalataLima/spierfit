@@ -133,13 +133,3 @@
 
 
 # Simulando dados para um ExerciseSet específico
-exercise_set = ExerciseSet.create!(
-  workout_id: Workout.last.id,
-  exercise_id: Exercise.first.id,
-  machine_id: Machine.first.id,
-  completed: false
-)
-
-simulate_arduino_data(exercise_set.id)
-
-puts "Seed data created successfully!"
