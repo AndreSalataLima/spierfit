@@ -22,6 +22,7 @@
   <!-- Formulário para Distâncias -->
   <div class="bg-[#303030] rounded-lg p-4 w-full max-w-[300px] mx-auto">
     <h2 class="text-white text-sm font-semibold mb-2">Ajustar Distâncias</h2>
+    <!-- verificar se devo corrigir para form_with(model: @machine, method: :patch, data: { turbo_stream: true }) -->
     <%= form_with(model: @machine, url: machine_path(@machine), method: :patch, local: true, data: { turbo_stream: true } ) do |f| %>
       <div class="mb-2">
         <label for="machine_min_distance" class="text-white block mb-1 text-xs">Distância Mínima</label>
