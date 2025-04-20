@@ -42,7 +42,7 @@ volumes:
 accessories:
   db:
     image: postgres:15
-    host: 127.0.0.1
+    host: 138.201.152.48
     env:
       clear:
         POSTGRES_DB: spierfit_production
@@ -54,6 +54,6 @@ accessories:
 
   redis:
     image: redis:7
-    host: 127.0.0.1
+    host: 138.201.152.48
     directories:
       - data:/data
