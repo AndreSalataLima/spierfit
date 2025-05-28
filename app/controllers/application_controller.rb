@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+        include DeviseTokenAuth::Concerns::SetUserByToken
   # O resto do seu código existente
 
   protected
