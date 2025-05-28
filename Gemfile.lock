@@ -374,7 +374,6 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  benchmark
   bootsnap (>= 1.4.4)
   chartkick
   clockwork

@@ -24,7 +24,7 @@ gem "font-awesome-sass"
 gem "haml-rails"
 gem "terser"
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'benchmark'
+# gem 'benchmark'
 gem 'devise_token_auth'
 
 

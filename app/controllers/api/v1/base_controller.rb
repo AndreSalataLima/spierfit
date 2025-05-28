@@ -4,7 +4,7 @@ module Api
       include DeviseTokenAuth::Concerns::SetUserByToken
       include ErrorHandler
 
-      skip_before_action :verify_authenticity_token
+      # skip_before_action :verify_authenticity_token
     end
   end
 end
