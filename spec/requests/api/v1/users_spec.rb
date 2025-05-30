@@ -1,23 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Users', type: :request do
-  describe 'GET /api/v1/users/:id' do
-    let!(:user) { User.create!(email: 'test@spierfit.com', password: '12345678', name: 'Test user') }
 
   # -------------------------------------------------------------------
   # Show /api/v1/users
   # -------------------------------------------------------------------
 
+  describe 'GET /api/v1/users/:id' do
+    let!(:user1) { User.create!(email: 'one@spierfit.com', password: '12345678', name: 'One') }
+    let!(:user2) { User.create!(email: 'two@spierfit.com', password: '12345678', name: 'Two') }
+
     context 'when authenticated' do
       it 'returns the user as JSON' do
-        get "/api/v1/users/#{user.id}", headers: user.create_new_auth_token
+        get "/api/v1/users/#{user1.id}", headers: user1.create_new_auth_token
 
         expect(response).to have_http_status(:ok)
 
         expected_response = {
-          'id' => user.id,
-          'name' => 'Test user',
-          'email' => 'test@spierfit.com'
+          'id' => user1.id,
+          'name' => 'One',
+          'email' => 'one@spierfit.com'
         }
 
         expect(JSON.parse(response.body)).to include(expected_response)
@@ -26,12 +28,22 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
     context 'when not authenticated' do
       it 'returns 401 unauthorized' do
-        get "/api/v1/users/#{user.id}"
+        get "/api/v1/users/#{user1.id}"
 
         expect(response).to have_http_status(:unauthorized)
       end
     end
+
+    context 'when authenticated but accessing another user' do
+      it 'returns 403 forbidden' do
+        get "/api/v1/users/#{user2.id}", headers: user1.create_new_auth_token
+
+        expect(response).to have_http_status(:forbidden)
+        expect(JSON.parse(response.body)).to include('error' => 'Ação não autorizada.')
+      end
+    end
   end
+
   # -------------------------------------------------------------------
   # Index /api/v1/users
   # -------------------------------------------------------------------
@@ -120,5 +132,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       end
     end
   end
+
+
 
 end
