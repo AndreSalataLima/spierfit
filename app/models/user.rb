@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  enum :role, { superadmin: 0, user: 1 }
+
   include DeviseTokenAuth::Concerns::User
 
   has_and_belongs_to_many :gyms

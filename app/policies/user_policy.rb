@@ -1,11 +1,11 @@
 class UserPolicy < ApplicationPolicy
 
   def index?
-    user.present?
+    allow_superadmin { user.present? }
   end
 
   def show?
-    user.present? && user.id == record.id
+    allow_superadmin { user.present? && user.id == record.id }
   end
 
   def create?
@@ -14,7 +14,11 @@ class UserPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.all
+      if user&.superadmin?
+        scope.all
+      else
+        scope.all
+      end
     end
   end
 end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class ApplicationPolicy
   attr_reader :user, :record
 
@@ -36,6 +34,15 @@ class ApplicationPolicy
     false
   end
 
+  def superadmin?
+    user&.superadmin?
+  end
+
+  def allow_superadmin
+    return true if superadmin?
+    yield
+  end
+  
   class Scope
     def initialize(user, scope)
       @user = user

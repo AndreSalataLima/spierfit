@@ -42,6 +42,25 @@ RSpec.describe 'Api::V1::Users', type: :request do
         expect(JSON.parse(response.body)).to include('error' => 'Ação não autorizada.')
       end
     end
+
+    context 'when authenticated as superadmin' do
+      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
+
+      it 'returns any user as JSON' do
+        get "/api/v1/users/#{user1.id}", headers: superadmin.create_new_auth_token
+
+        expect(response).to have_http_status(:ok)
+
+        expected_response = {
+          'id' => user1.id,
+          'name' => 'One',
+          'email' => 'one@spierfit.com'
+        }
+
+        expect(JSON.parse(response.body)).to include(expected_response)
+      end
+    end
+
   end
 
   # -------------------------------------------------------------------
@@ -76,6 +95,29 @@ RSpec.describe 'Api::V1::Users', type: :request do
         get '/api/v1/users'
 
         expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when authenticated as superadmin' do
+      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
+
+      it 'returns a list of all users as JSON' do
+        get '/api/v1/users', headers: superadmin.create_new_auth_token
+
+        expect(response).to have_http_status(:ok)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response).to be_an(Array)
+        expect(json_response.size).to eq(3)
+
+        expected_users = [
+          { 'id' => user1.id, 'name' => 'One', 'email' => 'one@spierfit.com' },
+          { 'id' => user2.id, 'name' => 'Two', 'email' => 'two@spierfit.com' },
+          { 'id' => superadmin.id, 'name' => 'Admin', 'email' => 'admin@spierfit.com' }
+        ]
+
+
+        expect(json_response).to match_array(expected_users)
       end
     end
   end
@@ -131,6 +173,30 @@ RSpec.describe 'Api::V1::Users', type: :request do
         expect(json_response).to have_key('errors')
       end
     end
+
+    context 'when authenticated as superadmin' do
+      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
+
+      let(:valid_params) do
+        {
+          name: 'Superadmin Created User',
+          email: 'created_by_admin@example.com',
+          password: '12345678',
+          password_confirmation: '12345678'
+        }
+      end
+
+      it 'creates a new user successfully' do
+        expect {
+          post '/api/v1/users', params: valid_params, headers: superadmin.create_new_auth_token
+        }.to change(User, :count).by(1)
+
+        expect(response).to have_http_status(:created)
+        json_response = JSON.parse(response.body)
+        expect(json_response).to include('name' => 'Superadmin Created User', 'email' => 'created_by_admin@example.com')
+      end
+    end
+
   end
 
 
