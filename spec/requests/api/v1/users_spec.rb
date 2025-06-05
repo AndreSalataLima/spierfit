@@ -7,8 +7,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
   # -------------------------------------------------------------------
 
   describe 'GET /api/v1/users/:id' do
-    let!(:user1) { User.create!(email: 'one@spierfit.com', password: '12345678', name: 'One') }
-    let!(:user2) { User.create!(email: 'two@spierfit.com', password: '12345678', name: 'Two') }
+    let!(:user1) { create(:user, name: 'One', email: 'one@spierfit.com') }
+    let!(:user2) { create(:user, name: 'Two', email: 'two@spierfit.com') }
 
     context 'when authenticated' do
       it 'returns the user as JSON' do
@@ -44,7 +44,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
     end
 
     context 'when authenticated as superadmin' do
-      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
+      let!(:superadmin) { create(:user, :superadmin, name: 'Admin', email: 'admin@spierfit.com') }
+
 
       it 'returns any user as JSON' do
         get "/api/v1/users/#{user1.id}", headers: superadmin.create_new_auth_token
@@ -68,8 +69,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
   # -------------------------------------------------------------------
 
   describe 'GET /api/v1/users' do
-    let!(:user1) { User.create!(email: 'one@spierfit.com', password: '12345678', name: 'One') }
-    let!(:user2) { User.create!(email: 'two@spierfit.com', password: '12345678', name: 'Two') }
+    let!(:user1) { create(:user, name: 'One', email: 'one@spierfit.com') }
+    let!(:user2) { create(:user, name: 'Two', email: 'two@spierfit.com') }
 
     context 'when authenticated' do
       it 'returns a list of users as JSON' do

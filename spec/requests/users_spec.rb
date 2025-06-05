@@ -8,7 +8,7 @@ RSpec.describe "Users API", type: :request do
   let!(:other_user) { User.create!(name: "Other User", email: "other@example.com", password: "password123") }
 
   before do
-    sign_in user # Autentica o usuário antes dos testes
+    sign_in user
   end
 
   describe "GET /users" do
