@@ -5,8 +5,6 @@ module Api
       include ErrorHandler
       include Pundit::Authorization
 
-      private
-
     end
   end
 end

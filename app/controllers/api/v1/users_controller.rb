@@ -7,19 +7,19 @@ class Api::V1::UsersController < Api::V1::BaseController
   def show
     user = User.find(params[:id])
     authorize user
-    render json: user.as_json(only: [:id, :name, :email])
+    render json: user.slice(:id, :name, :email)
   end
 
   def index
     users = policy_scope(User)
-    render json: users.as_json(only: [:id, :name, :email])
+    render json: users.map { |u| u.slice(:id, :name, :email) }
   end
 
   def create
     user = User.new(user_params)
     authorize user
     if user.save
-      render json: user.as_json(only: [:id, :name, :email]), status: :created
+      render json: user.slice(:id, :name, :email), status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end

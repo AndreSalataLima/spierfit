@@ -10,28 +10,17 @@ class ApplicationPolicy
     false
   end
 
-  def show?
-    false
-  end
-
-  def create?
-    false
-  end
+  alias_method :show?,   :index?
+  alias_method :create?, :index?
+  alias_method :update?, :index?
+  alias_method :destroy?,:index?
 
   def new?
     create?
   end
 
-  def update?
-    false
-  end
-
   def edit?
     update?
-  end
-
-  def destroy?
-    false
   end
 
   def superadmin?
@@ -42,7 +31,7 @@ class ApplicationPolicy
     return true if superadmin?
     yield
   end
-  
+
   class Scope
     def initialize(user, scope)
       @user = user

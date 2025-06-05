@@ -43,3 +43,5 @@
 /config/newmyserver.key
 
 .kamal/secrets
+
+/coverage/
