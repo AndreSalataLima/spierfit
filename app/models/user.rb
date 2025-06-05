@@ -13,6 +13,4 @@ class User < ApplicationRecord
   has_many :workouts, dependent: :destroy
   has_many :exercise_sets, through: :workouts
   has_many :workout_protocols, dependent: :destroy
-
-
 end

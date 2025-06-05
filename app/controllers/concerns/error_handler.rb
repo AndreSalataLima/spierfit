@@ -30,5 +30,4 @@ module ErrorHandler
   def render_forbidden(_exception)
     render json: { error: "Ação não autorizada." }, status: :forbidden
   end
-
 end
