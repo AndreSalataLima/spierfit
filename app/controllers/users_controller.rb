@@ -41,8 +41,6 @@ class UsersController < ApplicationController
     end
   end
 
-
-
   def destroy
     @user.destroy
     redirect_to users_url, notice: 'User excluído com sucesso!'
@@ -62,7 +60,6 @@ class UsersController < ApplicationController
 
   def search
     query = params[:query].to_s.downcase
-    #gym_id = session[:current_gym_id]
     gym_ids = current_user.gyms.pluck(:id)
 
     @users = User.joins(:gyms)

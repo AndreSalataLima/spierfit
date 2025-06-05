@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  # O resto do seu código existente
+  include DeviseTokenAuth::Concerns::SetUserByToken
 
   protected
 
@@ -8,11 +8,11 @@ class ApplicationController < ActionController::Base
     when User
       dashboard_user_path(resource)
     when Gym
-      dashboard_gym_path(resource)  # Assume que esta seja a rota correta
+      dashboard_gym_path(resource)
     when Personal
-      dashboard_personal_path(resource)  # Assume que esta seja a rota correta
+      dashboard_personal_path(resource)
     else
-      super  # Redireciona para a raiz ou outro caminho padrão para outros tipos de recursos
+      super
     end
   end
 

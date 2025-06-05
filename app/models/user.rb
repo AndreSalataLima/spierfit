@@ -4,11 +4,13 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  enum :role, { superadmin: 0, user: 1 }
+
+  include DeviseTokenAuth::Concerns::User
+
   has_and_belongs_to_many :gyms
   has_many :personals, through: :gyms
   has_many :workouts, dependent: :destroy
   has_many :exercise_sets, through: :workouts
   has_many :workout_protocols, dependent: :destroy
-  
-
 end

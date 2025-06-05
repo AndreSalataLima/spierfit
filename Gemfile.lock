@@ -99,6 +99,10 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise_token_auth (1.2.5)
+      bcrypt (~> 3.0)
+      devise (> 3.5.2, < 5)
+      rails (>= 4.2.0, < 8.1)
     diff-lcs (1.6.1)
     docile (1.4.1)
     domain_name (0.6.20240107)
@@ -221,6 +225,8 @@ GEM
       stringio
     puma (6.6.0)
       nio4r (~> 2.0)
+    pundit (2.5.0)
+      activesupport (>= 3.0.0)
     racc (1.8.1)
     rack (3.1.13)
     rack-cors (2.0.2)
@@ -370,12 +376,12 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  benchmark
   bootsnap (>= 1.4.4)
   chartkick
   clockwork
   debug
   devise
+  devise_token_auth
   dotenv-rails
   ffi (< 1.17.0)
   font-awesome-sass
@@ -387,6 +393,7 @@ DEPENDENCIES
   kamal
   pg (~> 1.1)
   puma (>= 5.0)
+  pundit
   rack-cors
   rails (~> 8.0.2)
   redis

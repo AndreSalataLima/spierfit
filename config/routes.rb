@@ -132,4 +132,16 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root to: 'pages#welcome'
+
+
+  #API-v1
+  namespace :api do
+    namespace :v1 do
+      mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+        sessions: 'api/v1/auth/sessions'
+      }
+
+      resources :users, only: [:show, :index, :create]
+    end
+  end
 end
