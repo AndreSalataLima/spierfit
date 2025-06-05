@@ -36,6 +36,7 @@ group :development, :test do
   # gem 'bullet'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
+  gem 'factory_bot_rails'
 end
 
 group :development do
