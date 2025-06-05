@@ -44,7 +44,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
     end
 
     context 'when authenticated as superadmin' do
-      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
+      let!(:superadmin) { create(:user, :superadmin, name: 'Admin', email: 'admin@spierfit.com') }
+
 
       it 'returns any user as JSON' do
         get "/api/v1/users/#{user1.id}", headers: superadmin.create_new_auth_token
