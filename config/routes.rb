@@ -141,7 +141,7 @@ Rails.application.routes.draw do
         sessions: 'api/v1/auth/sessions'
       }
 
-      resources :users, only: [:show, :index, :create]
+      resources :users, only: [:show, :index, :create, :update]
     end
   end
 end

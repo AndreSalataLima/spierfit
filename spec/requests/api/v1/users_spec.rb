@@ -197,9 +197,56 @@ RSpec.describe 'Api::V1::Users', type: :request do
         expect(json_response).to include('name' => 'Superadmin Created User', 'email' => 'created_by_admin@example.com')
       end
     end
-
   end
 
+  # -------------------------------------------------------------------
+  # PUT /api/v1/users/:id
+  # -------------------------------------------------------------------
 
+  describe 'PUT /api/v1/users/:id' do
+    let!(:user) { create(:user, name: 'Old Name', email: 'old@example.com') }
 
+    context 'when authenticated as the user' do
+      it 'updates the user data' do
+        updated_params = { name: 'New Name', email: 'new@example.com' }
+
+        put "/api/v1/users/#{user.id}", params: updated_params, headers: user.create_new_auth_token
+
+        expect(response).to have_http_status(:ok)
+        json_response = JSON.parse(response.body)
+        expect(json_response).to include('name' => 'New Name', 'email' => 'new@example.com')
+      end
+    end
+
+    context 'when not authenticated' do
+      it 'returns 401 unauthorized' do
+        put "/api/v1/users/#{user.id}", params: { name: 'New Name' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when authenticated as another user' do
+      let!(:other_user) { create(:user) }
+
+      it 'returns 403 forbidden' do
+        put "/api/v1/users/#{user.id}", params: { name: 'New Name' }, headers: other_user.create_new_auth_token
+        expect(response).to have_http_status(:forbidden)
+        expect(JSON.parse(response.body)).to include('error' => 'Ação não autorizada.')
+      end
+    end
+
+    context 'when authenticated as superadmin' do
+      let!(:superadmin) { create(:user, :superadmin) }
+
+      it 'updates any user data' do
+        updated_params = { name: 'Admin Updated', email: 'admin_updated@example.com' }
+
+        put "/api/v1/users/#{user.id}", params: updated_params, headers: superadmin.create_new_auth_token
+
+        expect(response).to have_http_status(:ok)
+        json_response = JSON.parse(response.body)
+        expect(json_response).to include('name' => 'Admin Updated', 'email' => 'admin_updated@example.com')
+      end
+    end
+  end
 end

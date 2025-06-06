@@ -1,7 +1,7 @@
 class Api::V1::UsersController < Api::V1::BaseController
   before_action :authenticate_user!, except: [:create]
   after_action  :verify_policy_scoped, only: [:index]
-  after_action  :verify_authorized, only: [:show, :create]
+  after_action  :verify_authorized, only: [:show, :create, :update]
 
 
   def show
@@ -20,6 +20,17 @@ class Api::V1::UsersController < Api::V1::BaseController
     authorize user
     if user.save
       render json: user.slice(:id, :name, :email), status: :created
+    else
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    user = User.find(params[:id])
+    authorize user
+
+    if user.update(user_params)
+      render json: user.slice(:id, :name, :email), status: :ok
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end

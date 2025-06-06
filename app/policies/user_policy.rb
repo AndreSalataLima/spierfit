@@ -12,6 +12,10 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  def update?
+    allow_superadmin { user.present? && user.id == record.id }
+  end
+
   class Scope < Scope
     def resolve
       if user&.superadmin?
