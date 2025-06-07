@@ -4,8 +4,11 @@ class GymPolicy < ApplicationPolicy
     superadmin_or_gym?
   end
 
-  alias_method :show?, :index?
-  alias_method :update?, :index?
+  def show?
+    user&.superadmin? || (user&.gym? && user.gyms.include?(record))
+  end
+
+  alias_method :update?, :show?
 
   def create?
     user&.superadmin?
@@ -16,7 +19,7 @@ class GymPolicy < ApplicationPolicy
       if user&.superadmin?
         scope.all
       elsif user&.gym?
-        scope.all
+        scope.joins(:users).where(users: { id: user.id }).distinct
       else
         scope.none
       end

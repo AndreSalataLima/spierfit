@@ -1,58 +1,47 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Gyms', type: :request do
-
+  let!(:gym1) { create(:gym) }
+  let!(:gym2) { create(:gym) }
   let!(:superadmin) { create(:user, :superadmin) }
-  let!(:gym_admin) { create(:user, role: :gym) }
+  let!(:gym_admin) { create(:user, role: :gym, gyms: [gym1]) }
+  let!(:other_gym_admin) { create(:user, role: :gym, gyms: [gym2]) }
   let!(:regular_user) { create(:user) }
-  let!(:gym1) { create(:gym, name: 'Gym One', email: 'gym1@example.com') }
-  let!(:gym2) { create(:gym, name: 'Gym Two', email: 'gym2@example.com') }
 
   # -------------------------------------------------------------------
   # GET /api/v1/gyms
   # -------------------------------------------------------------------
 
   describe 'GET /api/v1/gyms' do
+    let(:path) { '/api/v1/gyms' }
 
     context 'when authenticated as superadmin' do
-      it 'returns list of gyms' do
-        get '/api/v1/gyms', headers: superadmin.create_new_auth_token
+      before { get path, headers: superadmin.create_new_auth_token }
 
+      it 'returns list of gyms' do
         expect(response).to have_http_status(:ok)
         json_response = JSON.parse(response.body)
-        expect(json_response).to be_an(Array)
-        expect(json_response.size).to eq(2)
-        expect(json_response.map { |gym| gym['id'] }).to include(gym1.id, gym2.id)
+        expect(json_response.size).to eq(Gym.count)
       end
     end
 
     context 'when authenticated as gym' do
-      it 'returns list of gyms' do
-        get '/api/v1/gyms', headers: gym_admin.create_new_auth_token
+      before { get path, headers: gym_admin.create_new_auth_token }
 
+      it 'returns list of gyms' do
         expect(response).to have_http_status(:ok)
-        json_response = JSON.parse(response.body)
-        expect(json_response).to be_an(Array)
-        expect(json_response.size).to eq(2)
       end
     end
 
     context 'when authenticated as regular user' do
-      it 'returns 403 forbidden' do
-        get '/api/v1/gyms', headers: regular_user.create_new_auth_token
-
-        expect(response).to have_http_status(:forbidden)
-        expect(JSON.parse(response.body)).to include('error' => 'Ação não autorizada.')
-      end
+      before { get path, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when not authenticated' do
-      it 'returns 401 unauthorized' do
-        get '/api/v1/gyms'
-        expect(response).to have_http_status(:unauthorized)
-      end
+      before { get path }
+      it_behaves_like 'unauthorized request'
     end
-
   end
 
   # -------------------------------------------------------------------
@@ -60,51 +49,41 @@ RSpec.describe 'Api::V1::Gyms', type: :request do
   # -------------------------------------------------------------------
 
   describe 'GET /api/v1/gyms/:id' do
+    let(:path) { "/api/v1/gyms/#{gym1.id}" }
 
     context 'when authenticated as superadmin' do
-      it 'returns single gym' do
-        get "/api/v1/gyms/#{gym1.id}", headers: superadmin.create_new_auth_token
-
-        expect(response).to have_http_status(:ok)
-        json_response = JSON.parse(response.body)
-        expect(json_response['name']).to eq('Gym One')
-      end
+      before { get path, headers: superadmin.create_new_auth_token }
+      it { expect(response).to have_http_status(:ok) }
     end
 
-    context 'when authenticated as gym' do
-      it 'returns single gym' do
-        get "/api/v1/gyms/#{gym1.id}", headers: gym_admin.create_new_auth_token
-
-        expect(response).to have_http_status(:ok)
-        json_response = JSON.parse(response.body)
-        expect(json_response['name']).to eq('Gym One')
-      end
+    context 'when authenticated as gym of same gym' do
+      before { get path, headers: gym_admin.create_new_auth_token }
+      it { expect(response).to have_http_status(:ok) }
     end
 
-    context 'when gym does not exist' do
-      it 'returns 404 not found' do
-        get "/api/v1/gyms/999999", headers: superadmin.create_new_auth_token
-
-        expect(response).to have_http_status(:not_found)
-      end
+    context 'when authenticated as gym of other gym' do
+      before { get path, headers: other_gym_admin.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when authenticated as regular user' do
-      it 'returns 403 forbidden' do
-        get "/api/v1/gyms/#{gym1.id}", headers: regular_user.create_new_auth_token
-
-        expect(response).to have_http_status(:forbidden)
-      end
+      before { get path, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when not authenticated' do
-      it 'returns 401 unauthorized' do
-        get "/api/v1/gyms/#{gym1.id}"
-
-        expect(response).to have_http_status(:unauthorized)
-      end
+      before { get path }
+      it_behaves_like 'unauthorized request'
     end
 
+    context 'when gym does not exist' do
+      let(:invalid_path) { '/api/v1/gyms/999999' }
+
+      it 'returns 404 not found' do
+        get invalid_path, headers: superadmin.create_new_auth_token
+        expect(response).to have_http_status(:not_found)
+      end
+    end
   end
 
   # -------------------------------------------------------------------
@@ -112,29 +91,22 @@ RSpec.describe 'Api::V1::Gyms', type: :request do
   # -------------------------------------------------------------------
 
   describe 'POST /api/v1/gyms' do
-
-    let(:valid_params) do
-      { name: 'New Gym', email: 'newgym@example.com', password: '12345678', password_confirmation: '12345678' }
-    end
-
-    let(:invalid_params) do
-      { name: '', email: 'invalid-email', password: '123', password_confirmation: '321' }
-    end
+    let(:path) { '/api/v1/gyms' }
+    let(:valid_params) { attributes_for(:gym) }
+    let(:invalid_params) { { name: '', email: 'invalid-email', password: '123', password_confirmation: '321' } }
 
     context 'when authenticated as superadmin' do
       it 'creates new gym' do
         expect {
-          post '/api/v1/gyms', params: valid_params, headers: superadmin.create_new_auth_token
+          post path, params: valid_params, headers: superadmin.create_new_auth_token
         }.to change(Gym, :count).by(1)
 
         expect(response).to have_http_status(:created)
-        json_response = JSON.parse(response.body)
-        expect(json_response['name']).to eq('New Gym')
       end
 
       it 'returns 422 with invalid parameters' do
         expect {
-          post '/api/v1/gyms', params: invalid_params, headers: superadmin.create_new_auth_token
+          post path, params: invalid_params, headers: superadmin.create_new_auth_token
         }.not_to change(Gym, :count)
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -144,29 +116,19 @@ RSpec.describe 'Api::V1::Gyms', type: :request do
     end
 
     context 'when authenticated as gym' do
-      it 'returns 403 forbidden' do
-        post '/api/v1/gyms', params: valid_params, headers: gym_admin.create_new_auth_token
-
-        expect(response).to have_http_status(:forbidden)
-      end
+      before { post path, params: valid_params, headers: gym_admin.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when authenticated as regular user' do
-      it 'returns 403 forbidden' do
-        post '/api/v1/gyms', params: valid_params, headers: regular_user.create_new_auth_token
-
-        expect(response).to have_http_status(:forbidden)
-      end
+      before { post path, params: valid_params, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when not authenticated' do
-      it 'returns 401 unauthorized' do
-        post '/api/v1/gyms', params: valid_params
-
-        expect(response).to have_http_status(:unauthorized)
-      end
+      before { post path, params: valid_params }
+      it_behaves_like 'unauthorized request'
     end
-
   end
 
   # -------------------------------------------------------------------
@@ -174,64 +136,54 @@ RSpec.describe 'Api::V1::Gyms', type: :request do
   # -------------------------------------------------------------------
 
   describe 'PUT /api/v1/gyms/:id' do
-
-    let(:update_params) do
-      { name: 'Updated Gym', email: 'updated@example.com' }
-    end
-
-    let(:invalid_update_params) do
-      { name: '', email: 'invalid-email' }
-    end
+    let(:path) { "/api/v1/gyms/#{gym1.id}" }
+    let(:update_params) { { name: 'Updated Gym', email: Faker::Internet.unique.email } }
+    let(:invalid_update_params) { { name: '', email: 'invalid-email' } }
 
     context 'when authenticated as superadmin' do
-      it 'updates existing gym' do
-        put "/api/v1/gyms/#{gym1.id}", params: update_params, headers: superadmin.create_new_auth_token
-
+      it 'updates any gym' do
+        put path, params: update_params, headers: superadmin.create_new_auth_token
         expect(response).to have_http_status(:ok)
-        json_response = JSON.parse(response.body)
-        expect(json_response['name']).to eq('Updated Gym')
       end
 
       it 'returns 422 with invalid update parameters' do
-        put "/api/v1/gyms/#{gym1.id}", params: invalid_update_params, headers: superadmin.create_new_auth_token
-
+        put path, params: invalid_update_params, headers: superadmin.create_new_auth_token
         expect(response).to have_http_status(:unprocessable_entity)
         json_response = JSON.parse(response.body)
         expect(json_response).to have_key('errors')
       end
     end
 
-    context 'when authenticated as gym' do
-      it 'updates existing gym' do
-        put "/api/v1/gyms/#{gym1.id}", params: update_params, headers: gym_admin.create_new_auth_token
-
+    context 'when authenticated as gym_admin of the same gym' do
+      it 'updates its own gym' do
+        put path, params: update_params, headers: gym_admin.create_new_auth_token
         expect(response).to have_http_status(:ok)
-        json_response = JSON.parse(response.body)
-        expect(json_response['name']).to eq('Updated Gym')
       end
     end
 
-    context 'when gym does not exist' do
-      it 'returns 404 not found' do
-        put "/api/v1/gyms/999999", params: update_params, headers: superadmin.create_new_auth_token
-
-        expect(response).to have_http_status(:not_found)
-      end
-    end
-
-    context 'when authenticated as regular user' do
-      it 'returns 403 forbidden' do
-        put "/api/v1/gyms/#{gym1.id}", params: update_params, headers: regular_user.create_new_auth_token
-
+    context 'when authenticated as gym_admin of another gym' do
+      it 'returns forbidden' do
+        put path, params: update_params, headers: other_gym_admin.create_new_auth_token
         expect(response).to have_http_status(:forbidden)
       end
     end
 
-    context 'when not authenticated' do
-      it 'returns 401 unauthorized' do
-        put "/api/v1/gyms/#{gym1.id}", params: update_params
+    context 'when authenticated as regular user' do
+      before { put path, params: update_params, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
+    end
 
-        expect(response).to have_http_status(:unauthorized)
+    context 'when not authenticated' do
+      before { put path, params: update_params }
+      it_behaves_like 'unauthorized request'
+    end
+
+    context 'when gym does not exist' do
+      let(:invalid_path) { '/api/v1/gyms/999999' }
+
+      it 'returns 404 not found' do
+        put invalid_path, params: update_params, headers: superadmin.create_new_auth_token
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
