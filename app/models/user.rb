@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  enum :role, { superadmin: 0, user: 1 }
+  enum :role, { superadmin: 0, user: 1, gym: 2, personal: 3 }
 
   include DeviseTokenAuth::Concerns::User
 

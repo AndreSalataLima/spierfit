@@ -8,13 +8,12 @@ class UserPolicy < ApplicationPolicy
     allow_superadmin { user.present? && user.id == record.id }
   end
 
+  alias_method :update?, :show?
+
   def create?
     true
   end
 
-  def update?
-    allow_superadmin { user.present? && user.id == record.id }
-  end
 
   class Scope < Scope
     def resolve

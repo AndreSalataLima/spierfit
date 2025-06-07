@@ -29,7 +29,6 @@ gem 'devise_token_auth'
 gem 'pundit'
 
 
-
 group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails'
@@ -44,6 +43,7 @@ group :development do
   gem "web-console"
   # gem 'rack-mini-profiler'
   gem "kamal"
+  gem 'brakeman', require: false
 end
 
 gem "tzinfo-data", platforms: %i[windows jruby]

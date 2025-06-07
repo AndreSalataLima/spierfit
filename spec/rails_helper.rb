@@ -77,4 +77,7 @@ RSpec.configure do |config|
   end
 
   config.include FactoryBot::Syntax::Methods
+
+  Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+
 end
