@@ -1,4 +1,15 @@
 class GymPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if user&.superadmin?
+        scope.all
+      elsif user&.gym?
+        scope.joins(:users).where(users: { id: user.id }).distinct
+      else
+        scope.none
+      end
+    end
+  end
 
   def index?
     superadmin_or_gym?
@@ -12,18 +23,6 @@ class GymPolicy < ApplicationPolicy
 
   def create?
     user&.superadmin?
-  end
-
-  class Scope < Scope
-    def resolve
-      if user&.superadmin?
-        scope.all
-      elsif user&.gym?
-        scope.joins(:users).where(users: { id: user.id }).distinct
-      else
-        scope.none
-      end
-    end
   end
 
   private

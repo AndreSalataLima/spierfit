@@ -8,7 +8,7 @@ class Machine < ApplicationRecord
 
   after_initialize :set_default_status, if: :new_record?
 
-  validates :mac_address, presence: true, uniqueness: true
+  # validates :mac_address, presence: true, uniqueness: true
   validates :name, presence: true
 
   private

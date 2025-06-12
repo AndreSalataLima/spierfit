@@ -1,4 +1,15 @@
 class UserPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if user.superadmin?
+        scope.all
+      elsif user.gym?
+        scope.joins(:gyms).where(gyms: { id: user.gym_ids }).distinct
+      else
+        scope.none
+      end
+    end
+  end
 
   def index?
     superadmin_or_gym?
@@ -18,18 +29,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   alias_method :create?, :index?
-
-  class Scope < Scope
-    def resolve
-      if user.superadmin?
-        scope.all
-      elsif user.gym?
-        scope.joins(:gyms).where(gyms: { id: user.gym_ids }).distinct
-      else
-        scope.none
-      end
-    end
-  end
 
   private
 
