@@ -144,7 +144,7 @@ Rails.application.routes.draw do
       resources :users, only: [:show, :index, :create, :update]
       resources :gyms, only: [:show, :index, :create, :update]
       resources :machines, only: [:index, :show, :create, :update]
-
+      resources :exercises, only: [:index, :show, :create, :update]
     end
   end
 end
