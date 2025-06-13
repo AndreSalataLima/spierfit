@@ -1,6 +1,7 @@
 class WorkoutProtocol < ApplicationRecord
   belongs_to :user
-  belongs_to :personal, optional: true
+  # belongs_to :personal, optional: true
+  belongs_to :personal, class_name: 'User', optional: true
   belongs_to :gym
 
   has_many :protocol_exercises, dependent: :destroy

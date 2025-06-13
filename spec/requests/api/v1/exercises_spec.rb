@@ -5,8 +5,8 @@ RSpec.describe 'Api::V1::Exercises', type: :request do
   let!(:exercise2) { create(:exercise) }
 
   let!(:superadmin) { create(:user, :superadmin) }
-  let!(:gym_admin)  { create(:user, :gym) }
-  let!(:user)       { create(:user) }
+  let!(:gym_admin) { create(:user, :gym) }
+  let!(:user) { create(:user) }
 
   let(:base_path) { '/api/v1/exercises' }
   let(:valid_params) do

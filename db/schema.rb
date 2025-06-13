@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_123245) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_13_072552) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -261,8 +261,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_123245) do
   add_foreign_key "users", "gyms"
   add_foreign_key "weight_changes", "exercise_sets"
   add_foreign_key "workout_protocols", "gyms"
-  add_foreign_key "workout_protocols", "personals"
   add_foreign_key "workout_protocols", "users"
+  add_foreign_key "workout_protocols", "users", column: "personal_id"
   add_foreign_key "workouts", "gyms"
   add_foreign_key "workouts", "personals"
   add_foreign_key "workouts", "users"

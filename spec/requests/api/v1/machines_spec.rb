@@ -6,10 +6,10 @@ RSpec.describe 'Api::V1::Machines', type: :request do
   let!(:machine1) { create(:machine, gym: gym1) }
   let!(:machine2) { create(:machine, gym: gym2) }
 
-  let!(:superadmin)      { create(:user, :superadmin) }
-  let!(:gym_admin)       { create(:user, :gym, gyms: [gym1]) }
+  let!(:superadmin) { create(:user, :superadmin) }
+  let!(:gym_admin) { create(:user, :gym, gyms: [gym1]) }
   let!(:other_gym_admin) { create(:user, :gym, gyms: [gym2]) }
-  let!(:regular_user)    { create(:user) }
+  let!(:regular_user) { create(:user) }
 
   let(:base_path) { '/api/v1/machines' }
 

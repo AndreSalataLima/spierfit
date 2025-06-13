@@ -145,6 +145,9 @@ Rails.application.routes.draw do
       resources :gyms, only: [:show, :index, :create, :update]
       resources :machines, only: [:index, :show, :create, :update]
       resources :exercises, only: [:index, :show, :create, :update]
+      resources :workout_protocols do
+        resources :protocol_exercises
+      end
     end
   end
 end
