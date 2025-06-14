@@ -45,3 +45,5 @@
 .kamal/secrets
 
 /coverage/
+
+/output.html

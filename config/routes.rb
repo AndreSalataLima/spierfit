@@ -141,7 +141,16 @@ Rails.application.routes.draw do
         sessions: 'api/v1/auth/sessions'
       }
 
-      resources :users, only: [:show, :index, :create]
+      resources :users, only: [:show, :index, :create, :update]
+      resources :gyms, only: [:show, :index, :create, :update]
+      resources :machines, only: [:index, :show, :create, :update]
+      resources :exercises, only: [:index, :show, :create, :update]
+      resources :workout_protocols do
+        resources :protocol_exercises
+      end
+      resources :workouts, only: [:index, :show, :create, :update] do
+        resources :exercise_sets, only: [:show, :create, :update]
+      end
     end
   end
 end

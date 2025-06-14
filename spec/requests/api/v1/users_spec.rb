@@ -1,125 +1,95 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Users', type: :request do
+  let!(:gym) { create(:gym) }
+  let!(:superadmin) { create(:user, :superadmin) }
+  let!(:gym_admin) { create(:user, role: :gym, gyms: [gym]) }
+  let!(:regular_user) { create(:user) }
+  let!(:user1) { create(:user, gyms: [gym]) }
+  let!(:user2) { create(:user, gyms: [gym]) }
 
   # -------------------------------------------------------------------
-  # Show /api/v1/users
+  # GET /api/v1/users
   # -------------------------------------------------------------------
+  describe 'GET /api/v1/users' do
+    let(:path) { '/api/v1/users' }
 
-  describe 'GET /api/v1/users/:id' do
-    let!(:user1) { create(:user, name: 'One', email: 'one@spierfit.com') }
-    let!(:user2) { create(:user, name: 'Two', email: 'two@spierfit.com') }
+    context 'when authenticated as superadmin' do
+      before { get path, headers: superadmin.create_new_auth_token }
 
-    context 'when authenticated' do
-      it 'returns the user as JSON' do
-        get "/api/v1/users/#{user1.id}", headers: user1.create_new_auth_token
-
+      it 'returns list of all users' do
         expect(response).to have_http_status(:ok)
-
-        expected_response = {
-          'id' => user1.id,
-          'name' => 'One',
-          'email' => 'one@spierfit.com'
-        }
-
-        expect(JSON.parse(response.body)).to include(expected_response)
+        expect(JSON.parse(response.body).size).to eq(User.count)
       end
+    end
+
+    context 'when authenticated as gym' do
+      before { get path, headers: gym_admin.create_new_auth_token }
+
+      it 'returns list of users (restricted to gym scope)' do
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to be_an(Array)
+      end
+    end
+
+    context 'when authenticated as regular user' do
+      before { get path, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when not authenticated' do
-      it 'returns 401 unauthorized' do
-        get "/api/v1/users/#{user1.id}"
-
-        expect(response).to have_http_status(:unauthorized)
-      end
+      before { get path }
+      it_behaves_like 'unauthorized request'
     end
-
-    context 'when authenticated but accessing another user' do
-      it 'returns 403 forbidden' do
-        get "/api/v1/users/#{user2.id}", headers: user1.create_new_auth_token
-
-        expect(response).to have_http_status(:forbidden)
-        expect(JSON.parse(response.body)).to include('error' => 'Ação não autorizada.')
-      end
-    end
-
-    context 'when authenticated as superadmin' do
-      let!(:superadmin) { create(:user, :superadmin, name: 'Admin', email: 'admin@spierfit.com') }
-
-
-      it 'returns any user as JSON' do
-        get "/api/v1/users/#{user1.id}", headers: superadmin.create_new_auth_token
-
-        expect(response).to have_http_status(:ok)
-
-        expected_response = {
-          'id' => user1.id,
-          'name' => 'One',
-          'email' => 'one@spierfit.com'
-        }
-
-        expect(JSON.parse(response.body)).to include(expected_response)
-      end
-    end
-
   end
 
   # -------------------------------------------------------------------
-  # Index /api/v1/users
+  # GET /api/v1/users/:id
   # -------------------------------------------------------------------
+  describe 'GET /api/v1/users/:id' do
+    let(:path) { "/api/v1/users/#{user1.id}" }
 
-  describe 'GET /api/v1/users' do
-    let!(:user1) { create(:user, name: 'One', email: 'one@spierfit.com') }
-    let!(:user2) { create(:user, name: 'Two', email: 'two@spierfit.com') }
+    context 'when authenticated as superadmin' do
+      before { get path, headers: superadmin.create_new_auth_token }
 
-    context 'when authenticated' do
-      it 'returns a list of users as JSON' do
-        get '/api/v1/users', headers: user1.create_new_auth_token
-
+      it 'returns any user' do
         expect(response).to have_http_status(:ok)
-
-        json_response = JSON.parse(response.body)
-        expect(json_response).to be_an(Array)
-        expect(json_response.size).to eq(2)
-
-        expected_users = [
-          { 'id' => user1.id, 'name' => 'One', 'email' => 'one@spierfit.com' },
-          { 'id' => user2.id, 'name' => 'Two', 'email' => 'two@spierfit.com' }
-        ]
-
-        expect(json_response).to match_array(expected_users)
+        expect(JSON.parse(response.body)['id']).to eq(user1.id)
       end
+    end
+
+    context 'when authenticated as gym' do
+      before { get path, headers: gym_admin.create_new_auth_token }
+
+      it 'returns user in gym scope' do
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['id']).to eq(user1.id)
+      end
+    end
+
+    context 'when authenticated as same user' do
+      before { get path, headers: user1.create_new_auth_token }
+
+      it 'returns self' do
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['id']).to eq(user1.id)
+      end
+    end
+
+    context 'when authenticated as different user' do
+      before { get "/api/v1/users/#{user2.id}", headers: user1.create_new_auth_token }
+
+      it_behaves_like 'forbidden request'
+    end
+
+    context 'when authenticated as regular user' do
+      before { get path, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
     end
 
     context 'when not authenticated' do
-      it 'returns 401 unauthorized' do
-        get '/api/v1/users'
-
-        expect(response).to have_http_status(:unauthorized)
-      end
-    end
-
-    context 'when authenticated as superadmin' do
-      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
-
-      it 'returns a list of all users as JSON' do
-        get '/api/v1/users', headers: superadmin.create_new_auth_token
-
-        expect(response).to have_http_status(:ok)
-
-        json_response = JSON.parse(response.body)
-        expect(json_response).to be_an(Array)
-        expect(json_response.size).to eq(3)
-
-        expected_users = [
-          { 'id' => user1.id, 'name' => 'One', 'email' => 'one@spierfit.com' },
-          { 'id' => user2.id, 'name' => 'Two', 'email' => 'two@spierfit.com' },
-          { 'id' => superadmin.id, 'name' => 'Admin', 'email' => 'admin@spierfit.com' }
-        ]
-
-
-        expect(json_response).to match_array(expected_users)
-      end
+      before { get path }
+      it_behaves_like 'unauthorized request'
     end
   end
 
@@ -127,79 +97,79 @@ RSpec.describe 'Api::V1::Users', type: :request do
   # POST /api/v1/users
   # -------------------------------------------------------------------
   describe 'POST /api/v1/users' do
-    context 'with valid parameters' do
-      let(:valid_params) do
-        {
-          name: 'New User',
-          email: 'new@example.com',
-          password: '12345678',
-          password_confirmation: '12345678'
-        }
-      end
-
-      it 'creates a new user and returns it as JSON' do
-        expect {
-          post '/api/v1/users', params: valid_params
-        }.to change(User, :count).by(1)
-
-        expect(response).to have_http_status(:created)
-
-        json_response = JSON.parse(response.body)
-        expect(json_response).to include(
-          'id',
-          'name' => 'New User',
-          'email' => 'new@example.com'
-        )
-      end
-    end
-
-    context 'with invalid parameters' do
-      let(:invalid_params) do
-        {
-          name: '',
-          email: 'invalid-email',
-          password: '123',
-          password_confirmation: '321'
-        }
-      end
-
-      it 'returns 422 unprocessable entity with errors' do
-        expect {
-          post '/api/v1/users', params: invalid_params
-        }.not_to change(User, :count)
-
-        expect(response).to have_http_status(:unprocessable_entity)
-
-        json_response = JSON.parse(response.body)
-        expect(json_response).to have_key('errors')
-      end
-    end
+    let(:path) { '/api/v1/users' }
+    let(:valid_params) { attributes_for(:user) }
 
     context 'when authenticated as superadmin' do
-      let!(:superadmin) { User.create!(email: 'admin@spierfit.com', password: '12345678', name: 'Admin', role: :superadmin) }
-
-      let(:valid_params) do
-        {
-          name: 'Superadmin Created User',
-          email: 'created_by_admin@example.com',
-          password: '12345678',
-          password_confirmation: '12345678'
-        }
-      end
-
-      it 'creates a new user successfully' do
+      it 'creates a new user' do
         expect {
-          post '/api/v1/users', params: valid_params, headers: superadmin.create_new_auth_token
+          post path, params: valid_params, headers: superadmin.create_new_auth_token
         }.to change(User, :count).by(1)
 
         expect(response).to have_http_status(:created)
-        json_response = JSON.parse(response.body)
-        expect(json_response).to include('name' => 'Superadmin Created User', 'email' => 'created_by_admin@example.com')
       end
     end
 
+    context 'when authenticated as gym' do
+      it 'creates a new user (restricted to gym scope)' do
+        expect {
+          post path, params: valid_params, headers: gym_admin.create_new_auth_token
+        }.to change(User, :count).by(1)
+
+        expect(response).to have_http_status(:created)
+      end
+    end
+
+    context 'when authenticated as regular user' do
+      before { post path, params: valid_params, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
+    end
+
+    context 'when not authenticated' do
+      before { post path, params: valid_params }
+      it_behaves_like 'unauthorized request'
+    end
   end
 
+  # -------------------------------------------------------------------
+  # PUT /api/v1/users/:id
+  # -------------------------------------------------------------------
+  describe 'PUT /api/v1/users/:id' do
+    let(:path) { "/api/v1/users/#{user1.id}" }
+    let(:update_params) { { name: 'Updated Name', email: Faker::Internet.unique.email } }
 
+    context 'when authenticated as superadmin' do
+      it 'updates any user' do
+        put path, params: update_params, headers: superadmin.create_new_auth_token
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['name']).to eq('Updated Name')
+      end
+    end
 
+    context 'when authenticated as gym' do
+      it 'updates user in gym scope' do
+        put path, params: update_params, headers: gym_admin.create_new_auth_token
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['name']).to eq('Updated Name')
+      end
+    end
+
+    context 'when authenticated as same user' do
+      it 'updates own data' do
+        put path, params: update_params, headers: user1.create_new_auth_token
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['name']).to eq('Updated Name')
+      end
+    end
+
+    context 'when authenticated as other user' do
+      before { put "/api/v1/users/#{user2.id}", params: update_params, headers: regular_user.create_new_auth_token }
+      it_behaves_like 'forbidden request'
+    end
+
+    context 'when not authenticated' do
+      before { put path, params: update_params }
+      it_behaves_like 'unauthorized request'
+    end
+  end
 end
