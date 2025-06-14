@@ -148,6 +148,9 @@ Rails.application.routes.draw do
       resources :workout_protocols do
         resources :protocol_exercises
       end
+      resources :workouts, only: [:index, :show, :create, :update] do
+        resources :exercise_sets, only: [:show, :create, :update]
+      end
     end
   end
 end

@@ -6,6 +6,10 @@ FactoryBot.define do
     password_confirmation { '12345678' }
     role { :user }
 
+    trait :personal do
+      role { :personal }
+    end
+    
     trait :superadmin do
       role { :superadmin }
     end
